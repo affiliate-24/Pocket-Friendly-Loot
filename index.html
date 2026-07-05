@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pocket Friendly Loot — Live Amazon Prime Day Deal Alerts</title>
+<meta name="description" content="Hand-picked Amazon Prime Day deals, posted the moment they drop. Browse today's deals, trending products, gift guides, and buying guides.">
+<link rel="canonical" href="https://your-domain-or-netlify-url.com/index.html">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="Pocket Friendly Loot — Live Amazon Prime Day Deal Alerts">
+<meta property="og:description" content="Hand-picked Amazon Prime Day deals, posted the moment they drop.">
+<meta property="og:image" content="assets/og-image.png">
+<meta property="og:url" content="https://your-domain-or-netlify-url.com/">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Pocket Friendly Loot — Live Amazon Prime Day Deal Alerts">
+<meta name="twitter:description" content="Hand-picked Amazon Prime Day deals, posted the moment they drop.">
+<meta name="twitter:image" content="assets/og-image.png">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "Pocket Friendly Loot",
+  "url": "https://your-domain-or-netlify-url.com/"
+}
+</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="css/variables.css">
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/components.css">
+<link rel="stylesheet" href="css/pages.css">
+<link rel="stylesheet" href="css/responsive.css">
+<link rel="stylesheet" href="css/animations.css">
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js" defer></script>
+</head>
+<body>
+
+<header class="navbar">
+
+  <a class="brand" href="index.html"><span class="brand-dot"></span> Pocket Friendly Loot</a>
+  <nav class="nav-links" aria-label="Primary">
+    <a class="nav-link" href="index.html">Home</a>
+    <a class="nav-link" href="todays-deals.html">Today's Deals</a>
+    <a class="nav-link" href="trending-deals.html">Trending</a>
+    <a class="nav-link" href="categories.html">Categories</a>
+    <a class="nav-link" href="best-products.html">Best Products</a>
+    <a class="nav-link" href="blogs.html">Blogs</a>
+    <a class="nav-link" href="gift-ideas.html">Gift Ideas</a>
+  </nav>
+  <form class="nav-search" action="search.html" method="GET">
+    <button class="nav-search-icon" type="submit" aria-label="Submit search">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    </button>
+    <input class="nav-search-input" name="q" type="text" placeholder="Search…" aria-label="Search products">
+  </form>
+  <div class="nav-actions">
+    <a class="btn-primary btn-sm" data-telegram-cta href="#" target="_blank" rel="noopener">Join Telegram</a>
+    <button class="nav-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+<nav id="mobile-menu" class="mobile-menu" aria-label="Mobile">
+  <a class="nav-link" href="index.html">Home</a>
+  <a class="nav-link" href="todays-deals.html">Today's Deals</a>
+  <a class="nav-link" href="trending-deals.html">Trending</a>
+  <a class="nav-link" href="categories.html">Categories</a>
+  <a class="nav-link" href="best-products.html">Best Products</a>
+  <a class="nav-link" href="blogs.html">Blogs</a>
+    <a class="nav-link" href="gift-ideas.html">Gift Ideas</a>
+  </nav>
+
+<main id="main">
+  <section class="hero">
+    <span class="eyebrow">Amazon Prime Day · July 4–6</span>
+    <h1>Hand-picked deals,<br><span>posted the moment they drop.</span></h1>
+    <p>I track Prime Day discounts in real time so you don't have to. Browse below or join the Telegram channel for instant alerts.</p>
+
+    <div class="countdown-label" id="countdown-label">Sale starts in</div>
+    <div class="countdown" aria-live="polite">
+      <div class="unit"><div class="num" id="cd-d">00</div><div class="lab">Days</div></div>
+      <div class="unit"><div class="num" id="cd-h">00</div><div class="lab">Hrs</div></div>
+      <div class="unit"><div class="num" id="cd-m">00</div><div class="lab">Min</div></div>
+      <div class="unit"><div class="num" id="cd-s">00</div><div class="lab">Sec</div></div>
+    </div>
+
+    <div class="hero-ctas">
+      <a class="btn-primary" href="#todays-deals">Browse live deals</a>
+      <a class="btn-ghost" data-telegram-cta href="#" target="_blank" rel="noopener">Get alerts on Telegram</a>
+    </div>
+  </section>
+
+  <div class="ticker-wrap">
+    <div class="ticker" id="ticker"></div>
+  </div>
+
+  <!-- ============ Today's Deals (live grid, kept from v1) ============ -->
+  <section class="section" id="todays-deals">
+    <div class="section-header">
+      <h2>Today's Deals</h2>
+      <a class="view-all" href="todays-deals.html">View all →</a>
+    </div>
+    <div class="grid" id="home-deals-grid"></div>
+  </section>
+
+  <!-- ============ Featured Categories ============ -->
+  <section class="section">
+    <div class="section-header">
+      <h2>Featured Categories</h2>
+      <a class="view-all" href="categories.html">View all →</a>
+    </div>
+    <div class="category-grid" id="home-categories-grid"></div>
+  </section>
+
+  <!-- ============ Best Products ============ -->
+  <section class="section">
+    <div class="section-header">
+      <h2>Best Products</h2>
+      <a class="view-all" href="best-products.html">View all guides →</a>
+    </div>
+    <div id="home-guides-headings"></div>
+  </section>
+
+  <!-- ============ Gift Ideas ============ -->
+  <section class="section">
+    <div class="section-header">
+      <h2>Gift Ideas</h2>
+      <a class="view-all" href="gift-ideas.html">View all →</a>
+    </div>
+    <div class="teaser-grid" id="home-gifts-preview"></div>
+  </section>
+
+  <!-- ============ Latest Blogs ============ -->
+  <section class="section">
+    <div class="section-header">
+      <h2>Latest Blogs</h2>
+      <a class="view-all" href="blogs.html">View all →</a>
+    </div>
+    <div class="teaser-grid" id="home-blogs-preview"></div>
+  </section>
+
+  <!-- ============ Newsletter ============ -->
+  <section class="section">
+    <div class="newsletter-box" data-animate>
+      <h3>Never miss a deal</h3>
+      <p>Get the best Prime Day picks straight to your inbox.</p>
+      <a class="btn-primary" data-newsletter-link href="#" target="_blank" rel="noopener">Subscribe</a>
+    </div>
+  </section>
+
+</main>
+
+<!-- ============ Enhanced Footer ============ -->
+<footer class="site-footer">
+  <div class="footer-grid">
+    <div class="footer-col">
+      <h4>Pocket Friendly Loot</h4>
+      <a href="index.html">Home</a>
+      <a href="todays-deals.html">Today's Deals</a>
+      <a href="trending-deals.html">Trending Deals</a>
+      <a href="categories.html">Categories</a>
+    </div>
+    <div class="footer-col">
+      <h4>Discover</h4>
+      <a href="best-products.html">Best Products</a>
+      <a href="blogs.html">Blogs</a>
+      <a href="gift-ideas.html">Gift Ideas</a>
+      <a href="about.html">About</a>
+    </div>
+    <div class="footer-col">
+      <h4>More</h4>
+      <a href="search.html">Search</a>
+      <a href="contact.html">Contact</a>
+      <a data-telegram-cta href="#" target="_blank" rel="noopener">Telegram Channel</a>
+    </div>
+    <div class="footer-col">
+      <h4>Legal</h4>
+      <a href="privacy-policy.html">Privacy Policy</a>
+      <a href="affiliate-disclosure.html">Affiliate Disclosure</a>
+      <a href="terms.html">Terms of Use</a>
+    </div>
+  </div>
+  <div class="footer-bottom disclosure">
+    As an Amazon Associate, I earn from qualifying purchases. Prices and availability shown here are pulled live and may change on Amazon.<br>
+    © <span data-current-year></span> Pocket Friendly Loot. Want every deal the second it's posted? <a data-telegram-cta href="#" target="_blank" rel="noopener">Join the Telegram channel →</a>
+  </div>
+</footer>
+
+<script type="module">
+  import { initShared, CONFIG } from "./js/app.js";
+  import { initNavbar } from "./js/navbar.js";
+  import { initCountdown, initTicker, initScrollReveal } from "./js/animations.js";
+  import { initNewsletter } from "./js/newsletter.js";
+  import {
+    loadDeals, loadTodaysDeals, resolveCuratedList,
+    renderGrid, renderSkeletonGrid,
+  } from "./js/products.js";
+  import { loadCategories, renderCategoryCards } from "./js/categories.js";
+  import { groupBySlug } from "./js/guides.js";
+  import { fetchCSV, qs } from "./js/utils.js";
+
+  initShared();
+  initNavbar();
+  initCountdown();
+  initTicker();
+  initNewsletter();
+
+  async function initTodaysDealsPreview() {
+    const container = qs("#home-deals-grid");
+    renderSkeletonGrid(container, 8);
+    try {
+      const [deals, curated] = await Promise.all([loadDeals(), loadTodaysDeals()]);
+      const allDeals = resolveCuratedList(curated, deals);
+      renderGrid(container, allDeals.slice(0, 4));
+    } catch {
+      renderGrid(container, []);
+    }
+  }
+
+  async function initGuidesPreview() {
+    try {
+      const rows = await fetchCSV(CONFIG.SHEETS.bestProducts);
+      const guides = groupBySlug(rows);
+      const el = qs("#home-guides-headings");
+      el.innerHTML = `<div class="guide-preview">${guides.slice(0, 3).map((g) => `
+        <a class="guide-preview-card" href="best-products.html?slug=${encodeURIComponent(g.slug)}">${g.title}</a>`).join("")}</div>`;
+    } catch { /* best products sheet not configured yet */ }
+  }
+
+  async function initCategoriesPreview() {
+    try {
+      const categories = await loadCategories();
+      renderCategoryCards(qs("#home-categories-grid"), categories.slice(0, 6));
+    } catch { /* categories sheet not configured yet */ }
+  }
+
+  async function initGiftsPreview() {
+    try {
+      const guides = await fetchCSV(CONFIG.SHEETS.giftIdeas);
+      qs("#home-gifts-preview").innerHTML = guides.slice(0, 3).map((g) => `
+        <a class="teaser-card" href="gift-ideas.html?slug=${encodeURIComponent(g.Slug)}" data-animate>
+          <img src="${g.Hero_Image_URL}" alt="${g.Guide_Title}" loading="lazy">
+          <div class="teaser-body"><h3>${g.Guide_Title}</h3><p>${g.Description || ""}</p></div>
+        </a>`).join("");
+    } catch { /* gift ideas sheet not configured yet */ }
+  }
+
+  async function initBlogsPreview() {
+    try {
+      const posts = await fetchCSV(CONFIG.SHEETS.blogs);
+      const sorted = posts.slice().sort((a, b) => new Date(b.Published_Date) - new Date(a.Published_Date));
+      qs("#home-blogs-preview").innerHTML = sorted.slice(0, 3).map((p) => `
+        <a class="teaser-card" href="blogs.html?slug=${encodeURIComponent(p.Slug)}" data-animate>
+          <img src="${p.Hero_Image_URL}" alt="${p.Title}" loading="lazy">
+          <div class="teaser-body"><h3>${p.Title}</h3><p>${p.Excerpt || ""}</p></div>
+        </a>`).join("");
+    } catch { /* blogs sheet not configured yet */ }
+  }
+
+  initTodaysDealsPreview();
+  initGuidesPreview();
+  initCategoriesPreview();
+  initGiftsPreview();
+  initBlogsPreview();
+
+  // Re-run scroll-reveal after each async section populates its own content
+  [600, 1200, 1800].forEach((t) => setTimeout(initScrollReveal, t));
+</script>
+
+</body>
+</html>

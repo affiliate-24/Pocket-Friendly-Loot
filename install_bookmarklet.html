@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Install: Grab Product Info Bookmarklet</title>
+                                                                                  <link rel="preconnect" href="https://fonts.googleapis.com">
+                                                                                  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#12122B; --surface:#1B1B3F; --gold:#FFB627; --text:#F5F3EC; --muted:#9B98B8; --border:rgba(245,243,236,0.1);
+  }
+  body{ margin:0; background:var(--bg); color:var(--text); font-family:'Inter',sans-serif; padding: 40px 6vw 80px; }
+  h1{ font-family:'Space Grotesk',sans-serif; font-size:1.8rem; margin-bottom:8px; }
+  p{ color:var(--muted); line-height:1.6; max-width:560px; }
+  .step{ background:var(--surface); border:1px solid var(--border); border-radius:14px; padding:22px 24px; margin: 18px 0; max-width:560px; }
+  .step h3{ margin:0 0 10px; font-size:1rem; }
+  input{
+    width:100%; background:#12122B; border:1px solid var(--border); border-radius:8px; color:var(--text);
+    padding:11px 14px; font-family:'JetBrains Mono',monospace; font-size:0.9rem; box-sizing:border-box;
+  }
+  input:focus{ outline:none; border-color:var(--gold); }
+  .bm-link{
+    display:inline-block; margin-top:16px; background:var(--gold); color:#1A1A1A; font-weight:700;
+    padding:13px 22px; border-radius:999px; text-decoration:none; cursor:grab; font-size:0.95rem;
+  }
+  .hint{ font-size:0.8rem; color:var(--muted); margin-top:10px; }
+  code{ background:#0E0E22; padding:2px 6px; border-radius:5px; font-size:0.85rem; }
+</style>
+</head>
+<body>
+  <h1>🔖 Grab Product Info — bookmarklet</h1>
+  <p>One click on any Amazon product page grabs the title, price, and image, builds your affiliate link, and copies a ready-to-paste row to your clipboard.</p>
+
+  <div class="step">
+    <h3>Step 1 — Enter your Associate tag</h3>
+    <p style="margin:0 0 10px;">The part after <code>tag=</code> in any SiteStripe link, e.g. <code>yourtag-21</code>.</p>
+    <input id="tagInput" type="text" placeholder="yourtag-21" />
+  </div>
+
+  <div class="step">
+    <h3>Step 2 — Install it</h3>
+    <p style="margin:0;">Drag this button up to your browser's bookmarks bar:</p>
+    <a class="bm-link" id="bmLink" href="#">📋 Grab Product Info</a>
+    <div class="hint">Don't see a bookmarks bar? Press <code>Ctrl+Shift+B</code> (Windows) or <code>Cmd+Shift+B</code> (Mac) to show it.</div>
+  </div>
+
+  <div class="step">
+    <h3>Step 3 — Use it</h3>
+    <p style="margin:0;">Open any Amazon product page → click the bookmark → it copies one tab-separated row to your clipboard → paste into column B of your Google Sheet.</p>
+  </div>
+
+  <script>
+    var JS_TEMPLATE = "!function(){function e(e){for(var r=0;r<e.length;r++){var t=document.querySelector(e[r]);if(t){var a=(t.innerText||t.textContent||\"\").trim();if(a)return a}}return\"\"}function r(e){var r=e.replace(/,/g,\"\").match(/[\\d]+(\\.\\d+)?/);return r?r[0]:\"\"}function u(e){var r=e.replace(/,/g,\"\").match(/[\\d]+(,\\d{3})*(\\.\\d+)?/);return r?r[0].replace(/,/g,\"\"):\"\"}var t=e([\"#productTitle\"]),m=e([\"#wayfinding-breadcrumbs_container a\",\"#wayfinding-breadcrumbs_feature_div a\",\"#wayfinding-breadcrumbs_container span.a-list-item a\",\"#wayfinding-breadcrumbs_container li a\"]),a=e([\"#corePrice_feature_div .a-price.a-text-price.a-size-medium.apexPriceToPay .a-offscreen\",\"#corePriceDisplay_desktop_feature_div .a-price.priceToPay .a-offscreen\",\".priceToPay .a-offscreen\",\"#priceblock_dealprice\",\"#priceblock_ourprice\",\"#priceblock_saleprice\",\".a-price .a-offscreen\"]),i=e([\"#corePriceDisplay_desktop_feature_div .basisPrice .a-offscreen\",\".a-price.a-text-price .a-offscreen\",\"#priceblock_was_price\"]),o=r(a),c=r(i)||o,s=e([\"#averageCustomerReviews .a-icon-alt\",\"#acrPopover .a-icon-alt\",\"span[data-hook='rating-out-of-text']\",\"span.a-icon-alt\"]),w=e([\"#acrCustomerReviewText\",\"#acrCustomerReviewLink span\",\"span[data-hook='total-review-count']\"]),v=s.match(/[\\d]+(\\.\\d+)?/)?s.match(/[\\d]+(\\.\\d+)?/)[0]:\"\",x=u(w),n=function(e,r){for(var t=0;t<e.length;t++){var a=document.querySelector(e[t]);if(a)for(var i=0;i<r.length;i++){var o=a.getAttribute(r[i]);if(o)return o}}return\"\"}([\"#landingImage\",\"#imgTagWrapperId img\",\"#imgBlkFront\"],[\"data-old-hires\",\"src\"]),p=window.location.href.match(/\\/(?:dp|gp\\/product)\\/([A-Z0-9]{10})/),f=p?p[1]:\"\",l=f?\"https://www.amazon.in/dp/\"+f+\"?tag=__TAG__\":window.location.href,d=[t,m,c,o,n,l,v,x].join(\"\\t\");navigator.clipboard&&navigator.clipboard.writeText?navigator.clipboard.writeText(d).then(function(){alert(\"Copied to clipboard \u2014 paste into column B of your sheet.\\n\\n\"+t+\"\\n₹\"+c+\" \u2192 ₹\"+o+(v?\"\\nRating: \"+v:\"\")+(x?\"\\nReviews: \"+x:\"\"))}).catch(function(){prompt(\"Copy this row manually (it's tab-separated for pasting):\",d)}):prompt(\"Copy this row manually (it's tab-separated for pasting):\",d)}();";
+
+    var tagInput = document.getElementById("tagInput");
+    var bmLink = document.getElementById("bmLink");
+
+    function updateLink(){
+      var tag = (tagInput.value || "yourtag-21").trim();
+      var code = JS_TEMPLATE.replace(/__TAG__/g, tag);
+      bmLink.href = "javascript:" + encodeURIComponent(code);
+    }
+    tagInput.addEventListener("input", updateLink);
+    updateLink();
+  </script>
+</body>
+</html>
