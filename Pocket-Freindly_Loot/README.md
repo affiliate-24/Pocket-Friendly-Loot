@@ -1,4 +1,4 @@
-# Mela Deals — Setup Guide
+# Pocket Friendly Loot — Setup Guide
 
 A multi-page, no-backend affiliate site. Every page is static HTML/CSS/
 vanilla JS; all content lives in one Google Sheets workbook (7 tabs);
