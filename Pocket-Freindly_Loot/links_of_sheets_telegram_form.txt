@@ -1,0 +1,81 @@
+python -m pip install -r requirements.txt --break-system-packages
+python post_to_telegram.py
+
+
+mela-deals/
+├── index.html
+├── todays-deals.html
+├── categories.html
+├── best-products.html
+├── blogs.html
+├── gift-ideas.html
+├── search.html
+├── 404.html
+├── README.md
+├── PROJECT_REVIEW.md
+├── css/
+│   ├── variables.css      design tokens
+│   ├── style.css          resets, base type, a11y baseline
+│   ├── components.cs     buttons, chips, cards, nav, footer, etc.
+│   ├── pages.css          section/page layout
+│   ├── responsive.css     breakpoint overrides
+│   └── animations.css     keyframes + motion utility classes
+├── js/
+│   ├── utils.js           formatting, CSV fetch, debounce, content parser
+│   ├── app.js              CONFIG + shared bootstrap
+│   ├── navbar.js           sticky / active link / mobile menu
+│   ├── products.js         card rendering, wishlist, sort, infinite scroll
+│   ├── search.js           cross-content instant search
+│   ├── categories.js       category chips + cards
+│   ├── blogs.js             blog listing + article template
+│   ├── gifts.js             gift guide listing + detail
+│   ├── guides.js            best-products ranking + comparison table
+│   ├── newsletter.js        Google Form wiring
+│   └── animations.js        countdown, ticker, scroll-reveal
+├── sheet-templates/        one CSV starter per tab
+├── automation/              Telegram bot + bookmarklet
+└── docs/
+    └── SCHEMA.md            the 7-tab content contract
+
+
+
+----------------------------------------------------------------------------------
+# ==========================================================================
+# SYSTEM ENVIROMENT VARIABLES (HIDDEN CONFIG)
+# ==========================================================================
+
+# Telegram Setup
+TELEGRAM_BOT_TOKEN="8966017091:AAHocD2txaOou1nCulNhwwxiZyCoGBUM6DU"
+TELEGRAM_CHANNEL_ID="@PFLoot00"
+
+# Google Sheets CSV Endpoints
+URL_SHEET_DEALS="https://docs.google.com/spreadsheets/d/e/2PACX-1vQlfHk-JQa7q8lIyBxXQtdI3et92suMRw2t2C5A1OfvR41mMZ-wy_hUWuMOizPmFzTbRq0u0WS0OJ-Z/pub?gid=0&single=true&output=csv"
+URL_SHEET_TODAYS_DEALS="https://docs.google.com/spreadsheets/d/e/2PACX-1vQlfHk-JQa7q8lIyBxXQtdI3et92suMRw2t2C5A1OfvR41mMZ-wy_hUWuMOizPmFzTbRq0u0WS0OJ-Z/pub?gid=2035525778&single=true&output=csv"
+URL_SHEET_TRENDING_DEALS="https://docs.google.com/spreadsheets/d/e/2PACX-1vQlfHk-JQa7q8lIyBxXQtdI3et92suMRw2t2C5A1OfvR41mMZ-wy_hUWuMOizPmFzTbRq0u0WS0OJ-Z/pub?gid=1671278602&single=true&output=csv"
+URL_SHEET_CATEGORIES="https://docs.google.com/spreadsheets/d/e/2PACX-1vQlfHk-JQa7q8lIyBxXQtdI3et92suMRw2t2C5A1OfvR41mMZ-wy_hUWuMOizPmFzTbRq0u0WS0OJ-Z/pub?gid=1900968817&single=true&output=csv"
+URL_SHEET_BLOGS="https://docs.google.com/spreadsheets/d/e/2PACX-1vQlfHk-JQa7q8lIyBxXQtdI3et92suMRw2t2C5A1OfvR41mMZ-wy_hUWuMOizPmFzTbRq0u0WS0OJ-Z/pub?gid=2115468565&single=true&output=csv"
+URL_SHEET_BEST_PRODUCTS="https://docs.google.com/spreadsheets/d/e/2PACX-1vQlfHk-JQa7q8lIyBxXQtdI3et92suMRw2t2C5A1OfvR41mMZ-wy_hUWuMOizPmFzTbRq0u0WS0OJ-Z/pub?gid=763871860&single=true&output=csv"
+URL_SHEET_GIFT_IDEAS="https://docs.google.com/spreadsheets/d/e/2PACX-1vQlfHk-JQa7q8lIyBxXQtdI3et92suMRw2t2C5A1OfvR41mMZ-wy_hUWuMOizPmFzTbRq0u0WS0OJ-Z/pub?gid=2030758027&single=true&output=csv"
+
+# Newsletter Configuration
+NEWSLETTER_FORM_URL="https://docs.google.com/forms/d/e/1FAIpQLSf3BdjDWcfc1PQFMc5bxvm88sMyeB3phCj4exuIHw5nQ-wqDA/viewform?usp=publish-editor"
+--------------------------------------------------------------------------
+google form link
+
+https://docs.google.com/forms/d/e/1FAIpQLSf3BdjDWcfc1PQFMc5bxvm88sMyeB3phCj4exuIHw5nQ-wqDA/viewform?usp=publish-editor
+--------------------------------------------------------------------------
+telegram bot name 
+@PFLOOT_bot
+
+bot's token
+
+8966017091:AAHocD2txaOou1nCulNhwwxiZyCoGBUM6DU
+--------------------------------------------------------------------------
+telegram channel link 
+https://t.me/PFLoot00
+
+Channel ID using @
+@PFLoot00
+
+telegram's channel ID
+-1003382588725

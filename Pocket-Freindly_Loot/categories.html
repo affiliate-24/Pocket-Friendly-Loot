@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Categories — Pocket Friendly Loot</title>
+<meta name="description" content="Browse every product category we cover, from electronics to fashion to home & kitchen.">
+<link rel="canonical" href="https://your-domain-or-netlify-url.com/categories.html">
+<meta property="og:title" content="Categories — Pocket Friendly Loot">
+<meta name="twitter:card" content="summary">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/variables.css">
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/components.css">
+<link rel="stylesheet" href="css/pages.css">
+<link rel="stylesheet" href="css/responsive.css">
+<link rel="stylesheet" href="css/animations.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js" defer></script>
+</head>
+<body>
+
+<header class="navbar">
+  <a class="brand" href="index.html"><span class="brand-dot"></span> Pocket Friendly Loot</a>
+  <nav class="nav-links" aria-label="Primary">
+    <a class="nav-link" href="index.html">Home</a>
+    <a class="nav-link" href="todays-deals.html">Today's Deals</a>
+    <a class="nav-link" href="trending-deals.html">Trending</a>
+    <a class="nav-link" href="categories.html">Categories</a>
+    <a class="nav-link" href="best-products.html">Best Products</a>
+    <a class="nav-link" href="blogs.html">Blogs</a>
+    <a class="nav-link" href="gift-ideas.html">Gift Ideas</a>
+  </nav>
+  <form class="nav-search" action="search.html" method="GET">
+    <button class="nav-search-icon" type="submit" aria-label="Submit search">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    </button>
+    <input class="nav-search-input" name="q" type="text" placeholder="Search…" aria-label="Search products">
+  </form>
+  <div class="nav-actions">
+    <a class="btn-primary btn-sm" data-telegram-cta href="#" target="_blank" rel="noopener">Join Telegram</a>
+    <button class="nav-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-menu"><span></span><span></span><span></span></button>
+  </div>
+</header>
+<nav id="mobile-menu" class="mobile-menu" aria-label="Mobile">
+  <a class="nav-link" href="index.html">Home</a>
+  <a class="nav-link" href="todays-deals.html">Today's Deals</a>
+  <a class="nav-link" href="trending-deals.html">Trending</a>
+  <a class="nav-link" href="categories.html">Categories</a>
+  <a class="nav-link" href="best-products.html">Best Products</a>
+  <a class="nav-link" href="blogs.html">Blogs</a>
+  <a class="nav-link" href="gift-ideas.html">Gift Ideas</a>
+  <a class="nav-link" href="search.html">Search</a>
+</nav>
+
+<main id="main">
+  <div class="page-header">
+    <span class="eyebrow">Browse</span>
+    <h1>Categories</h1>
+    <p>Pick a category to see every deal we've got in it.</p>
+  </div>
+  <div class="section">
+    <div class="category-grid" id="categories-grid"></div>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="footer-grid">
+    <div class="footer-col"><h4>Pocket Friendly Loot</h4><a href="index.html">Home</a><a href="todays-deals.html">Today's Deals</a><a href="trending-deals.html">Trending Deals</a><a href="categories.html">Categories</a></div>
+    <div class="footer-col"><h4>Discover</h4><a href="best-products.html">Best Products</a><a href="blogs.html">Blogs</a><a href="gift-ideas.html">Gift Ideas</a><a href="about.html">About</a></div>
+    <div class="footer-col"><h4>More</h4><a href="search.html">Search</a><a href="contact.html">Contact</a><a data-telegram-cta href="#" target="_blank" rel="noopener">Telegram Channel</a></div>
+    <div class="footer-col"><h4>Legal</h4><a href="privacy-policy.html">Privacy Policy</a><a href="affiliate-disclosure.html">Affiliate Disclosure</a><a href="terms.html">Terms of Use</a></div>
+  </div>
+  <div class="footer-bottom disclosure">
+    As an Amazon Associate, I earn from qualifying purchases.<br>
+    © <span data-current-year></span> Pocket Friendly Loot.
+  </div>
+</footer>
+
+<script type="module">
+  import { initShared } from "./js/app.js";
+  import { initNavbar } from "./js/navbar.js";
+  import { initScrollReveal } from "./js/animations.js";
+  import { loadCategories, renderCategoryCards } from "./js/categories.js";
+  import { qs } from "./js/utils.js";
+
+  initShared();
+  initNavbar();
+
+  loadCategories()
+    .then((categories) => {
+      renderCategoryCards(qs("#categories-grid"), categories);
+      initScrollReveal();
+    })
+    .catch(() => {
+      qs("#categories-grid").innerHTML = `<div class="state-error"><div class="display">Couldn't load categories</div></div>`;
+    });
+</script>
+
+</body>
+</html>

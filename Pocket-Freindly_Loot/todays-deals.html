@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Today's Deals — Pocket Friendly Loot</title>
+<meta name="description" content="Every Amazon deal we're featuring today — filter by category, sort by price or discount, and keep scrolling for more.">
+<link rel="canonical" href="https://your-domain-or-netlify-url.com/todays-deals.html">
+<meta property="og:title" content="Today's Deals — Pocket Friendly Loot">
+<meta property="og:description" content="Every Amazon deal we're featuring today.">
+<meta name="twitter:card" content="summary">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/variables.css">
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/components.css">
+<link rel="stylesheet" href="css/pages.css">
+<link rel="stylesheet" href="css/responsive.css">
+<link rel="stylesheet" href="css/animations.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js" defer></script>
+</head>
+<body>
+
+<header class="navbar">
+  <a class="brand" href="index.html"><span class="brand-dot"></span> Pocket Friendly Loot</a>
+  <nav class="nav-links" aria-label="Primary">
+    <a class="nav-link" href="index.html">Home</a>
+    <a class="nav-link" href="todays-deals.html">Today's Deals</a>
+    <a class="nav-link" href="trending-deals.html">Trending</a>
+    <a class="nav-link" href="categories.html">Categories</a>
+    <a class="nav-link" href="best-products.html">Best Products</a>
+    <a class="nav-link" href="blogs.html">Blogs</a>
+    <a class="nav-link" href="gift-ideas.html">Gift Ideas</a>
+  </nav>
+  <form class="nav-search" action="search.html" method="GET">
+    <button class="nav-search-icon" type="submit" aria-label="Submit search">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    </button>
+    <input class="nav-search-input" name="q" type="text" placeholder="Search…" aria-label="Search products">
+  </form>
+  <div class="nav-actions">
+    <a class="btn-primary btn-sm" data-telegram-cta href="#" target="_blank" rel="noopener">Join Telegram</a>
+    <button class="nav-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-menu"><span></span><span></span><span></span></button>
+  </div>
+</header>
+<nav id="mobile-menu" class="mobile-menu" aria-label="Mobile">
+  <a class="nav-link" href="index.html">Home</a>
+  <a class="nav-link" href="todays-deals.html">Today's Deals</a>
+  <a class="nav-link" href="trending-deals.html">Trending</a>
+  <a class="nav-link" href="categories.html">Categories</a>
+  <a class="nav-link" href="best-products.html">Best Products</a>
+  <a class="nav-link" href="blogs.html">Blogs</a>
+  <a class="nav-link" href="gift-ideas.html">Gift Ideas</a>
+  <a class="nav-link" href="search.html">Search</a>
+</nav>
+
+<main id="main">
+  <div class="page-header">
+    <span class="eyebrow">Updated live</span>
+    <h1>Today's Deals</h1>
+    <p>Every deal we're featuring right now. Filter, sort, and keep scrolling — more loads automatically.</p>
+  </div>
+
+  <div class="controls">
+    <div class="chips" id="category-chips"></div>
+    <div style="display:flex; gap:10px; flex-wrap:wrap;">
+      <input class="search-input" id="search-input" type="text" placeholder="Search a product…" aria-label="Search deals">
+      <select class="sort-select" id="sort-select" aria-label="Sort deals">
+        <option value="default">Sort: Featured</option>
+        <option value="price-asc">Price: Low to High</option>
+        <option value="price-desc">Price: High to Low</option>
+        <option value="discount-desc">Biggest Discount</option>
+        <option value="rating-desc">Highest Rated</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="grid" id="deals-grid"></div>
+</main>
+
+<footer class="site-footer">
+  <div class="footer-grid">
+    <div class="footer-col"><h4>Pocket Friendly Loot</h4><a href="index.html">Home</a><a href="todays-deals.html">Today's Deals</a><a href="trending-deals.html">Trending Deals</a><a href="categories.html">Categories</a></div>
+    <div class="footer-col"><h4>Discover</h4><a href="best-products.html">Best Products</a><a href="blogs.html">Blogs</a><a href="gift-ideas.html">Gift Ideas</a><a href="about.html">About</a></div>
+    <div class="footer-col"><h4>More</h4><a href="search.html">Search</a><a href="contact.html">Contact</a><a data-telegram-cta href="#" target="_blank" rel="noopener">Telegram Channel</a></div>
+    <div class="footer-col"><h4>Legal</h4><a href="privacy-policy.html">Privacy Policy</a><a href="affiliate-disclosure.html">Affiliate Disclosure</a><a href="terms.html">Terms of Use</a></div>
+  </div>
+  <div class="footer-bottom disclosure">
+    As an Amazon Associate, I earn from qualifying purchases.<br>
+    © <span data-current-year></span> Pocket Friendly Loot.
+  </div>
+</footer>
+
+<script type="module">
+  import { initShared } from "./js/app.js";
+  import { initNavbar } from "./js/navbar.js";
+  import { initScrollReveal } from "./js/animations.js";
+  import {
+    loadDeals, loadTodaysDeals, resolveCuratedList,
+    renderSkeletonGrid, sortDeals, initInfiniteScroll,
+  } from "./js/products.js";
+  import { loadCategories, renderCategoryChips } from "./js/categories.js";
+  import { qs, debounce } from "./js/utils.js";
+
+  initShared();
+  initNavbar();
+
+  let allDeals = [];
+  let activeCategory = "All Products";
+
+  function applyAndRender() {
+    const term = qs("#search-input").value.toLowerCase();
+    const sortKey = qs("#sort-select").value;
+    let filtered = allDeals.filter((d) => {
+      const inCat = activeCategory === "All Products" || (d.Category || "").split(",").map((c) => c.trim()).includes(activeCategory);
+      const inSearch = !term || (d.Product_Name || "").toLowerCase().includes(term);
+      return inCat && inSearch;
+    });
+    filtered = sortDeals(filtered, sortKey);
+    initInfiniteScroll(qs("#deals-grid"), filtered, 12);
+    initScrollReveal();
+  }
+
+  function renderChips(names) {
+    renderCategoryChips(qs("#category-chips"), names, activeCategory, (cat) => {
+      activeCategory = cat;
+      renderChips(names);
+      applyAndRender();
+    });
+  }
+
+  async function init() {
+    renderSkeletonGrid(qs("#deals-grid"), 12);
+    try {
+      const [deals, curated, categories] = await Promise.all([loadDeals(), loadTodaysDeals(), loadCategories()]);
+      allDeals = resolveCuratedList(curated, deals);
+      const catNames = categories.map((c) => c.Category_Name).filter(Boolean);
+      const activeNames = catNames.filter((name) => allDeals.some((d) => (d.Category || "").split(",").map((c) => c.trim()).includes(name)));
+      renderChips(activeNames);
+      applyAndRender();
+    } catch {
+      qs("#deals-grid").innerHTML = `<div class="state-error"><div class="display">Couldn't load deals</div><div>Check the SHEETS URLs in app.js.</div></div>`;
+    }
+  }
+
+  qs("#search-input").addEventListener("input", debounce(applyAndRender, 200));
+  qs("#sort-select").addEventListener("change", applyAndRender);
+  init();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,77 @@
+/* ==========================================================================
+   responsive.css
+   Most layout in this project is already fluid (CSS grid auto-fill,
+   clamp() for type) and needs no breakpoints at all. This file only
+   contains the handful of rules that genuinely need a hard cutoff —
+   mainly the nav collapsing to a hamburger, and the two-column article
+   layout dropping to one column.
+   Breakpoints used: 1024px (laptop), 768px (tablet), 480px (phone)
+   ========================================================================== */
+
+@media (max-width: 1024px) {
+  .article-layout {
+    grid-template-columns: 1fr;
+  }
+  .article-sidebar {
+    position: static;
+    order: -1;
+  }
+}
+
+@media (max-width: 900px) {
+  .grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 480px) {
+  .grid { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 768px) {
+  .nav-links {
+    display: none;
+  }
+  .nav-search {
+    display: none;
+  }
+  .nav-toggle {
+    display: flex;
+  }
+  .countdown .unit {
+    min-width: 70px;
+    padding: var(--space-sm) var(--space-md);
+  }
+  .controls {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .search-input,
+  .sort-select {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero {
+    padding: var(--space-3xl) var(--gutter) var(--space-2xl);
+  }
+  .countdown {
+    gap: var(--space-sm);
+  }
+  .countdown .unit {
+    min-width: 60px;
+    padding: var(--space-xs) var(--space-sm);
+  }
+  .countdown .unit .num {
+    font-size: var(--text-lg);
+  }
+  .hero-ctas {
+    flex-direction: column;
+    width: 100%;
+  }
+  .hero-ctas .btn-primary,
+  .hero-ctas .btn-ghost {
+    width: 100%;
+  }
+  .footer-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}

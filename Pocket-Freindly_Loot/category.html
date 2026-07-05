@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Category — Pocket Friendly Loot</title>
+<meta name="description" content="Browse all deals in this category — sort by price or discount, and keep scrolling for more.">
+<link rel="canonical" href="https://your-domain-or-netlify-url.com/category.html">
+<meta property="og:title" content="Category — Pocket Friendly Loot">
+<meta property="og:description" content="Browse all deals in this category.">
+<meta name="twitter:card" content="summary">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/variables.css">
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/components.css">
+<link rel="stylesheet" href="css/pages.css">
+<link rel="stylesheet" href="css/responsive.css">
+<link rel="stylesheet" href="css/animations.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js" defer></script>
+</head>
+<body>
+
+<header class="navbar">
+  <a class="brand" href="index.html"><span class="brand-dot"></span> Pocket Friendly Loot</a>
+  <nav class="nav-links" aria-label="Primary">
+    <a class="nav-link" href="index.html">Home</a>
+    <a class="nav-link" href="todays-deals.html">Today's Deals</a>
+    <a class="nav-link" href="trending-deals.html">Trending</a>
+    <a class="nav-link" href="categories.html">Categories</a>
+    <a class="nav-link" href="best-products.html">Best Products</a>
+    <a class="nav-link" href="blogs.html">Blogs</a>
+    <a class="nav-link" href="gift-ideas.html">Gift Ideas</a>
+    <a class="nav-link" href="search.html">Search</a>
+  </nav>
+  <div class="nav-actions">
+    <a class="btn-primary btn-sm" data-telegram-cta href="#" target="_blank" rel="noopener">Join Telegram</a>
+    <button class="nav-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-menu"><span></span><span></span><span></span></button>
+  </div>
+</header>
+<nav id="mobile-menu" class="mobile-menu" aria-label="Mobile">
+  <a class="nav-link" href="index.html">Home</a>
+  <a class="nav-link" href="todays-deals.html">Today's Deals</a>
+  <a class="nav-link" href="trending-deals.html">Trending</a>
+  <a class="nav-link" href="categories.html">Categories</a>
+  <a class="nav-link" href="best-products.html">Best Products</a>
+  <a class="nav-link" href="blogs.html">Blogs</a>
+  <a class="nav-link" href="gift-ideas.html">Gift Ideas</a>
+  <a class="nav-link" href="search.html">Search</a>
+</nav>
+
+<main id="main">
+  <div class="page-header">
+    <span class="eyebrow"><a href="categories.html" style="color:inherit;text-decoration:none;">← All Categories</a></span>
+    <h1 id="category-heading">Category</h1>
+    <p id="category-subtitle">Every deal we've got in this category. Filter, sort, and keep scrolling — more loads automatically.</p>
+  </div>
+
+  <div class="controls">
+    <div style="display:flex; gap:10px; flex-wrap:wrap;">
+      <input class="search-input" id="search-input" type="text" placeholder="Search a product…" aria-label="Search deals">
+      <select class="sort-select" id="sort-select" aria-label="Sort deals">
+        <option value="default">Sort: Featured</option>
+        <option value="price-asc">Price: Low to High</option>
+        <option value="price-desc">Price: High to Low</option>
+        <option value="discount-desc">Biggest Discount</option>
+        <option value="rating-desc">Highest Rated</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="grid" id="deals-grid"></div>
+</main>
+
+<footer class="site-footer">
+  <div class="footer-grid">
+    <div class="footer-col"><h4>Pocket Friendly Loot</h4><a href="index.html">Home</a><a href="todays-deals.html">Today's Deals</a><a href="trending-deals.html">Trending Deals</a><a href="categories.html">Categories</a></div>
+    <div class="footer-col"><h4>Discover</h4><a href="best-products.html">Best Products</a><a href="blogs.html">Blogs</a><a href="gift-ideas.html">Gift Ideas</a><a href="about.html">About</a></div>
+    <div class="footer-col"><h4>More</h4><a href="search.html">Search</a><a href="contact.html">Contact</a><a data-telegram-cta href="#" target="_blank" rel="noopener">Telegram Channel</a></div>
+    <div class="footer-col"><h4>Legal</h4><a href="privacy-policy.html">Privacy Policy</a><a href="affiliate-disclosure.html">Affiliate Disclosure</a><a href="terms.html">Terms of Use</a></div>
+  </div>
+  <div class="footer-bottom disclosure">
+    As an Amazon Associate, I earn from qualifying purchases.<br>
+    © <span data-current-year></span> Pocket Friendly Loot.
+  </div>
+</footer>
+
+<script type="module">
+  import { initShared } from "./js/app.js";
+  import { initNavbar } from "./js/navbar.js";
+  import { initScrollReveal } from "./js/animations.js";
+  import {
+    loadDeals,
+    renderSkeletonGrid, sortDeals, initInfiniteScroll,
+  } from "./js/products.js";
+  import { qs, debounce, getQueryParam } from "./js/utils.js";
+
+  initShared();
+  initNavbar();
+
+  let allDeals = [];
+  let categoryChosen = getQueryParam("cat");
+
+  function updateHeading() {
+    const heading = qs("#category-heading");
+    const subtitle = qs("#category-subtitle");
+    if (categoryChosen) {
+      heading.textContent = categoryChosen;
+      subtitle.textContent = `Every deal we've got in ${categoryChosen}. Filter, sort, and keep scrolling — more loads automatically.`;
+      document.title = `${categoryChosen} — Pocket Friendly Loot`;
+    } else {
+      heading.textContent = "All Products";
+      subtitle.textContent = "Browse every deal across all categories. Filter, sort, and keep scrolling.";
+      document.title = "All Products — Pocket Friendly Loot";
+    }
+  }
+  updateHeading();
+
+  function applyAndRender() {
+    const term = qs("#search-input").value.toLowerCase();
+    const sortKey = qs("#sort-select").value;
+    let filtered = allDeals.filter((d) => {
+      const inCat = !categoryChosen || (d.Category || "").split(",").map((c) => c.trim()).includes(categoryChosen);
+      const inSearch = !term || (d.Product_Name || "").toLowerCase().includes(term);
+      return inCat && inSearch;
+    });
+    filtered = sortDeals(filtered, sortKey);
+    initInfiniteScroll(qs("#deals-grid"), filtered, 12);
+    initScrollReveal();
+  }
+
+  async function init() {
+    renderSkeletonGrid(qs("#deals-grid"), 12);
+    try {
+      allDeals = await loadDeals();
+      applyAndRender();
+    } catch {
+      qs("#deals-grid").innerHTML = `<div class="state-error"><div class="display">Couldn't load deals</div><div>Check the SHEETS URLs in app.js.</div></div>`;
+    }
+  }
+
+  qs("#search-input").addEventListener("input", debounce(applyAndRender, 200));
+  qs("#sort-select").addEventListener("change", applyAndRender);
+  init();
+</script>
+
+</body>
+</html>

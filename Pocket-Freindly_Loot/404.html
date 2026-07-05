@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Page Not Found — Pocket Friendly Loot</title>
+<meta name="robots" content="noindex">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/variables.css">
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/components.css">
+<link rel="stylesheet" href="css/pages.css">
+<link rel="stylesheet" href="css/responsive.css">
+<link rel="stylesheet" href="css/animations.css">
+</head>
+<body>
+
+<header class="navbar">
+  <a class="brand" href="index.html"><span class="brand-dot"></span> Pocket Friendly Loot</a>
+</header>
+
+<main id="main">
+  <div class="not-found">
+    <div class="code">404</div>
+    <h1>This page wandered off the deal feed.</h1>
+    <p>The page you're looking for doesn't exist, or the link may be out of date.</p>
+    <a class="btn-primary" href="index.html">Back to homepage</a>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="footer-bottom disclosure">
+    As an Amazon Associate, I earn from qualifying purchases.<br>
+    © <span data-current-year></span> Pocket Friendly Loot. &middot; <a href="privacy-policy.html">Privacy</a> &middot; <a href="affiliate-disclosure.html">Disclosure</a> &middot; <a href="terms.html">Terms</a>
+  </div>
+</footer>
+
+<script type="module">
+  import { setFooterYear } from "./js/app.js";
+  setFooterYear();
+</script>
+
+</body>
+</html>

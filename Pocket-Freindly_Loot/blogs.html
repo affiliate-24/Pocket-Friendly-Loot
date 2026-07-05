@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Blogs — Pocket Friendly Loot</title>
+<meta name="description" content="Buying tips, deal roundups, and shopping guides from Pocket Friendly Loot.">
+<link rel="canonical" href="https://your-domain-or-netlify-url.com/blogs.html">
+<meta property="og:title" content="Blogs — Pocket Friendly Loot">
+<meta property="og:description" content="Buying tips, deal roundups, and shopping guides.">
+<meta property="og:image" content="">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Blogs — Pocket Friendly Loot">
+<meta name="twitter:description" content="Buying tips, deal roundups, and shopping guides.">
+<meta name="twitter:image" content="">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/variables.css">
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/components.css">
+<link rel="stylesheet" href="css/pages.css">
+<link rel="stylesheet" href="css/responsive.css">
+<link rel="stylesheet" href="css/animations.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js" defer></script>
+</head>
+<body>
+
+<header class="navbar">
+  <a class="brand" href="index.html"><span class="brand-dot"></span> Pocket Friendly Loot</a>
+  <nav class="nav-links" aria-label="Primary">
+    <a class="nav-link" href="index.html">Home</a>
+    <a class="nav-link" href="todays-deals.html">Today's Deals</a>
+    <a class="nav-link" href="trending-deals.html">Trending</a>
+    <a class="nav-link" href="categories.html">Categories</a>
+    <a class="nav-link" href="best-products.html">Best Products</a>
+    <a class="nav-link" href="blogs.html">Blogs</a>
+    <a class="nav-link" href="gift-ideas.html">Gift Ideas</a>
+  </nav>
+  <form class="nav-search" action="search.html" method="GET">
+    <button class="nav-search-icon" type="submit" aria-label="Submit search">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    </button>
+    <input class="nav-search-input" name="q" type="text" placeholder="Search…" aria-label="Search products">
+  </form>
+  <div class="nav-actions">
+    <a class="btn-primary btn-sm" data-telegram-cta href="#" target="_blank" rel="noopener">Join Telegram</a>
+    <button class="nav-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-menu"><span></span><span></span><span></span></button>
+  </div>
+</header>
+<nav id="mobile-menu" class="mobile-menu" aria-label="Mobile">
+  <a class="nav-link" href="index.html">Home</a>
+  <a class="nav-link" href="todays-deals.html">Today's Deals</a>
+  <a class="nav-link" href="trending-deals.html">Trending</a>
+  <a class="nav-link" href="categories.html">Categories</a>
+  <a class="nav-link" href="best-products.html">Best Products</a>
+  <a class="nav-link" href="blogs.html">Blogs</a>
+  <a class="nav-link" href="gift-ideas.html">Gift Ideas</a>
+  <a class="nav-link" href="search.html">Search</a>
+</nav>
+
+<main id="main">
+
+  <div id="article-listing-view">
+    <div class="page-header">
+      <span class="eyebrow">Read</span>
+      <h1 id="page-header-title">Blogs</h1>
+      <p>Buying tips, deal roundups, and shopping guides.</p>
+    </div>
+    <div class="section">
+      <div class="teaser-grid" id="blog-listing"></div>
+    </div>
+  </div>
+
+  <div id="article-detail-view" hidden>
+    <div class="article-hero">
+      <img id="article-hero-img" src="" alt="">
+      <h1 id="article-title" style="margin-top: var(--space-lg); font-size: clamp(1.8rem, 4vw, 2.6rem);"></h1>
+      <div class="article-meta" id="article-meta"></div>
+      <p style="margin-top:var(--space-md);"><a href="blogs.html">← Back to all articles</a></p>
+    </div>
+    <div class="article-layout">
+      <article class="article-content" id="article-content"></article>
+      <aside class="article-sidebar">
+        <div class="toc"><div id="article-toc"></div></div>
+        <div class="recommended-products" id="recommended-products"></div>
+      </aside>
+    </div>
+  </div>
+
+</main>
+
+<footer class="site-footer">
+  <div class="footer-grid">
+    <div class="footer-col"><h4>Pocket Friendly Loot</h4><a href="index.html">Home</a><a href="todays-deals.html">Today's Deals</a><a href="trending-deals.html">Trending Deals</a><a href="categories.html">Categories</a></div>
+    <div class="footer-col"><h4>Discover</h4><a href="best-products.html">Best Products</a><a href="blogs.html">Blogs</a><a href="gift-ideas.html">Gift Ideas</a><a href="about.html">About</a></div>
+    <div class="footer-col"><h4>More</h4><a href="search.html">Search</a><a href="contact.html">Contact</a><a data-telegram-cta href="#" target="_blank" rel="noopener">Telegram Channel</a></div>
+    <div class="footer-col"><h4>Legal</h4><a href="privacy-policy.html">Privacy Policy</a><a href="affiliate-disclosure.html">Affiliate Disclosure</a><a href="terms.html">Terms of Use</a></div>
+  </div>
+  <div class="footer-bottom disclosure">
+    As an Amazon Associate, I earn from qualifying purchases.<br>
+    © <span data-current-year></span> Pocket Friendly Loot.
+  </div>
+</footer>
+
+<script type="module">
+  import { initShared } from "./js/app.js";
+  import { initNavbar } from "./js/navbar.js";
+  import { initScrollReveal } from "./js/animations.js";
+  import { initBlogsPage } from "./js/blogs.js";
+
+  initShared();
+  initNavbar();
+  initBlogsPage().then(initScrollReveal);
+</script>
+
+</body>
+</html>
