@@ -1,0 +1,13 @@
+.env
+posted_log.json
+__pycache__/
+*.pyc
+post_to_telegram_copy.py
+app_copy.js 
+app_netlify_copy.js 
+links_of_sheets_telegram_form.txt
+a--Next works
+/post_to_telegram.py
+/requirements.txt
+/install_bookmarklet.html
+/grab_product_info.source.js
