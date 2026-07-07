@@ -25,7 +25,7 @@ export const CONFIG = {
   SALE_START: new Date("2026-07-04T00:00:00+05:30"),
   SALE_END: new Date("2026-07-06T23:59:59+05:30"),
   SITE_NAME: "Pocket Friendly Loot",
-  SITE_URL: "https://your-domain-or-netlify-url.com",
+  SITE_URL: "https://pf-loots.netlify.app",
 };
 /* =========================================================== */
 
