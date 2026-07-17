@@ -6,6 +6,15 @@
 <title>About — Pocket Friendly Loot</title>
 <meta name="description" content="Learn more about Pocket Friendly Loot — your go-to source for the best Amazon deals, buying guides, and gift ideas.">
 <link rel="canonical" href="https://pf-loots.netlify.app/about.html">
+<meta property="og:type" content="website">
+<meta property="og:title" content="About — Pocket Friendly Loot">
+<meta property="og:description" content="Learn more about Pocket Friendly Loot — your go-to source for the best Amazon deals, buying guides, and gift ideas.">
+<meta property="og:image" content="https://pf-loots.netlify.app/assets/og-image.png">
+<meta property="og:url" content="https://pf-loots.netlify.app/about.html">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="About — Pocket Friendly Loot">
+<meta name="twitter:description" content="Learn more about Pocket Friendly Loot — your go-to source for the best Amazon deals, buying guides, and gift ideas.">
+<meta name="twitter:image" content="https://pf-loots.netlify.app/assets/og-image.png">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
@@ -16,8 +25,25 @@
 <link rel="stylesheet" href="css/responsive.css">
 <link rel="stylesheet" href="css/animations.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js" defer></script>
+<!-- Fallback: if Papa failed to load from the CDN (outage / offline), load a local copy so the site keeps working -->
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    if (!window.Papa) {
+      var s = document.createElement('script');
+      s.src = 'assets/papaparse.min.js';
+      s.defer = true;
+      document.head.appendChild(s);
+    }
+  });
+</script>
+
+<!-- Branding icons: favicon + apple-touch-icon for iOS home screen bookmarks -->
+<link rel="icon" type="image/x-icon" href="/assets/favicon.ico">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">
 </head>
 <body>
+<script>document.documentElement.classList.add('js');</script>
 
 <header class="navbar">
   <a class="brand" href="index.html"><span class="brand-dot"></span> Pocket Friendly Loot</a>
@@ -40,18 +66,18 @@
     <a class="btn-primary btn-sm" data-telegram-cta href="#" target="_blank" rel="noopener">Join Telegram</a>
     <button class="nav-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-menu"><span></span><span></span><span></span></button>
   </div>
+  <nav id="mobile-menu" class="mobile-menu" aria-label="Mobile">
+    <a class="nav-link" href="index.html">Home</a>
+    <a class="nav-link" href="todays-deals.html">Today's Deals</a>
+    <a class="nav-link" href="trending-deals.html">Trending</a>
+    <a class="nav-link" href="categories.html">Categories</a>
+    <a class="nav-link" href="best-products.html">Best Products</a>
+    <a class="nav-link" href="blogs.html">Blogs</a>
+    <a class="nav-link" href="gift-ideas.html">Gift Ideas</a>
+    <a class="nav-link" href="search.html">Search</a>
+    <a class="nav-link" href="saved.html">Saved</a>
+  </nav>
 </header>
-<nav id="mobile-menu" class="mobile-menu" aria-label="Mobile">
-  <a class="nav-link" href="index.html">Home</a>
-  <a class="nav-link" href="todays-deals.html">Today's Deals</a>
-  <a class="nav-link" href="trending-deals.html">Trending</a>
-  <a class="nav-link" href="categories.html">Categories</a>
-  <a class="nav-link" href="best-products.html">Best Products</a>
-  <a class="nav-link" href="blogs.html">Blogs</a>
-  <a class="nav-link" href="gift-ideas.html">Gift Ideas</a>
-  <a class="nav-link" href="search.html">Search</a>
-</nav>
-
 
 <main id="main">
   <div class="page-header">
@@ -116,6 +142,7 @@
       <h4>More</h4>
       <a href="search.html">Search</a>
       <a href="contact.html">Contact</a>
+      <a href="saved.html">Saved</a>
       <a data-telegram-cta href="#" target="_blank" rel="noopener">Telegram Channel</a>
     </div>
     <div class="footer-col">
@@ -126,8 +153,8 @@
     </div>
   </div>
   <div class="footer-bottom disclosure">
-    As an Amazon Associate, I earn from qualifying purchases. Prices and availability may change on Amazon.<br>
-    © <span data-current-year></span> Pocket Friendly Loot. Want every deal the second it's posted? <a data-telegram-cta href="#" target="_blank" rel="noopener">Join the Telegram channel →</a>
+    As an Amazon Associate, I earn from qualifying purchases.<br>
+    © <span data-current-year></span> Pocket Friendly Loot | <a data-telegram-cta href="#" target="_blank" rel="noopener">Join us on Telegram</a> for instant deals.
   </div>
 </footer>
 
@@ -139,5 +166,7 @@
   initNavbar();
 </script>
 
+<button id="btn-top" class="nav-btn btn-top" aria-label="Go to top">↑</button>
+<button id="btn-back" class="nav-btn btn-back" aria-label="Go back">←</button>
 </body>
 </html>

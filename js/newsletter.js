@@ -17,13 +17,24 @@ export function initNewsletter() {
   });
 
   qsa("[data-newsletter-embed]").forEach((el) => {
-    if (CONFIG.NEWSLETTER_FORM_URL.includes("PASTE_YOUR")) return; // don't embed a placeholder
+    if (CONFIG.NEWSLETTER_FORM_URL.includes("PASTE_YOUR")) return;
     const iframe = document.createElement("iframe");
     iframe.src = CONFIG.NEWSLETTER_FORM_URL;
     iframe.width = "100%";
     iframe.height = "420";
     iframe.style.border = "none";
     iframe.title = "Newsletter signup form";
+    el.appendChild(iframe);
+  });
+
+  qsa("[data-contact-embed]").forEach((el) => {
+    if (!CONFIG.CONTACT_FORM_URL || CONFIG.CONTACT_FORM_URL.includes("PASTE_YOUR")) return;
+    const iframe = document.createElement("iframe");
+    iframe.src = CONFIG.CONTACT_FORM_URL;
+    iframe.width = "100%";
+    iframe.height = "800";
+    iframe.style.border = "none";
+    iframe.title = "Contact form";
     el.appendChild(iframe);
   });
 }

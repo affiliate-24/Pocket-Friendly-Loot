@@ -14,13 +14,20 @@
 <link rel="stylesheet" href="css/pages.css">
 <link rel="stylesheet" href="css/responsive.css">
 <link rel="stylesheet" href="css/animations.css">
+
+<!-- Branding icons: favicon + apple-touch-icon for iOS home screen bookmarks -->
+<link rel="icon" type="image/x-icon" href="/assets/favicon.ico">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">
 </head>
 <body>
+<script>document.documentElement.classList.add('js');</script>
 
 <header class="navbar">
   <a class="brand" href="index.html"><span class="brand-dot"></span> Pocket Friendly Loot</a>
 </header>
-
+
+
 <main id="main">
   <div class="not-found">
     <div class="code">404</div>
@@ -33,14 +40,17 @@
 <footer class="site-footer">
   <div class="footer-bottom disclosure">
     As an Amazon Associate, I earn from qualifying purchases.<br>
-    © <span data-current-year></span> Pocket Friendly Loot. &middot; <a href="privacy-policy.html">Privacy</a> &middot; <a href="affiliate-disclosure.html">Disclosure</a> &middot; <a href="terms.html">Terms</a>
+    © <span data-current-year></span> Pocket Friendly Loot | <a data-telegram-cta href="#" target="_blank" rel="noopener">Join us on Telegram</a> for instant deals. &middot; <a href="privacy-policy.html">Privacy</a> &middot; <a href="affiliate-disclosure.html">Disclosure</a> &middot; <a href="terms.html">Terms</a>
   </div>
 </footer>
 
 <script type="module">
-  import { setFooterYear } from "./js/app.js";
+  import { setFooterYear, initNavButtons } from "./js/app.js";
   setFooterYear();
+  initNavButtons();
 </script>
 
+<button id="btn-top" class="nav-btn btn-top" aria-label="Go to top">↑</button>
+<button id="btn-back" class="nav-btn btn-back" aria-label="Go back">←</button>
 </body>
 </html>

@@ -14,8 +14,9 @@ import {
   parseLiteContent,
   calcReadingTime,
   findByIds,
+  escapeHtml, // imported for XSS protection on sheet-derived strings (Title, Excerpt, etc.)
 } from "./utils.js";
-import { loadDeals, buildCardHTML } from "./products.js";
+import { loadDeals, buildCardHTML, setupCardInteractions } from "./products.js"; // setupCardInteractions added to wire wishlist on recommended products
 
 export async function initBlogsPage() {
   const slug = getQueryParam("slug");
@@ -45,17 +46,25 @@ function renderListing(blogs) {
   }
 
   const sorted = blogs.slice().sort((a, b) => new Date(b.Published_Date) - new Date(a.Published_Date));
+  // Escape every sheet-derived string to prevent stored XSS via a malicious Blogs row.
   container.innerHTML = sorted
     .map(
-      (post) => `
-      <a class="teaser-card" href="blogs.html?slug=${encodeURIComponent(post.Slug)}" data-animate>
-        <img src="${post.Hero_Image_URL}" alt="${post.Title}" loading="lazy">
-        <div class="teaser-body">
-          ${post.Category ? `<div class="teaser-tag">${post.Category}</div>` : ""}
-          <h3>${post.Title}</h3>
-          <p>${post.Excerpt || ""}</p>
-        </div>
-      </a>`
+      (post) => {
+        const safeTitle = escapeHtml(post.Title || "");
+        const safeImg = post.Hero_Image_URL ? encodeURI(post.Hero_Image_URL) : "";
+        const safeCategory = post.Category ? escapeHtml(post.Category) : "";
+        const safeExcerpt = post.Excerpt ? escapeHtml(post.Excerpt) : "";
+        const safeSlug = encodeURIComponent(post.Slug || "");
+        return `
+        <a class="teaser-card" href="blogs.html?slug=${safeSlug}" data-animate>
+          <img src="${safeImg}" alt="${safeTitle}" loading="lazy">
+          <div class="teaser-body">
+            ${safeCategory ? `<div class="teaser-tag">${safeCategory}</div>` : ""}
+            <h3>${safeTitle}</h3>
+            <p>${safeExcerpt}</p>
+          </div>
+        </a>`;
+      }
     )
     .join("");
 }
@@ -71,20 +80,24 @@ async function renderArticle(post) {
   const { html, toc, wordCount } = parseLiteContent(post.Content);
   const readingTime = calcReadingTime(wordCount);
 
-  qs("#article-hero-img").src = post.Hero_Image_URL;
-  qs("#article-hero-img").alt = post.Title;
-  qs("#article-title").textContent = post.Title;
+  // encodeURI on the hero image URL guards against attribute-injection (e.g. " javascript:...")
+  qs("#article-hero-img").src = post.Hero_Image_URL ? encodeURI(post.Hero_Image_URL) : "";
+  qs("#article-hero-img").alt = post.Title;  // alt via setAttribute is safe (does not parse HTML)
+  qs("#article-title").textContent = post.Title;  // textContent is XSS-safe by design
+  // escapeHtml on Author prevents markup injection via the article-meta innerHTML assignment below.
   qs("#article-meta").innerHTML = `
-    <span>${post.Author || CONFIG.SITE_NAME}</span>
+    <span>${escapeHtml(post.Author || CONFIG.SITE_NAME)}</span>
     <span>•</span>
     <span>${new Date(post.Published_Date).toLocaleDateString("en-IN", { day: "numeric", month: "long", year: "numeric" })}</span>
     <span>•</span>
     <span>${readingTime} min read</span>`;
+  // article-content `html` is produced by parseLiteContent which already escapes inside its own pipeline — safe.
   qs("#article-content").innerHTML = html;
 
   const tocEl = qs("#article-toc");
   if (toc.length) {
-    tocEl.innerHTML = `<h4>On this page</h4>` + toc.map((t) => `<a class="toc-link" href="#${t.id}">${t.text}</a>`).join("");
+    // escapeHtml on t.text prevents XSS from sheet content; t.id is slugified internally (safe).
+    tocEl.innerHTML = `<h4>On this page</h4>` + toc.map((t) => `<a class="toc-link" href="#${t.id}">${escapeHtml(t.text)}</a>`).join("");
   } else {
     tocEl.closest(".toc")?.setAttribute("hidden", "true");
   }
@@ -95,6 +108,9 @@ async function renderArticle(post) {
     const recEl = qs("#recommended-products");
     if (recommended.length && recEl) {
       recEl.innerHTML = `<h3>Recommended products</h3>` + recommended.map(buildCardHTML).join("");
+      // Wire up wishlist toggle + accessible whole-card click for the recommended product cards
+      // (Issue #3 — previously missing, so heart buttons were dead on blog article pages).
+      setupCardInteractions(recEl);
     }
   }
 }
@@ -107,11 +123,12 @@ function setMetaTags(post) {
   setTag('meta[name="description"]', "content", post.Excerpt || "");
   setTag('meta[property="og:title"]', "content", post.Title);
   setTag('meta[property="og:description"]', "content", post.Excerpt || "");
-  setTag('meta[property="og:image"]', "content", post.Hero_Image_URL || "");
+  // Encode the image URL to neutralize any attribute-injection attempt from a sheet row.
+  setTag('meta[property="og:image"]', "content", post.Hero_Image_URL ? encodeURI(post.Hero_Image_URL) : "");
   setTag('meta[name="twitter:title"]', "content", post.Title);
   setTag('meta[name="twitter:description"]', "content", post.Excerpt || "");
-  setTag('meta[name="twitter:image"]', "content", post.Hero_Image_URL || "");
-  setTag('link[rel="canonical"]', "href", `${CONFIG.SITE_URL}/blogs.html?slug=${post.Slug}`);
+  setTag('meta[name="twitter:image"]', "content", post.Hero_Image_URL ? encodeURI(post.Hero_Image_URL) : "");
+  setTag('link[rel="canonical"]', "href", `${CONFIG.SITE_URL}/blogs.html?slug=${encodeURIComponent(post.Slug)}`);
 
   // Schema.org Article structured data, injected fresh per article
   const schema = {

@@ -15,6 +15,7 @@ import {
   qsa,
   findById,
   findByIds,
+  escapeHtml, // imported for XSS protection on sheet-derived strings (Product_Name, Category, etc.)
 } from "./utils.js";
 
 const WISHLIST_KEY = "mela_wishlist";
@@ -50,6 +51,11 @@ function getWishlist() {
     return [];
   }
 }
+// Exported so saved.html (the wishlist page) can read the stored IDs and
+// resolve them to full deal rows via the master Deals tab.
+export function getWishlistIds() {
+  return getWishlist();
+}
 function saveWishlist(list) {
   localStorage.setItem(WISHLIST_KEY, JSON.stringify(list));
 }
@@ -83,20 +89,26 @@ function buildStarsHTML(rating, reviewCount) {
 export function buildCardHTML(deal) {
   const pct = discountPct(deal.Original_Price, deal.Sale_Price);
   const wishlisted = isWishlisted(deal.S_No);
-  const badgeText = deal._badgeOverride || (pct ? `${pct}% OFF` : "");
-  const name = deal.Product_Name || "";
-  const img = (deal.Image_URL || "").trim();
-  const link = (deal.Affiliate_Link || "#").trim();
+  // Escape every sheet-derived string before it is inserted into innerHTML.
+  // This neutralizes stored XSS if a row in the Google Sheet contains HTML markup.
+  const badgeText = escapeHtml(deal._badgeOverride || (pct ? `${pct}% OFF` : ""));
+  const name = escapeHtml(deal.Product_Name || "");
+  const cat = escapeHtml(deal.Category || "Deal");
+  // Image URL and affiliate link are attributes — use encodeURI to block attribute injection.
+  const rawImg = (deal.Image_URL || "").trim();
+  const img = rawImg ? encodeURI(rawImg) : "";
+  const rawLink = (deal.Affiliate_Link || "#").trim();
+  const link = rawLink ? encodeURI(rawLink) : "#";
 
   return `
-    <article class="card" data-sno="${deal.S_No}" data-link="${link}" tabindex="-1">
+    <article class="card" data-sno="${escapeHtml(String(deal.S_No))}" data-link="${link}" tabindex="-1">
       <div class="card-img">
         ${badgeText ? `<span class="badge badge-discount">${badgeText}</span>` : ""}
         <button
           type="button"
           class="wishlist-btn ${wishlisted ? "active" : ""}"
           data-wishlist-btn
-          data-sno="${deal.S_No}"
+          data-sno="${escapeHtml(String(deal.S_No))}"
           aria-pressed="${wishlisted}"
           aria-label="${wishlisted ? "Remove from" : "Add to"} wishlist: ${name}"
         >${HEART_ICON}</button>
@@ -105,7 +117,7 @@ export function buildCardHTML(deal) {
       <div class="card-body">
         <!-- this is commented because every product box containaing it -->
         <!-- <span class="badge badge-affiliate">Affiliate</span> -->
-        <div class="card-cat">${deal.Category || "Deal"}</div>
+        <div class="card-cat">${cat}</div>
         <div class="card-name"><a href="${link}" target="_blank" rel="noopener sponsored nofollow">${name}</a></div>
         ${buildStarsHTML(deal.Rating, deal.Review_Count)}
         <div class="card-price">

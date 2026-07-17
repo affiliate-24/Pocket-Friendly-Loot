@@ -3,22 +3,22 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Pocket Friendly Loot — Live Amazon Prime Day Deal Alerts</title>
-<meta name="description" content="Hand-picked Amazon Prime Day deals, posted the moment they drop. Browse today's deals, trending products, gift guides, and buying guides.">
+<title>Pocket Friendly Loot — Live Deal Alerts & Best Products</title>
+<meta name="description" content="Hand-picked deals, posted the moment they drop. Browse today's deals, trending products, gift guides, and buying guides.">
 <link rel="canonical" href="https://pf-loots.netlify.app/index.html">
 
 <meta property="og:type" content="website">
-<meta property="og:title" content="Pocket Friendly Loot — Live Amazon Prime Day Deal Alerts">
-<meta property="og:description" content="Hand-picked Amazon Prime Day deals, posted the moment they drop.">
-<meta property="og:image" content="assets/og-image.png">
+<meta property="og:title" content="Pocket Friendly Loot — Live Deal Alerts & Best Products">
+<meta property="og:description" content="Hand-picked deals, posted the moment they drop.">
+<meta property="og:image" content="https://pf-loots.netlify.app/assets/og-image.png">
 <meta property="og:url" content="https://pf-loots.netlify.app/">
 <meta name="google-site-verification" content="StIYrDHkcI_N3UGj4z085-fzuy8aiiKflN01JCC_qmI" />
 <meta name="google-site-verification" content="e2WqebJJdnCGtV01cS82OCD2NKkJFx_BCQ0_VnzaQG4" />
 <meta name="google-site-verification" content="e2WqebJJdnCGtV01cS82OCD2NKkJFx_BCQ0_VnzaQG4" />
 
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Pocket Friendly Loot — Live Amazon Prime Day Deal Alerts">
-<meta name="twitter:description" content="Hand-picked Amazon Prime Day deals, posted the moment they drop.">
+<meta name="twitter:title" content="Pocket Friendly Loot — Live Deal Alerts & Best Products">
+<meta name="twitter:description" content="Hand-picked deals, posted the moment they drop.">
 <meta name="twitter:image" content="assets/og-image.png">
 
 <script type="application/ld+json">
@@ -41,8 +41,25 @@
 <link rel="stylesheet" href="css/animations.css">
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js" defer></script>
+<!-- Fallback: if Papa failed to load from the CDN (outage / offline), load a local copy so the site keeps working -->
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    if (!window.Papa) {
+      var s = document.createElement('script');
+      s.src = 'assets/papaparse.min.js';
+      s.defer = true;
+      document.head.appendChild(s);
+    }
+  });
+</script>
+
+<!-- Branding icons: favicon + apple-touch-icon for iOS home screen bookmarks -->
+<link rel="icon" type="image/x-icon" href="/assets/favicon.ico">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">
 </head>
 <body>
+<script>document.documentElement.classList.add('js');</script>
 
 <header class="navbar">
 
@@ -68,30 +85,23 @@
       <span></span><span></span><span></span>
     </button>
   </div>
-</header>
-<nav id="mobile-menu" class="mobile-menu" aria-label="Mobile">
-  <a class="nav-link" href="index.html">Home</a>
-  <a class="nav-link" href="todays-deals.html">Today's Deals</a>
-  <a class="nav-link" href="trending-deals.html">Trending</a>
-  <a class="nav-link" href="categories.html">Categories</a>
-  <a class="nav-link" href="best-products.html">Best Products</a>
-  <a class="nav-link" href="blogs.html">Blogs</a>
+  <nav id="mobile-menu" class="mobile-menu" aria-label="Mobile">
+    <a class="nav-link" href="index.html">Home</a>
+    <a class="nav-link" href="todays-deals.html">Today's Deals</a>
+    <a class="nav-link" href="trending-deals.html">Trending</a>
+    <a class="nav-link" href="categories.html">Categories</a>
+    <a class="nav-link" href="best-products.html">Best Products</a>
+    <a class="nav-link" href="blogs.html">Blogs</a>
     <a class="nav-link" href="gift-ideas.html">Gift Ideas</a>
+    <a class="nav-link" href="search.html">Search</a>
+    <a class="nav-link" href="saved.html">Saved</a>
   </nav>
+</header>
 
 <main id="main">
   <section class="hero">
-    <span class="eyebrow">Amazon Prime Day · July 4–6</span>
     <h1>Hand-picked deals,<br><span>posted the moment they drop.</span></h1>
-    <p>I track Prime Day discounts in real time so you don't have to. Browse below or join the Telegram channel for instant alerts.</p>
-
-    <div class="countdown-label" id="countdown-label">Sale starts in</div>
-    <div class="countdown" aria-live="polite">
-      <div class="unit"><div class="num" id="cd-d">00</div><div class="lab">Days</div></div>
-      <div class="unit"><div class="num" id="cd-h">00</div><div class="lab">Hrs</div></div>
-      <div class="unit"><div class="num" id="cd-m">00</div><div class="lab">Min</div></div>
-      <div class="unit"><div class="num" id="cd-s">00</div><div class="lab">Sec</div></div>
-    </div>
+    <p>I track the best discounts in real time so you don't have to. Browse below or join the Telegram channel for instant alerts.</p>
 
     <div class="hero-ctas">
       <a class="btn-primary" href="#todays-deals">Browse live deals</a>
@@ -180,6 +190,7 @@
       <h4>More</h4>
       <a href="search.html">Search</a>
       <a href="contact.html">Contact</a>
+      <a href="saved.html">Saved</a>
       <a data-telegram-cta href="#" target="_blank" rel="noopener">Telegram Channel</a>
     </div>
     <div class="footer-col">
@@ -190,15 +201,15 @@
     </div>
   </div>
   <div class="footer-bottom disclosure">
-    As an Amazon Associate, I earn from qualifying purchases. Prices and availability shown here are pulled live and may change on Amazon.<br>
-    © <span data-current-year></span> Pocket Friendly Loot. Want every deal the second it's posted? <a data-telegram-cta href="#" target="_blank" rel="noopener">Join the Telegram channel →</a>
+    As an Amazon Associate, I earn from qualifying purchases.<br>
+    © <span data-current-year></span> Pocket Friendly Loot | <a data-telegram-cta href="#" target="_blank" rel="noopener">Join us on Telegram</a> for instant deals.
   </div>
 </footer>
 
 <script type="module">
   import { initShared, CONFIG } from "./js/app.js";
   import { initNavbar } from "./js/navbar.js";
-  import { initCountdown, initTicker, initScrollReveal } from "./js/animations.js";
+  import { initTicker, initScrollReveal } from "./js/animations.js";
   import { initNewsletter } from "./js/newsletter.js";
   import {
     loadDeals, loadTodaysDeals, resolveCuratedList,
@@ -206,11 +217,10 @@
   } from "./js/products.js";
   import { loadCategories, renderCategoryCards } from "./js/categories.js";
   import { groupBySlug } from "./js/guides.js";
-  import { fetchCSV, qs } from "./js/utils.js";
+  import { fetchCSV, qs, escapeHtml } from "./js/utils.js";
 
   initShared();
   initNavbar();
-  initCountdown();
   initTicker();
   initNewsletter();
 
@@ -246,11 +256,18 @@
   async function initGiftsPreview() {
     try {
       const guides = await fetchCSV(CONFIG.SHEETS.giftIdeas);
-      qs("#home-gifts-preview").innerHTML = guides.slice(0, 3).map((g) => `
-        <a class="teaser-card" href="gift-ideas.html?slug=${encodeURIComponent(g.Slug)}" data-animate>
-          <img src="${g.Hero_Image_URL}" alt="${g.Guide_Title}" loading="lazy">
-          <div class="teaser-body"><h3>${g.Guide_Title}</h3><p>${g.Description || ""}</p></div>
-        </a>`).join("");
+      qs("#home-gifts-preview").innerHTML = guides.slice(0, 3).map((g) => {
+        // escapeHtml prevents stored XSS from sheet content; encodeURI neutralizes attribute-injection in src/href.
+        const safeImg = g.Hero_Image_URL ? encodeURI(g.Hero_Image_URL) : "";
+        const safeTitle = escapeHtml(g.Guide_Title || "");
+        const safeDesc = g.Description ? escapeHtml(g.Description) : "";
+        const safeSlug = encodeURIComponent(g.Slug || "");
+        return `
+          <a class="teaser-card" href="gift-ideas.html?slug=${safeSlug}" data-animate>
+            <img src="${safeImg}" alt="${safeTitle}" loading="lazy">
+            <div class="teaser-body"><h3>${safeTitle}</h3><p>${safeDesc}</p></div>
+          </a>`;
+      }).join("");
     } catch { /* gift ideas sheet not configured yet */ }
   }
 
@@ -258,11 +275,17 @@
     try {
       const posts = await fetchCSV(CONFIG.SHEETS.blogs);
       const sorted = posts.slice().sort((a, b) => new Date(b.Published_Date) - new Date(a.Published_Date));
-      qs("#home-blogs-preview").innerHTML = sorted.slice(0, 3).map((p) => `
-        <a class="teaser-card" href="blogs.html?slug=${encodeURIComponent(p.Slug)}" data-animate>
-          <img src="${p.Hero_Image_URL}" alt="${p.Title}" loading="lazy">
-          <div class="teaser-body"><h3>${p.Title}</h3><p>${p.Excerpt || ""}</p></div>
-        </a>`).join("");
+      qs("#home-blogs-preview").innerHTML = sorted.slice(0, 3).map((p) => {
+        const safeImg = p.Hero_Image_URL ? encodeURI(p.Hero_Image_URL) : "";
+        const safeTitle = escapeHtml(p.Title || "");
+        const safeExcerpt = p.Excerpt ? escapeHtml(p.Excerpt) : "";
+        const safeSlug = encodeURIComponent(p.Slug || "");
+        return `
+          <a class="teaser-card" href="blogs.html?slug=${safeSlug}" data-animate>
+            <img src="${safeImg}" alt="${safeTitle}" loading="lazy">
+            <div class="teaser-body"><h3>${safeTitle}</h3><p>${safeExcerpt}</p></div>
+          </a>`;
+      }).join("");
     } catch { /* blogs sheet not configured yet */ }
   }
 
@@ -276,5 +299,7 @@
   [600, 1200, 1800].forEach((t) => setTimeout(initScrollReveal, t));
 </script>
 
+<button id="btn-top" class="nav-btn btn-top" aria-label="Go to top">↑</button>
+<button id="btn-back" class="nav-btn btn-back" aria-label="Go back">←</button>
 </body>
 </html>

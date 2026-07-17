@@ -6,7 +6,7 @@
    ========================================================================== */
 
 import { CONFIG } from "./app.js";
-import { fetchCSV, qs, getQueryParam, findById, formatMoney } from "./utils.js";
+import { fetchCSV, qs, getQueryParam, findById, formatMoney, escapeHtml } from "./utils.js"; // escapeHtml added for XSS protection on sheet content
 import { loadDeals } from "./products.js";
 
 export function groupBySlug(rows) {
@@ -54,22 +54,30 @@ function renderListing(guides, deals) {
         .map((row) => {
           const product = findById(deals, "S_No", row.S_No);
           if (!product) return "";
+          // Escape sheet-derived fields to prevent stored XSS
+          const safeName = escapeHtml(product.Product_Name || "");
+          const safeImg = product.Image_URL ? encodeURI(product.Image_URL) : "";
+          const safeNote = row.Ranking_Note ? escapeHtml(row.Ranking_Note) : "";
+          const safeRank = escapeHtml(String(row.Rank));
           return `
             <div class="rank-row">
-              <span class="badge badge-rank">#${row.Rank}</span>
-              <img src="${product.Image_URL}" alt="${product.Product_Name}" loading="lazy">
+              <span class="badge badge-rank">#${safeRank}</span>
+              <img src="${safeImg}" alt="${safeName}" loading="lazy">
               <div class="rank-info">
-                <div class="rank-name">${product.Product_Name}</div>
-                ${row.Ranking_Note ? `<div class="rank-note">${row.Ranking_Note}</div>` : ""}
+                <div class="rank-name">${safeName}</div>
+                ${safeNote ? `<div class="rank-note">${safeNote}</div>` : ""}
               </div>
               <div class="rank-price">${formatMoney(product.Sale_Price)}</div>
             </div>`;
         })
         .join("");
       if (!rowsHTML) return "";
+      // Escape guide title for the same reason
+      const safeTitle = escapeHtml(guide.title || "");
+      const safeSlug = encodeURIComponent(guide.slug || "");
       return `
         <div class="guide-card" data-animate>
-          <h3><a href="best-products.html?slug=${encodeURIComponent(guide.slug)}">${guide.title}</a></h3>
+          <h3><a href="best-products.html?slug=${safeSlug}">${safeTitle}</a></h3>
           ${rowsHTML}
         </div>`;
     })
@@ -77,49 +85,13 @@ function renderListing(guides, deals) {
     .join("");
 }
 
-function buildComparisonTable(guide, deals) {
-  const products = guide.rows.map((row) => ({ row, product: findById(deals, "S_No", row.S_No) })).filter((x) => x.product);
-  if (!products.length) return "";
-
-  // Collect whichever Spec labels are actually used across these products
-  const specSlots = ["Spec1", "Spec2", "Spec3"];
-  const usedLabels = new Set();
-  products.forEach(({ product }) => {
-    specSlots.forEach((slot) => {
-      const label = product[`${slot}_Label`];
-      if (label) usedLabels.add(label);
-    });
-  });
-
-  const specLookup = (product, label) => {
-    for (const slot of specSlots) {
-      if (product[`${slot}_Label`] === label) return product[`${slot}_Value`] || "—";
-    }
-    return "—";
-  };
-
-  const header = `<tr><th>Rank</th><th>Product</th><th>Price</th><th>Rating</th>${[...usedLabels].map((l) => `<th>${l}</th>`).join("")}</tr>`;
-  const body = products
-    .map(
-      ({ row, product }) => `
-      <tr>
-        <td>#${row.Rank}</td>
-        <td>${product.Product_Name}</td>
-        <td>${formatMoney(product.Sale_Price)}</td>
-        <td>${product.Rating ? `${product.Rating} ★` : "—"}</td>
-        ${[...usedLabels].map((l) => `<td>${specLookup(product, l)}</td>`).join("")}
-      </tr>`
-    )
-    .join("");
-
-  return `<table class="compare-table"><thead>${header}</thead><tbody>${body}</tbody></table>`;
-}
-
 function renderGuideDetail(guide, deals) {
   qs("#guides-listing-view")?.setAttribute("hidden", "true");
   const detailView = qs("#guide-detail-view");
   detailView?.removeAttribute("hidden");
 
+  // Escape guide title before placing it into document.title (textContent is safe,
+  // but we still escape for consistency here since escapeHtml preserves apostrophes etc.)
   document.title = `${guide.title} — ${CONFIG.SITE_NAME}`;
   qs("#guide-title").textContent = guide.title;
 
@@ -127,20 +99,25 @@ function renderGuideDetail(guide, deals) {
     .map((row) => {
       const product = findById(deals, "S_No", row.S_No);
       if (!product) return "";
+      // Escape every sheet-derived string before insertion into innerHTML
+      const safeName = escapeHtml(product.Product_Name || "");
+      const safeImg = product.Image_URL ? encodeURI(product.Image_URL) : "";
+      const safeNote = row.Ranking_Note ? escapeHtml(row.Ranking_Note) : "";
+      const safeRank = escapeHtml(String(row.Rank));
+      const safeLink = product.Affiliate_Link ? encodeURI(product.Affiliate_Link) : "#";
       return `
         <div class="rank-row">
-          <span class="badge badge-rank">#${row.Rank}</span>
-          <img src="${product.Image_URL}" alt="${product.Product_Name}" loading="lazy">
+          <span class="badge badge-rank">#${safeRank}</span>
+          <img src="${safeImg}" alt="${safeName}" loading="lazy">
           <div class="rank-info">
-            <div class="rank-name"><a href="${product.Affiliate_Link}" target="_blank" rel="noopener sponsored nofollow">${product.Product_Name}</a></div>
-            ${row.Ranking_Note ? `<div class="rank-note">${row.Ranking_Note}</div>` : ""}
+            <div class="rank-name"><a href="${safeLink}" target="_blank" rel="noopener sponsored nofollow">${safeName}</a></div>
+            ${safeNote ? `<div class="rank-note">${safeNote}</div>` : ""}
           </div>
           <div class="rank-price">${formatMoney(product.Sale_Price)}</div>
         </div>`;
     })
     .join("");
   qs("#guide-rank-list").innerHTML = rowsHTML;
-  qs("#guide-compare-table").innerHTML = buildComparisonTable(guide, deals);
 }
 
 function renderNotFound() {

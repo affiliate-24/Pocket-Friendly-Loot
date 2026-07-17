@@ -19,12 +19,12 @@
    IntersectionObserver when an element with [data-animate] enters the
    viewport. Starts invisible/offset so there's no flash-of-content
    before JS runs. */
-[data-animate] {
+.js [data-animate] {
   opacity: 0;
   transform: translateY(16px);
   transition: opacity 0.5s ease, transform 0.5s ease;
 }
-[data-animate].is-visible {
+.js [data-animate].is-visible {
   opacity: 1;
   transform: translateY(0);
 }

@@ -4,8 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Install: Grab Product Info Bookmarklet</title>
-                                                                                  <link rel="preconnect" href="https://fonts.googleapis.com">
-                                                                                  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+                                                                                   <link rel="preconnect" href="https://fonts.googleapis.com">
+                                                                                   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<!-- Branding icons: favicon + apple-touch-icon for iOS home screen bookmarks -->
+<link rel="icon" type="image/x-icon" href="/assets/favicon.ico">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">
 <style>
   :root{
     --bg:#12122B; --surface:#1B1B3F; --gold:#FFB627; --text:#F5F3EC; --muted:#9B98B8; --border:rgba(245,243,236,0.1);
@@ -29,6 +33,7 @@
 </style>
 </head>
 <body>
+<script>document.documentElement.classList.add('js');</script>
   <h1>🔖 Grab Product Info — bookmarklet</h1>
   <p>One click on any Amazon product page grabs the title, price, and image, builds your affiliate link, and copies a ready-to-paste row to your clipboard.</p>
 
@@ -51,8 +56,7 @@
   </div>
 
   <script>
-    var JS_TEMPLATE = "!function(){function e(e){for(var r=0;r<e.length;r++){var t=document.querySelector(e[r]);if(t){var a=(t.innerText||t.textContent||\"\").trim();if(a)return a}}return\"\"}function r(e){var r=e.replace(/,/g,\"\").match(/[\\d]+(\\.\\d+)?/);return r?r[0]:\"\"}function u(e){var r=e.replace(/,/g,\"\").match(/[\\d]+(,\\d{3})*(\\.\\d+)?/);return r?r[0].replace(/,/g,\"\"):\"\"}var t=e([\"#productTitle\"]),m=e([\"#wayfinding-breadcrumbs_container a\",\"#wayfinding-breadcrumbs_feature_div a\",\"#wayfinding-breadcrumbs_container span.a-list-item a\",\"#wayfinding-breadcrumbs_container li a\"]),a=e([\"#corePrice_feature_div .a-price.a-text-price.a-size-medium.apexPriceToPay .a-offscreen\",\"#corePriceDisplay_desktop_feature_div .a-price.priceToPay .a-offscreen\",\".priceToPay .a-offscreen\",\"#priceblock_dealprice\",\"#priceblock_ourprice\",\"#priceblock_saleprice\",\".a-price .a-offscreen\"]),i=e([\"#corePriceDisplay_desktop_feature_div .basisPrice .a-offscreen\",\".a-price.a-text-price .a-offscreen\",\"#priceblock_was_price\"]),o=r(a),c=r(i)||o,s=e([\"#averageCustomerReviews .a-icon-alt\",\"#acrPopover .a-icon-alt\",\"span[data-hook='rating-out-of-text']\",\"span.a-icon-alt\"]),w=e([\"#acrCustomerReviewText\",\"#acrCustomerReviewLink span\",\"span[data-hook='total-review-count']\"]),v=s.match(/[\\d]+(\\.\\d+)?/)?s.match(/[\\d]+(\\.\\d+)?/)[0]:\"\",x=u(w),n=function(e,r){for(var t=0;t<e.length;t++){var a=document.querySelector(e[t]);if(a)for(var i=0;i<r.length;i++){var o=a.getAttribute(r[i]);if(o)return o}}return\"\"}([\"#landingImage\",\"#imgTagWrapperId img\",\"#imgBlkFront\"],[\"data-old-hires\",\"src\"]),p=window.location.href.match(/\\/(?:dp|gp\\/product)\\/([A-Z0-9]{10})/),f=p?p[1]:\"\",l=f?\"https://www.amazon.in/dp/\"+f+\"?tag=__TAG__\":window.location.href,d=[t,m,c,o,n,l,v,x].join(\"\\t\");navigator.clipboard&&navigator.clipboard.writeText?navigator.clipboard.writeText(d).then(function(){alert(\"Copied to clipboard \u2014 paste into column B of your sheet.\\n\\n\"+t+\"\\n₹\"+c+\" \u2192 ₹\"+o+(v?\"\\nRating: \"+v:\"\")+(x?\"\\nReviews: \"+x:\"\"))}).catch(function(){prompt(\"Copy this row manually (it's tab-separated for pasting):\",d)}):prompt(\"Copy this row manually (it's tab-separated for pasting):\",d)}();";
-
+    var JS_TEMPLATE = "!function(){function e(e){for(var r=0;r<e.length;r++){var t=document.querySelector(e[r]);if(t){var a=(t.innerText||t.textContent||\"\").trim();if(a)return a}}return\"\"}function r(e){var r=e.replace(/,/g,\"\").match(/[\\d]+(\\.\\d+)?/);return r?r[0]:\"\"}function u(e){var r=e.replace(/,/g,\"\").match(/[\\d]+(,\\d{3})*(\\.\\d+)?/);return r?r[0].replace(/,/g,\"\"):\"\"}var t=e([\"#productTitle\"]),m=e([\"#wayfinding-breadcrumbs_container a\",\"#wayfinding-breadcrumbs_feature_div a\",\"#wayfinding-breadcrumbs_container span.a-list-item a\",\"#wayfinding-breadcrumbs_container li a\"]),a=e([\"#corePrice_feature_div .a-price.a-text-price.a-size-medium.apexPriceToPay .a-offscreen\",\"#corePriceDisplay_desktop_feature_div .a-price.priceToPay .a-offscreen\",\".priceToPay .a-offscreen\",\"#priceblock_dealprice\",\"#priceblock_ourprice\",\"#priceblock_saleprice\",\".a-price .a-offscreen\"]),i=e([\"#corePriceDisplay_desktop_feature_div .basisPrice .a-offscreen\",\".a-price.a-text-price .a-offscreen\",\"#priceblock_was_price\"]),o=r(a),c=r(i)||o,s=e([\"#averageCustomerReviews .a-icon-alt\",\"#acrPopover .a-icon-alt\",\"span[data-hook='rating-out-of-text']\",\"span.a-icon-alt\"]),w=e([\"#acrCustomerReviewText\",\"#acrCustomerReviewLink span\",\"span[data-hook='total-review-count']\"]),v=s.match(/[\\d]+(\\.\\d+)?/)?s.match(/[\\d]+(\\.\\d+)?/)[0]:\"\",x=u(w),n=function(e,r){for(var t=0;t<e.length;t++){var a=document.querySelector(e[t]);if(a)for(var i=0;i<r.length;i++){var o=a.getAttribute(r[i]);if(o)return o}}return\"\"}([\"#landingImage\",\"#imgTagWrapperId img\",\"#imgBlkFront\"],[\"data-old-hires\",\"src\"]),p=window.location.href.match(/\\/(?:dp|gp\\/product)\\/([A-Z0-9]{10})/),f=p?p[1]:\"\",l=f?\"https://www.amazon.in/dp/\"+f+\"?tag=__TAG__\":window.location.href,d=[t,m,c,o,n,l,v,x].join(\"\\t\");navigator.clipboard&&navigator.clipboard.writeText?navigator.clipboard.writeText(d).then(function(){alert(\"Copied to clipboard \u2014 paste into column B of yo... (line truncated to 2000 chars)
     var tagInput = document.getElementById("tagInput");
     var bmLink = document.getElementById("bmLink");
 
@@ -64,5 +68,11 @@
     tagInput.addEventListener("input", updateLink);
     updateLink();
   </script>
+  <script type="module">
+    import { initNavButtons } from "./js/app.js";
+    initNavButtons();
+  </script>
+<button id="btn-top" class="nav-btn btn-top" aria-label="Go to top">↑</button>
+<button id="btn-back" class="nav-btn btn-back" aria-label="Go back">←</button>
 </body>
 </html>

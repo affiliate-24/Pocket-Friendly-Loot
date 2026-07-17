@@ -3,17 +3,18 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Best Products — Pocket Friendly Loot</title>
-<meta name="description" content="Ranked top picks by category, compared on price, rating, and the specs that actually matter.">
-<link rel="canonical" href="https://pf-loots.netlify.app/best-products.html">
+<title>Saved Deals — Pocket Friendly Loot</title>
+<meta name="description" content="Your saved deals on Pocket Friendly Loot.">
+<link rel="canonical" href="https://pf-loots.netlify.app/saved.html">
+
 <meta property="og:type" content="website">
-<meta property="og:title" content="Best Products — Pocket Friendly Loot">
-<meta property="og:description" content="Ranked top picks by category, compared on price, rating, and the specs that actually matter.">
+<meta property="og:title" content="Saved Deals — Pocket Friendly Loot">
+<meta property="og:description" content="Your saved deals on Pocket Friendly Loot.">
 <meta property="og:image" content="https://pf-loots.netlify.app/assets/og-image.png">
-<meta property="og:url" content="https://pf-loots.netlify.app/best-products.html">
+<meta property="og:url" content="https://pf-loots.netlify.app/saved.html">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Best Products — Pocket Friendly Loot">
-<meta name="twitter:description" content="Ranked top picks by category, compared on price, rating, and the specs that actually matter.">
+<meta name="twitter:title" content="Saved Deals — Pocket Friendly Loot">
+<meta name="twitter:description" content="Your saved deals on Pocket Friendly Loot.">
 <meta name="twitter:image" content="https://pf-loots.netlify.app/assets/og-image.png">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -80,36 +81,19 @@
 </header>
 
 <main id="main">
-
-  <div id="guides-listing-view">
-    <div class="page-header">
-      <span class="eyebrow">Ranked</span>
-      <h1>Best Products</h1>
-      <p>Top picks by category — ranked on price, rating, and real specs, not guesswork.</p>
-    </div>
-    <div class="section">
-      <div id="guides-listing"></div>
-    </div>
+  <div class="page-header">
+    <span class="eyebrow">Wishlist</span>
+    <h1>Saved Deals</h1>
+    <p>Products you've saved for later. Tap the heart on any deal card to add or remove it here.</p>
   </div>
-
-  <div id="guide-detail-view" hidden>
-    <div class="page-header">
-      <span class="eyebrow">Best Products</span>
-      <h1 id="guide-title">Loading…</h1>
-      <p><a href="best-products.html">← Back to all guides</a></p>
-    </div>
-    <div class="section">
-      <div id="guide-rank-list" style="margin-bottom: var(--space-3xl);"></div>
-    </div>
-  </div>
-
+  <div class="grid" id="saved-grid"></div>
 </main>
 
 <footer class="site-footer">
   <div class="footer-grid">
     <div class="footer-col"><h4>Pocket Friendly Loot</h4><a href="index.html">Home</a><a href="todays-deals.html">Today's Deals</a><a href="trending-deals.html">Trending Deals</a><a href="categories.html">Categories</a></div>
     <div class="footer-col"><h4>Discover</h4><a href="best-products.html">Best Products</a><a href="blogs.html">Blogs</a><a href="gift-ideas.html">Gift Ideas</a><a href="about.html">About</a></div>
-    <div class="footer-col"><h4>More</h4><a href="search.html">Search</a><a href="contact.html">Contact</a><a href="saved.html">Saved</a><a data-telegram-cta href="#" target="_blank" rel="noopener">Telegram Channel</a></div>
+    <div class="footer-col"><h4>More</h4><a href="search.html">Search</a><a href="contact.html">Contact</a><a data-telegram-cta href="#" target="_blank" rel="noopener">Telegram Channel</a><a href="saved.html">Saved</a></div>
     <div class="footer-col"><h4>Legal</h4><a href="privacy-policy.html">Privacy Policy</a><a href="affiliate-disclosure.html">Affiliate Disclosure</a><a href="terms.html">Terms of Use</a></div>
   </div>
   <div class="footer-bottom disclosure">
@@ -122,13 +106,35 @@
   import { initShared } from "./js/app.js";
   import { initNavbar } from "./js/navbar.js";
   import { initScrollReveal } from "./js/animations.js";
-  import { initBestProductsPage } from "./js/guides.js";
+  import { loadDeals, renderGrid, renderEmptyState, setupCardInteractions, getWishlistIds, renderSkeletonGrid } from "./js/products.js";
+  import { qs } from "./js/utils.js";
 
   initShared();
   initNavbar();
-  initBestProductsPage().then(initScrollReveal);
-</script>
 
+  async function initSavedPage() {
+    const container = qs("#saved-grid");
+    if (!container) return;
+    // Show skeleton first so the page doesn't look broken during fetch
+    renderSkeletonGrid(container, 8);
+    try {
+      const [allDeals, ids] = await Promise.all([loadDeals(), Promise.resolve(getWishlistIds())]);
+      // Match deals whose S_No is in the wishlist ID list (string-safe compare)
+      const saved = allDeals.filter((d) => ids.includes(String(d.S_No)));
+      if (!saved.length) {
+        renderEmptyState(container, "You haven't saved any deals yet. Browse today's deals and tap the heart icon to save them here.");
+        return;
+      }
+      renderGrid(container, saved);
+    } catch {
+      renderEmptyState(container, "Couldn't load your saved deals — check your connection and try again.");
+    }
+  }
+
+  initSavedPage();
+  // Re-run scroll-reveal after async content populates
+  [400, 800, 1200].forEach((t) => setTimeout(initScrollReveal, t));
+</script>
 <button id="btn-top" class="nav-btn btn-top" aria-label="Go to top">↑</button>
 <button id="btn-back" class="nav-btn btn-back" aria-label="Go back">←</button>
 </body>

@@ -114,6 +114,10 @@
   flex-direction: column;
   cursor: pointer;
   transition: transform var(--transition-medium), border-color var(--transition-medium);
+  /* --- SIZE ADJUSTMENT: .card width ---
+     The grid controls card width via grid-template-columns in pages.css (.grid).
+     To make cards narrower/wider, adjust the grid column fractions there.
+     For a fixed card max-width, add: max-width: 280px; justify-self: center;  */
 }
 .card:hover, .card:focus-within {
   transform: translateY(-3px);
@@ -124,6 +128,11 @@
   aspect-ratio: 4 / 3;
   background: var(--color-surface-alt);
   overflow: hidden;
+  /* --- SIZE ADJUSTMENT: .card-img ---
+     To change image height, adjust aspect-ratio above.
+     e.g. aspect-ratio: 16 / 9;  (shorter/wider)
+          aspect-ratio: 1 / 1;   (square)
+     The image fills the container via object-fit: cover.  */
 }
 .card-img img {
   width: 100%;
@@ -138,8 +147,8 @@
   position: absolute;
   top: 10px;
   right: 10px;
-  width: 34px;
-  height: 34px;
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
   background: rgba(18, 18, 43, 0.65);
   border: none;
@@ -148,7 +157,7 @@
   justify-content: center;
   cursor: pointer;
   color: var(--color-text);
-  font-size: 1rem;
+  font-size: 1.2rem;
   transition: transform var(--transition-fast), color var(--transition-fast);
   z-index: 2;
 }
@@ -292,27 +301,14 @@
   border-radius: var(--radius-full);
 }
 .nav-search-icon:hover { color: var(--color-text); background: var(--color-surface); }
-.nav-search-input {
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-full);
-  padding: 6px 14px;
-  color: var(--color-text);
-  font-size: var(--text-sm);
-  width: 160px;
-  outline: none;
-  transition: border-color var(--transition-fast);
-}
-.nav-search-input:focus { border-color: var(--color-gold); }
-.nav-search-input::placeholder { color: var(--color-text-muted); }
 
 .nav-toggle {
   display: none;
   flex-direction: column;
   justify-content: center;
   gap: 5px;
-  width: 32px;
-  height: 32px;
+  width: 44px;
+  height: 44px;
   background: none;
   border: none;
   cursor: pointer;
@@ -336,6 +332,13 @@
   padding: var(--space-xl) var(--gutter) var(--space-2xl);
   background: var(--color-surface);
   border-bottom: 1px solid var(--color-border);
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  max-height: 80vh;
+  overflow-y: auto;
 }
 .mobile-menu.is-open { display: flex; }
 .mobile-menu .nav-link { font-size: var(--text-md); }
@@ -427,4 +430,55 @@
   color: var(--color-text);
   font-size: var(--text-xl);
   margin-bottom: var(--space-xs);
+}
+
+/* ---------------------------- Go to Top + Back buttons ---------------------------- */
+.nav-btn {
+  position: fixed;
+  z-index: 60;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  color: var(--color-text);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  transition: opacity var(--transition-fast), transform var(--transition-fast), background var(--transition-fast);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+}
+.nav-btn:hover { background: var(--color-gold); color: var(--color-cta-text); border-color: var(--color-gold); }
+.nav-btn:active { transform: scale(0.92); }
+
+.btn-back {
+  bottom: 80px;
+  left: 16px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--transition-fast), transform var(--transition-fast), background var(--transition-fast);
+}
+.btn-back.is-visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.btn-top {
+  bottom: 80px;
+  right: 16px;
+  opacity: 0;
+  transform: translateY(12px);
+  pointer-events: none;
+}
+.btn-top.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+@media (max-width: 768px) {
+  .btn-back { bottom: 64px; left: 10px; }
+  .btn-top { bottom: 64px; right: 10px; }
 }
