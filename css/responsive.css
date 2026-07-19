@@ -52,6 +52,8 @@
 }
 
 @media (max-width: 480px) {
+  .subscribe-table td { display: block; width: 100% !important; padding: var(--space-xs) 0; }
+  .subscribe-table td:first-child { padding-bottom: 0; }
   .hero {
     padding: var(--space-3xl) var(--gutter) var(--space-2xl);
   }

@@ -67,6 +67,7 @@ export function toggleWishlist(sNo) {
   const id = String(sNo);
   const next = list.includes(id) ? list.filter((x) => x !== id) : [...list, id];
   saveWishlist(next);
+  window.dispatchEvent(new CustomEvent("wishlist:updated"));
   return next.includes(id);
 }
 

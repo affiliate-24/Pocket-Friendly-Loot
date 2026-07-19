@@ -8,10 +8,28 @@
 
 import { qs, qsa } from "./utils.js";
 
+/** Read the wishlist from localStorage and update the saved-badge count and icon fill state. */
+function updateSavedBadge() {
+  var badge = document.getElementById("saved-badge");
+  if (!badge) return;
+  try {
+    var list = JSON.parse(localStorage.getItem("mela_wishlist") || "[]");
+    badge.textContent = list.length;
+    // Toggle .has-items on the parent link so the SVG fills when products are saved
+    var link = badge.closest(".nav-saved-link");
+    if (link) link.classList.toggle("has-items", list.length > 0);
+  } catch {
+    badge.textContent = "0";
+  }
+}
+
 export function initNavbar() {
   highlightActiveLink();
   setupStickyShadow();
   setupMobileMenu();
+  updateSavedBadge();
+  // Re-read the wishlist count whenever a card's wishlist button is toggled
+  window.addEventListener("wishlist:updated", updateSavedBadge);
 }
 
 /** Adds .active to whichever .nav-link's href matches the current page. */
@@ -73,4 +91,13 @@ function setupMobileMenu() {
   document.addEventListener("click", (e) => {
     if (!menu.contains(e.target) && !toggle.contains(e.target)) setOpen(false);
   });
+
+  // Close on scroll
+  let scrollTimeout;
+  window.addEventListener("scroll", function () {
+    if (toggle.getAttribute("aria-expanded") === "true") {
+      clearTimeout(scrollTimeout);
+      scrollTimeout = setTimeout(function () { setOpen(false); }, 80);
+    }
+  }, { passive: true });
 }

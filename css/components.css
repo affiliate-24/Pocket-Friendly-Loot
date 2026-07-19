@@ -304,44 +304,71 @@
 
 .nav-toggle {
   display: none;
-  flex-direction: column;
+  align-items: center;
   justify-content: center;
-  gap: 5px;
   width: 44px;
   height: 44px;
   background: none;
   border: none;
   cursor: pointer;
 }
-.nav-toggle span {
-  display: block;
-  width: 100%;
-  height: 2px;
-  background: var(--color-text);
-  border-radius: var(--radius-full);
-  transition: transform var(--transition-medium), opacity var(--transition-medium);
+
+/* Saved/wishlist icon in the navigation bar with live count badge */
+.nav-saved-link {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  color: var(--color-text-muted);
+  transition: color var(--transition-fast);
+  text-decoration: none;
 }
-.nav-toggle[aria-expanded="true"] span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
-.nav-toggle[aria-expanded="true"] span:nth-child(2) { opacity: 0; }
-.nav-toggle[aria-expanded="true"] span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+.nav-saved-link:hover { color: var(--color-gold); }
+.nav-saved-badge {
+  position: absolute;
+  top: 0;
+  right: -2px;
+  min-width: 16px;
+  height: 16px;
+  padding: 0 4px;
+  border-radius: var(--radius-full);
+  background: var(--color-red);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 16px;
+  text-align: center;
+  pointer-events: none;
+}
+/* Fill the icon when the user has saved items */
+.nav-saved-link.has-items svg {
+  fill: currentColor;
+}
+.nav-saved-link.has-items {
+  color: var(--color-gold);
+}
 
 .mobile-menu {
   display: none;
   flex-direction: column;
-  gap: var(--space-lg);
-  padding: var(--space-xl) var(--gutter) var(--space-2xl);
+  gap: var(--space-sm);
+  padding: var(--space-md) var(--space-lg);
   background: var(--color-surface);
-  border-bottom: 1px solid var(--color-border);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
   position: absolute;
-  top: 100%;
-  left: 0;
+  top: calc(100% + 6px);
   right: 0;
+  left: auto;
   z-index: 100;
-  max-height: 80vh;
-  overflow-y: auto;
+  min-width: 190px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.3);
 }
 .mobile-menu.is-open { display: flex; }
-.mobile-menu .nav-link { font-size: var(--text-md); }
+.mobile-menu .nav-link { font-size: var(--text-sm); padding: var(--space-xs) var(--space-sm); border-radius: var(--radius-sm); white-space: nowrap; }
+.mobile-menu .nav-link:hover { background: var(--color-bg); }
 
 /* ---------------------------- Footer ---------------------------- */
 .site-footer {
@@ -419,6 +446,26 @@
 .newsletter-box h3 { font-size: var(--text-xl); margin-bottom: var(--space-xs); }
 .newsletter-box p { color: var(--color-text-muted); margin: 0 0 var(--space-lg); }
 
+.subscribe-form { text-align: center; }
+.subscribe-table { width: 100%; border-collapse: collapse; margin-bottom: var(--space-lg); margin: 0 auto var(--space-lg); }
+.subscribe-table td { padding: var(--space-sm) 0; vertical-align: middle; }
+.subscribe-table td:first-child { width: 120px; font-weight: 600; color: var(--color-text-muted); white-space: nowrap; }
+.subscribe-table input,
+.subscribe-table textarea {
+  width: 100%;
+  padding: var(--space-sm) var(--space-md);
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  color: var(--color-text);
+  transition: border-color 0.2s;
+}
+.subscribe-table input:focus,
+.subscribe-table textarea:focus { outline: none; border-color: var(--color-gold); }
+.subscribe-table textarea { min-height: 80px; resize: vertical; }
+.subscribe-table input::placeholder,
+.subscribe-table textarea::placeholder { color: var(--color-text-muted); opacity: 0.6; }
+
 /* ---------------------------- Empty / loading / error states ---------------------------- */
 .state-empty, .state-loading, .state-error {
   grid-column: 1 / -1;
@@ -454,7 +501,7 @@
 .nav-btn:active { transform: scale(0.92); }
 
 .btn-back {
-  bottom: 80px;
+  top: 76px;
   left: 16px;
   opacity: 0;
   pointer-events: none;
@@ -479,6 +526,6 @@
 }
 
 @media (max-width: 768px) {
-  .btn-back { bottom: 64px; left: 10px; }
+  .btn-back { top: 88px; left: 10px; }
   .btn-top { bottom: 64px; right: 10px; }
 }

@@ -47,7 +47,7 @@
 <script>document.documentElement.classList.add('js');</script>
 
 <header class="navbar">
-  <a class="brand" href="index.html"><span class="brand-dot"></span> Pocket Friendly Loot</a>
+    <a class="brand" href="index.html"><span class="brand-dot"></span> Pocket Friendly Loot</a>
   <nav class="nav-links" aria-label="Primary">
     <a class="nav-link" href="index.html">Home</a>
     <a class="nav-link" href="todays-deals.html">Today's Deals</a>
@@ -65,9 +65,11 @@
   </form>
   <div class="nav-actions">
     <a class="btn-primary btn-sm" data-telegram-cta href="#" target="_blank" rel="noopener">Join Telegram</a>
-    <button class="nav-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-menu"><span></span><span></span><span></span></button>
-  </div>
-  <nav id="mobile-menu" class="mobile-menu" aria-label="Mobile">
+    <a class="nav-saved-link" href="saved.html" aria-label="Favorites" title="Favorites">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7.5-4.6-10-9.3C.5 8 2 4.5 5.5 4 8 3.6 10 5 12 7.5 14 5 16 3.6 18.5 4 22 4.5 23.5 8 22 11.7 19.5 16.4 12 21 12 21z"/></svg>
+    <span class="nav-saved-badge" id="saved-badge">0</span>
+  </a><button class="nav-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-menu"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" stroke="none" aria-hidden="true"><circle cx="12" cy="5" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="12" cy="19" r="2"/></svg></button>
+  </div><nav id="mobile-menu" class="mobile-menu" aria-label="Mobile">
     <a class="nav-link" href="index.html">Home</a>
     <a class="nav-link" href="todays-deals.html">Today's Deals</a>
     <a class="nav-link" href="trending-deals.html">Trending</a>
@@ -76,7 +78,6 @@
     <a class="nav-link" href="blogs.html">Blogs</a>
     <a class="nav-link" href="gift-ideas.html">Gift Ideas</a>
     <a class="nav-link" href="search.html">Search</a>
-    <a class="nav-link" href="saved.html">Saved</a>
   </nav>
 </header>
 
@@ -88,17 +89,16 @@
   </div>
 
   <div class="controls">
-    <div class="chips" id="category-chips"></div>
-    <div class="controls-right">
-      <input class="search-input" id="search-input" type="text" placeholder="Search a product…" aria-label="Search deals">
-      <select class="sort-select" id="sort-select" aria-label="Sort deals">
-        <option value="default">Sort: Featured</option>
-        <option value="price-asc">Price: Low to High</option>
-        <option value="price-desc">Price: High to Low</option>
-        <option value="discount-desc">Biggest Discount</option>
-        <option value="rating-desc">Highest Rated</option>
-      </select>
-    </div>
+    <select id="category-select" class="sort-select" aria-label="Filter by category">
+      <option value="">All Categories</option>
+    </select>
+    <select class="sort-select" id="sort-select" aria-label="Sort deals">
+      <option value="default">Sort: Featured</option>
+      <option value="price-asc">Price: Low to High</option>
+      <option value="price-desc">Price: High to Low</option>
+      <option value="discount-desc">Biggest Discount</option>
+      <option value="rating-desc">Highest Rated</option>
+    </select>
   </div>
 
   <div class="grid" id="deals-grid"></div>
@@ -108,7 +108,7 @@
   <div class="footer-grid">
     <div class="footer-col"><h4>Pocket Friendly Loot</h4><a href="index.html">Home</a><a href="todays-deals.html">Today's Deals</a><a href="trending-deals.html">Trending Deals</a><a href="categories.html">Categories</a></div>
     <div class="footer-col"><h4>Discover</h4><a href="best-products.html">Best Products</a><a href="blogs.html">Blogs</a><a href="gift-ideas.html">Gift Ideas</a><a href="about.html">About</a></div>
-    <div class="footer-col"><h4>More</h4><a href="search.html">Search</a><a href="contact.html">Contact</a><a href="saved.html">Saved</a><a data-telegram-cta href="#" target="_blank" rel="noopener">Telegram Channel</a></div>
+    <div class="footer-col"><h4>More</h4><a href="search.html">Search</a><a href="contact.html">Contact</a><a href="saved.html">Favorites</a><a data-telegram-cta href="#" target="_blank" rel="noopener">Telegram Channel</a></div>
     <div class="footer-col"><h4>Legal</h4><a href="privacy-policy.html">Privacy Policy</a><a href="affiliate-disclosure.html">Affiliate Disclosure</a><a href="terms.html">Terms of Use</a></div>
   </div>
   <div class="footer-bottom disclosure">
@@ -125,32 +125,42 @@
     loadDeals, loadTrendingDeals, resolveCuratedList,
     renderSkeletonGrid, sortDeals, initInfiniteScroll,
   } from "./js/products.js";
-  import { loadCategories, renderCategoryChips } from "./js/categories.js";
-  import { qs, debounce } from "./js/utils.js";
+  import { loadCategories } from "./js/categories.js";
+  import { qs } from "./js/utils.js";
 
   initShared();
   initNavbar();
 
   let allDeals = [];
-  let activeCategory = "All Products";
+  var activeCategory = "";
+
+  function isInCategory(deal, category) {
+    if (!category) return true;
+    return (deal.Category || "").split(",").map(function (c) { return c.trim(); }).includes(category);
+  }
 
   function applyAndRender() {
-    const term = qs("#search-input").value.toLowerCase();
     const sortKey = qs("#sort-select").value;
-    let filtered = allDeals.filter((d) => {
-      const inCat = activeCategory === "All Products" || (d.Category || "").split(",").map((c) => c.trim()).includes(activeCategory);
-      const inSearch = !term || (d.Product_Name || "").toLowerCase().includes(term);
-      return inCat && inSearch;
-    });
+    var filtered = allDeals.filter(function (d) { return isInCategory(d, activeCategory); });
     filtered = sortDeals(filtered, sortKey);
     initInfiniteScroll(qs("#deals-grid"), filtered, 12);
     initScrollReveal();
   }
 
-  function renderChips(names) {
-    renderCategoryChips(qs("#category-chips"), names, activeCategory, (cat) => {
-      activeCategory = cat;
-      renderChips(names);
+  function populateCategoryDropdown(categories) {
+    var select = qs("#category-select");
+    var seen = {};
+    categories.forEach(function (cat) {
+      var name = cat.Category_Name;
+      if (!name || seen[name]) return;
+      seen[name] = true;
+      var opt = document.createElement("option");
+      opt.value = name;
+      opt.textContent = name;
+      select.appendChild(opt);
+    });
+    select.addEventListener("change", function () {
+      activeCategory = this.value;
       applyAndRender();
     });
   }
@@ -158,18 +168,15 @@
   async function init() {
     renderSkeletonGrid(qs("#deals-grid"), 12);
     try {
-      const [deals, curated, categories] = await Promise.all([loadDeals(), loadTrendingDeals(), loadCategories()]);
+      var [deals, curated, categories] = await Promise.all([loadDeals(), loadTrendingDeals(), loadCategories()]);
       allDeals = resolveCuratedList(curated, deals);
-      const catNames = categories.map((c) => c.Category_Name).filter(Boolean);
-      const activeNames = catNames.filter((name) => allDeals.some((d) => (d.Category || "").split(",").map((c) => c.trim()).includes(name)));
-      renderChips(activeNames);
+      populateCategoryDropdown(categories);
       applyAndRender();
     } catch {
-      qs("#deals-grid").innerHTML = `<div class="state-error"><div class="display">Couldn't load deals</div><div>Check the SHEETS URLs in app.js.</div></div>`;
+      qs("#deals-grid").innerHTML = '<div class="state-error"><div class="display">Couldn\'t load deals</div><div>Check the SHEETS URLs in app.js.</div></div>';
     }
   }
 
-  qs("#search-input").addEventListener("input", debounce(applyAndRender, 200));
   qs("#sort-select").addEventListener("change", applyAndRender);
   init();
 </script>

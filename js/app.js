@@ -23,6 +23,12 @@ export const CONFIG = {
   TELEGRAM_CHANNEL_URL: "https://t.me/PFLoot00",
   NEWSLETTER_FORM_URL: "https://docs.google.com/forms/d/e/1FAIpQLSf3BdjDWcfc1PQFMc5bxvm88sMyeB3phCj4exuIHw5nQ-wqDA/viewform?usp=header",
   CONTACT_FORM_URL: "https://docs.google.com/forms/d/e/1FAIpQLSf8R5XK8VqX9pZ5vN3wY7tL2mJ4kD6hS9fA1bC3nE0oP2gH7Q/viewform?usp=header",
+  /* Replace the entry IDs below with the actual ones from your Google Form.
+     Open the form in edit mode, click a field → three-dot menu → "Get pre-filled link",
+     then copy the "entry.1234567890" value for each field. */
+  NEWSLETTER_ENTRY_NAME: "entry.2005620554",
+  NEWSLETTER_ENTRY_EMAIL: "entry.1045781291",
+  NEWSLETTER_ENTRY_THOUGHT: "entry.839337160",
   SALE_START: new Date("2026-07-04T00:00:00+05:30"),
   SALE_END: new Date("2026-07-06T23:59:59+05:30"),
   SALE_WINDOW_LABEL: "Prime Day 2026",
@@ -82,6 +88,7 @@ export function initShared() {
   wireTelegramButtons();
   setFooterYear();
   initNetworkDetection();
+  initNavButtons();
 }
 
 /** Go to Top + Back buttons: show/hide on scroll, smooth scroll, history back. */

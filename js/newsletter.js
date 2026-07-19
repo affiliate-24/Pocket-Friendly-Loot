@@ -1,40 +1,34 @@
-/* ==========================================================================
-   newsletter.js
-   No backend/database means no custom signup handling — a Google Form
-   is the standard no-code way to collect emails, writing each
-   submission straight into its own response sheet. This module just
-   wires the on-page button/embed to that form.
-   ========================================================================== */
-
-import { CONFIG } from "./app.js";
+import { CONFIG, showToast } from "./app.js";
 import { qsa } from "./utils.js";
 
 export function initNewsletter() {
-  qsa("[data-newsletter-link]").forEach((el) => {
-    el.href = CONFIG.NEWSLETTER_FORM_URL;
-    el.target = "_blank";
-    el.rel = "noopener";
+  qsa("[data-subscribe-form]").forEach(function (form) {
+    initSubscriptionForm(form);
   });
+}
 
-  qsa("[data-newsletter-embed]").forEach((el) => {
-    if (CONFIG.NEWSLETTER_FORM_URL.includes("PASTE_YOUR")) return;
-    const iframe = document.createElement("iframe");
-    iframe.src = CONFIG.NEWSLETTER_FORM_URL;
-    iframe.width = "100%";
-    iframe.height = "420";
-    iframe.style.border = "none";
-    iframe.title = "Newsletter signup form";
-    el.appendChild(iframe);
-  });
+function initSubscriptionForm(form) {
+  var actionUrl = CONFIG.NEWSLETTER_FORM_URL.replace("/viewform", "/formResponse");
+  form.action = actionUrl;
+  form.method = "POST";
 
-  qsa("[data-contact-embed]").forEach((el) => {
-    if (!CONFIG.CONTACT_FORM_URL || CONFIG.CONTACT_FORM_URL.includes("PASTE_YOUR")) return;
-    const iframe = document.createElement("iframe");
-    iframe.src = CONFIG.CONTACT_FORM_URL;
-    iframe.width = "100%";
-    iframe.height = "800";
-    iframe.style.border = "none";
-    iframe.title = "Contact form";
-    el.appendChild(iframe);
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
+
+    var iframe = document.createElement("iframe");
+    iframe.name = "hidden_iframe_" + Date.now();
+    iframe.style.display = "none";
+    document.body.appendChild(iframe);
+    form.target = iframe.name;
+
+    form.submit();
+
+    var btn = form.querySelector("button[type=submit]");
+    var btnText = btn ? btn.textContent.trim() : "";
+    showToast(btnText === "Send" ? "Sent successfully!" : "Subscribed successfully!");
+
+    form.reset();
+
+    setTimeout(function () { iframe.remove(); }, 5000);
   });
 }
