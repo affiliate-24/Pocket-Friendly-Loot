@@ -38,8 +38,8 @@
     display: flex;
   }
   .nav-actions .btn-sm {
-    padding: 6px 12px;
-    font-size: 12px;
+    padding: 4px 8px;
+    font-size: 11px;
   }
   .controls {
     flex-direction: column;

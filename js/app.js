@@ -7,7 +7,7 @@
    CONFIG from here — never duplicates it.
    ========================================================================== */
 
-import { qsa } from "./utils.js";
+import { qs, qsa } from "./utils.js";
 
 /* ====================== EDIT THESE ====================== */
 export const CONFIG = {
@@ -48,11 +48,40 @@ export function setFooterYear() {
   });
 }
 
+/** Show a temporary toast notification at the top of the viewport. */
+export function showToast(message) {
+  var existing = qs(".app-toast");
+  if (existing) existing.remove();
+  var toast = document.createElement("div");
+  toast.className = "app-toast";
+  toast.textContent = message;
+  toast.setAttribute("role", "status");
+  toast.setAttribute("aria-live", "polite");
+  document.body.appendChild(toast);
+  setTimeout(function () {
+    toast.classList.add("app-toast--hide");
+    setTimeout(function () { toast.remove(); }, 400);
+  }, 3000);
+}
+
+/** Listen for online/offline events. Shows a toast and reloads when the network recovers. */
+export function initNetworkDetection() {
+  if (window._networkInitDone) return;
+  window._networkInitDone = true;
+  window.addEventListener("offline", function () {
+    showToast("You're offline. Deals will update when reconnected.");
+  });
+  window.addEventListener("online", function () {
+    showToast("Connection restored. Updating deals...");
+    setTimeout(function () { window.location.reload(); }, 1500);
+  });
+}
+
 /** Run on every page, before any page-specific module initializes. */
 export function initShared() {
   wireTelegramButtons();
   setFooterYear();
-  initNavButtons();
+  initNetworkDetection();
 }
 
 /** Go to Top + Back buttons: show/hide on scroll, smooth scroll, history back. */

@@ -17,6 +17,7 @@
 <link rel="stylesheet" href="css/responsive.css">
 <link rel="stylesheet" href="css/animations.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js" defer></script>
+<script src="js/papafallback.js" defer></script>
 <!-- Fallback: if Papa failed to load from the CDN (outage / offline), load a local copy so the site keeps working -->
 <script>
   document.addEventListener('DOMContentLoaded', function () {
@@ -72,6 +73,15 @@
 </header>
 
 <main id="main">
+  <div class="page-header" style="padding-bottom:var(--space-lg);">
+    <span class="eyebrow">Search</span>
+    <h1>Search Deals</h1>
+    <p>Find products, categories, guides, and gift ideas.</p>
+    <form action="search.html" method="GET" role="search" style="display:flex;gap:8px;max-width:480px;margin:var(--space-lg) auto 0;">
+      <input class="search-input" name="q" type="search" placeholder="Search products…" aria-label="Search" style="flex:1;min-width:0;">
+      <button class="btn-primary btn-sm" type="submit">Search</button>
+    </form>
+  </div>
   <div class="search-results" id="search-results"></div>
 </main>
 

@@ -107,6 +107,10 @@ export async function initSearchPage() {
 
   const params = new URLSearchParams(window.location.search);
   const term = params.get("q");
+  // Populate the inline search bar with the current query so mobile users
+  // can edit and re-submit without re-typing the whole term.
+  var searchInput = qs("input[name='q']");
+  if (searchInput && term) searchInput.value = term;
   if (!term) {
     resultsEl.innerHTML = `<div class="state-empty"><div class="display">Search products</div><div>Type a keyword in the search bar above.</div></div>`;
     return;
