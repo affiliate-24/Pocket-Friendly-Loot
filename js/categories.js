@@ -6,7 +6,7 @@
    ========================================================================== */
 
 import { CONFIG } from "./app.js";
-import { fetchCSV, qsa } from "./utils.js";
+import { fetchCSV, qsa, escapeHtml } from "./utils.js"; // escapeHtml added for XSS protection on sheet content
 
 export function loadCategories() {
   return fetchCSV(CONFIG.SHEETS.categories);
@@ -21,14 +21,18 @@ export function renderCategoryChips(container, categoryNames, activeCategory, on
   const names = ["All Products", ...categoryNames];
   container.innerHTML = names
     .map(
-      (name) => `
-      <button
-        type="button"
-        class="chip ${name === activeCategory ? "active" : ""}"
-        role="button"
-        aria-pressed="${name === activeCategory}"
-        data-category="${name}"
-      >${name}</button>`
+      (name) => {
+        // escapeHtml prevents stored XSS if a category name contains HTML markup
+        const safeName = escapeHtml(name);
+        return `
+        <button
+          type="button"
+          class="chip ${name === activeCategory ? "active" : ""}"
+          role="button"
+          aria-pressed="${name === activeCategory}"
+          data-category="${safeName}"
+        >${safeName}</button>`;
+      }
     )
     .join("");
 
@@ -55,12 +59,20 @@ export function renderCategoryCards(container, categories) {
   const sorted = categories.slice().sort((a, b) => (parseFloat(a.Sort_Order) || 0) - (parseFloat(b.Sort_Order) || 0));
   container.innerHTML = sorted
     .map(
-      (cat) => `
-      <a class="category-card${cat.Image_URL ? " category-card--img" : ""}" href="category.html?cat=${encodeURIComponent(cat.Category_Name)}" data-animate${cat.Image_URL ? ` style="background-image:url('${cat.Image_URL}')"` : ""}>
-        ${!cat.Image_URL && cat.Icon_Emoji ? `<div class="icon" aria-hidden="true">${cat.Icon_Emoji}</div>` : ""}
-        <h3>${cat.Category_Name}</h3>
-        ${cat.Description ? `<p>${cat.Description}</p>` : ""}
-      </a>`
+      (cat) => {
+        // Escape all sheet-derived content to prevent stored XSS / CSS injection.
+        const safeName = escapeHtml(cat.Category_Name || "");
+        const safeDesc = cat.Description ? escapeHtml(cat.Description) : "";
+        const safeIcon = cat.Icon_Emoji ? escapeHtml(cat.Icon_Emoji) : "";
+        const safeImg = cat.Image_URL ? encodeURI(cat.Image_URL) : "";
+        const safeHref = `category.html?cat=${encodeURIComponent(cat.Category_Name)}`;
+        return `
+        <a class="category-card${cat.Image_URL ? " category-card--img" : ""}" href="${safeHref}" data-animate${cat.Image_URL ? ` style="background-image:url('${escapeHtml(safeImg)}')"` : ""}>
+          ${!cat.Image_URL && cat.Icon_Emoji ? `<div class="icon" aria-hidden="true">${safeIcon}</div>` : ""}
+          <h3>${safeName}</h3>
+          ${safeDesc ? `<p>${safeDesc}</p>` : ""}
+        </a>`;
+      }
     )
     .join("") + `
     <a class="category-card" href="category.html" data-animate>

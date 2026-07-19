@@ -6,7 +6,7 @@
    ========================================================================== */
 
 import { CONFIG } from "./app.js";
-import { fetchCSV, qs, formatMoney } from "./utils.js";
+import { fetchCSV, qs, formatMoney, escapeHtml } from "./utils.js"; // escapeHtml added for XSS protection on rendered search terms
 import { buildCardHTML, setupCardInteractions } from "./products.js";
 
 export async function buildSearchIndex() {
@@ -39,12 +39,19 @@ export function searchAll(index, rawTerm) {
 }
 
 function rowHTML(title, href, imageUrl, subtitle) {
+  // Escape all user/sheet-derived content to prevent reflected XSS via search queries
+  // and stored XSS via malicious sheet content. href is also escaped to block
+  // attribute-injection (e.g. "javascript:" URLs).
+  const safeTitle = escapeHtml(title);
+  const safeSubtitle = subtitle ? escapeHtml(subtitle) : "";
+  const safeHref = encodeURI(href.startsWith("http") || href.startsWith("/") ? href : "#");
+  const safeImg = imageUrl ? encodeURI(imageUrl) : "";
   return `
-    <a class="search-result-row" href="${href}">
-      ${imageUrl ? `<img src="${imageUrl}" alt="" loading="lazy">` : ""}
+    <a class="search-result-row" href="${safeHref}">
+      ${safeImg ? `<img src="${safeImg}" alt="" loading="lazy">` : ""}
       <div>
-        <div>${title}</div>
-        ${subtitle ? `<div style="color:var(--color-text-muted);font-size:var(--text-sm)">${subtitle}</div>` : ""}
+        <div>${safeTitle}</div>
+        ${safeSubtitle ? `<div style="color:var(--color-text-muted);font-size:var(--text-sm)">${safeSubtitle}</div>` : ""}
       </div>
     </a>`;
 }
@@ -62,11 +69,16 @@ export function renderSearchResults(container, results, term) {
     (results.gifts?.length || 0);
 
   if (!totalCount) {
-    container.innerHTML = `<div class="state-empty"><div class="display">No results for "${term}"</div><div>Try a different search term.</div></div>`;
+    // escapeHtml(term) prevents the search query from being interpreted as HTML markup
+    container.innerHTML = `<div class="state-empty"><div class="display">No results for "${escapeHtml(term)}"</div><div>Try a different search term.</div></div>`;
     return;
   }
 
-  let html = `<div class="search-result-group"><h2>Products</h2><div class="grid">${results.products.map(buildCardHTML).join("")}</div></div>`;
+  // Products section is only rendered when there are product matches —
+  // avoids an empty <h2>Products</h2> heading when results.products is empty.
+  let html = results.products.length
+    ? `<div class="search-result-group"><h2>Products</h2><div class="grid">${results.products.map(buildCardHTML).join("")}</div></div>`
+    : "";
 
   const otherGroups = [
     { key: "categories", label: "Categories", build: (c) => rowHTML(c.Category_Name, `todays-deals.html?cat=${encodeURIComponent(c.Category_Name)}`, c.Image_URL) },
@@ -95,16 +107,21 @@ export async function initSearchPage() {
 
   const params = new URLSearchParams(window.location.search);
   const term = params.get("q");
+  // Populate the inline search bar with the current query so mobile users
+  // can edit and re-submit without re-typing the whole term.
+  var searchInput = qs("input[name='q']");
+  if (searchInput && term) searchInput.value = term;
   if (!term) {
     resultsEl.innerHTML = `<div class="state-empty"><div class="display">Search products</div><div>Type a keyword in the search bar above.</div></div>`;
     return;
   }
 
-  resultsEl.innerHTML = `<div class="state-loading"><div class="display">Searching for "${term}"…</div></div>`;
+  resultsEl.innerHTML = `<div class="state-loading"><div class="display">Searching for "${escapeHtml(term)}"…</div></div>`; // escapeHtml prevents XSS from URL ?q= parameter
   const index = await buildSearchIndex();
   const results = searchAll(index, term);
   renderSearchResults(resultsEl, results, term);
 
-  // Update page title
-  document.title = `${term} — Pocket Friendly Loot`;
+  // Use textContent-style concatenation (escapeHtml strips any markup)
+  // so a malicious query like ?q=<script> cannot inject markup into the page title.
+  document.title = escapeHtml(term) + " — Pocket Friendly Loot";
 }

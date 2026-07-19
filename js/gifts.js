@@ -5,8 +5,8 @@
    ========================================================================== */
 
 import { CONFIG } from "./app.js";
-import { fetchCSV, qs, getQueryParam, findByIds } from "./utils.js";
-import { loadDeals, buildCardHTML } from "./products.js";
+import { fetchCSV, qs, getQueryParam, findByIds, escapeHtml } from "./utils.js"; // escapeHtml added for XSS protection on sheet content
+import { loadDeals, buildCardHTML, setupCardInteractions } from "./products.js"; // setupCardInteractions added to wire wishlist on gift detail cards
 
 export async function initGiftIdeasPage() {
   const slug = getQueryParam("slug");
@@ -35,15 +35,23 @@ function renderListing(guides) {
 
   container.innerHTML = guides
     .map(
-      (guide) => `
-      <a class="teaser-card" href="gift-ideas.html?slug=${encodeURIComponent(guide.Slug)}" data-animate>
-        <img src="${guide.Hero_Image_URL}" alt="${guide.Guide_Title}" loading="lazy">
-        <div class="teaser-body">
-          ${guide.Occasion_Tag ? `<div class="teaser-tag">${guide.Occasion_Tag}</div>` : ""}
-          <h3>${guide.Guide_Title}</h3>
-          <p>${guide.Description || ""}</p>
-        </div>
-      </a>`
+      (guide) => {
+        // Escape every sheet-derived string before insertion into innerHTML to prevent stored XSS.
+        const safeSlug = encodeURIComponent(guide.Slug || "");
+        const safeImg = guide.Hero_Image_URL ? encodeURI(guide.Hero_Image_URL) : "";
+        const safeTitle = escapeHtml(guide.Guide_Title || "");
+        const safeTag = guide.Occasion_Tag ? escapeHtml(guide.Occasion_Tag) : "";
+        const safeDesc = guide.Description ? escapeHtml(guide.Description) : "";
+        return `
+        <a class="teaser-card" href="gift-ideas.html?slug=${safeSlug}" data-animate>
+          <img src="${safeImg}" alt="${safeTitle}" loading="lazy">
+          <div class="teaser-body">
+            ${safeTag ? `<div class="teaser-tag">${safeTag}</div>` : ""}
+            <h3>${safeTitle}</h3>
+            <p>${safeDesc}</p>
+          </div>
+        </a>`;
+      }
     )
     .join("");
 }
@@ -55,7 +63,8 @@ async function renderGuideDetail(guide) {
   const detailView = qs("#gift-detail-view");
   detailView?.removeAttribute("hidden");
 
-  qs("#gift-hero-img").src = guide.Hero_Image_URL;
+  // encodeURI guards against attribute-injection via sheet-provided image URL
+  qs("#gift-hero-img").src = guide.Hero_Image_URL ? encodeURI(guide.Hero_Image_URL) : "";
   qs("#gift-hero-img").alt = guide.Guide_Title;
   qs("#gift-title").textContent = guide.Guide_Title;
   qs("#gift-description").textContent = guide.Description || "";
@@ -67,6 +76,9 @@ async function renderGuideDetail(guide) {
     grid.innerHTML = products.length
       ? products.map(buildCardHTML).join("")
       : `<div class="state-empty"><div class="display">No products linked yet</div></div>`;
+    // Wire up wishlist toggle + accessible whole-card click for the rendered product cards
+    // (Issue #3 — previously missing, so heart buttons were dead on gift detail pages).
+    if (products.length) setupCardInteractions(grid);
   }
 }
 

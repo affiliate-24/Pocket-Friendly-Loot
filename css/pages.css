@@ -196,7 +196,7 @@
 /* ---------------------------- Best Products preview (home page) ---------------------------- */
 .guide-preview {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
   gap: var(--space-lg);
   margin-top: var(--space-xl);
 }
