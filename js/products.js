@@ -6,7 +6,7 @@
    described in components.css.
    ========================================================================== */
 
-import { CONFIG } from "./app.js";
+import { CONFIG, navigateExternal } from "./app.js";
 import {
   fetchCSV,
   formatMoney,
@@ -86,8 +86,9 @@ function buildStarsHTML(rating, reviewCount) {
   return `<div class="stars" role="img" aria-label="${r} out of 5 stars${reviewCount ? `, ${reviewCount} reviews` : ""}">${stars}${countHTML}</div>`;
 }
 
-/** Builds one product card. `deal` is a row from the Deals tab (optionally merged with a curated-tab badge override). */
-export function buildCardHTML(deal) {
+/** Builds one product card. `deal` is a row from the Deals tab (optionally merged with a curated-tab badge override).
+ *  Optional `rank` adds a rank badge (e.g. #1, #2) inside .card-img. */
+export function buildCardHTML(deal, rank) {
   const pct = discountPct(deal.Original_Price, deal.Sale_Price);
   const wishlisted = isWishlisted(deal.S_No);
   // Escape every sheet-derived string before it is inserted into innerHTML.
@@ -104,6 +105,7 @@ export function buildCardHTML(deal) {
   return `
     <article class="card" data-sno="${escapeHtml(String(deal.S_No))}" data-link="${link}" tabindex="-1">
       <div class="card-img">
+        ${rank ? `<span class="badge badge-rank">#${rank}</span>` : ""}
         ${badgeText ? `<span class="badge badge-discount">${badgeText}</span>` : ""}
         <button
           type="button"
@@ -182,7 +184,7 @@ export function setupCardInteractions(container) {
     if (e.target.closest("a, button")) return;
     const card = e.target.closest(".card");
     if (card && card.dataset.link) {
-      window.open(card.dataset.link, "_blank", "noopener");
+      navigateExternal(card.dataset.link);
     }
   });
 }

@@ -130,6 +130,131 @@ input, button, textarea, select {
   to { transform: translateY(-100%); opacity: 0; }
 }
 
+/* ---------- Telegram confirmation dialog ---------- */
+.tg-dialog {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  align-items: center;
+  justify-content: center;
+}
+.tg-dialog.is-open { display: flex; }
+.tg-dialog-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+}
+.tg-dialog-box {
+  position: relative;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-2xl);
+  max-width: 320px;
+  width: 90%;
+  text-align: center;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+}
+.tg-dialog-icon {
+  color: var(--color-gold);
+  margin-bottom: var(--space-md);
+}
+.tg-dialog-box h3 {
+  font-size: var(--text-xl);
+  margin: 0 0 var(--space-xs);
+}
+.tg-dialog-box p {
+  color: var(--color-text-muted);
+  margin: 0 0 var(--space-lg);
+  font-size: var(--text-base);
+}
+.tg-dialog-actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+.tg-dialog-actions .btn-primary,
+.tg-dialog-actions .btn-ghost {
+  width: 100%;
+}
+.tg-dialog-actions .btn-ghost {
+  font-size: var(--text-sm);
+  padding: 10px 16px;
+}
+
+/* ---------- External link notification ---------- */
+.ext-link-toast {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  z-index: 99999;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-2xl);
+  max-width: 360px;
+  width: 90%;
+  text-align: center;
+  box-shadow: 0 8px 40px rgba(0,0,0,0.5);
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0.92) translateY(8px);
+  transition: opacity 0.35s ease, transform 0.35s ease;
+  pointer-events: none;
+}
+.ext-link-toast.is-visible {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1) translateY(0);
+  pointer-events: auto;
+}
+.ext-link-toast-icon {
+  color: var(--color-gold);
+  margin-bottom: var(--space-md);
+}
+.ext-link-toast h3 {
+  font-size: var(--text-lg);
+  margin: 0 0 var(--space-xs);
+}
+.ext-link-toast .toast-domain {
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+  margin: 0 0 var(--space-lg);
+  word-break: break-all;
+  font-family: var(--font-mono);
+}
+.ext-link-toast .toast-progress {
+  width: 100%;
+  height: 4px;
+  background: var(--color-border);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+  margin-bottom: var(--space-lg);
+}
+.ext-link-toast .toast-progress-bar {
+  height: 100%;
+  width: 100%;
+  background: var(--color-gold);
+  border-radius: var(--radius-full);
+  transform-origin: left center;
+}
+.ext-link-toast .toast-progress-bar.is-shrinking {
+  animation: progress-shrink 5s linear forwards;
+}
+@keyframes progress-shrink {
+  from { transform: scaleX(1); }
+  to { transform: scaleX(0); }
+}
+.ext-link-toast .toast-actions {
+  display: flex;
+  gap: var(--space-sm);
+  justify-content: center;
+}
+.ext-link-toast .toast-actions .btn-ghost,
+.ext-link-toast .toast-actions .btn-primary {
+  font-size: var(--text-sm);
+  padding: 8px 18px;
+}
+
 /* Respect "reduce motion" system setting globally — every transition,
    animation, and the smooth scroll above all collapse to effectively
    instant. Individual components don't need their own reduced-motion

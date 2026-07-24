@@ -10,21 +10,36 @@
 
 @media (max-width: 1024px) {
   .article-layout {
-    grid-template-columns: 1fr;
+    display: flex;
+    flex-direction: column;
   }
   .article-sidebar {
-    position: static;
-    order: -1;
+    display: contents;
+  }
+  .article-content { order: 2; }
+  .toc { order: 1; }
+  .recommended-products {
+    order: 3;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-md);
+    padding-top: var(--space-xl);
+    border-top: 1px solid var(--color-border);
+  }
+  .recommended-products h3 {
+    grid-column: 1 / -1;
+    margin-bottom: 0;
   }
 }
 
 @media (max-width: 900px) {
   .grid { grid-template-columns: repeat(2, 1fr); }
   .guide-preview { grid-template-columns: repeat(2, 1fr); }
+  .guide-card-body-inner { grid-template-columns: repeat(2, 1fr); }
 }
 @media (max-width: 480px) {
-  .grid { grid-template-columns: 1fr; }
-  .guide-preview { grid-template-columns: 1fr; }
+  .guide-preview { grid-template-columns: repeat(2, 1fr); }
+  .guide-card-body-inner { grid-template-columns: repeat(2, 1fr); }
 }
 
 @media (max-width: 768px) {
@@ -37,9 +52,21 @@
   .nav-toggle {
     display: flex;
   }
-  .nav-actions .btn-sm {
-    padding: 4px 8px;
-    font-size: 11px;
+  .nav-tg-link .tg-icon {
+    width: 24px;
+    height: 24px;
+  }
+  .nav-tg-label {
+    display: none;
+  }
+  .nav-tg-link:hover::after,
+  .hero-ctas .btn-ghost[data-telegram-cta]:hover::after {
+    display: none;
+  }
+  .nav-btn:hover {
+    background: var(--color-surface);
+    color: var(--color-text);
+    border-color: var(--color-border);
   }
   .controls {
     flex-direction: column;

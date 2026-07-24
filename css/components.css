@@ -38,6 +38,48 @@
 }
 .btn-outline:hover { background: var(--color-gold); color: var(--color-cta-text); }
 .btn-sm { padding: 9px 16px; font-size: var(--text-sm); }
+.nav-tg {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  cursor: default;  
+}
+.nav-tg-link {
+  display: flex;
+  align-items: center;
+  color: var(--color-gold);
+  position: relative;
+  transition: opacity var(--transition-fast);
+}
+.nav-tg-link:hover { opacity: 0.8; }
+.nav-tg-link .tg-icon {
+  width: 40px;
+  height: 40px;
+}
+.nav-tg-label {
+  font-size: var(--text-sm);
+  font-weight: 500;
+  color: var(--color-text-muted);
+  pointer-events: none;
+}
+.nav-tg-link:hover::after,
+.hero-ctas .btn-ghost[data-telegram-cta]:hover::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  background: var(--color-surface);
+  color: var(--color-text);
+  font-size: var(--text-xs);
+  padding: 6px 10px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 100;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+.hero-ctas .btn-ghost[data-telegram-cta] { position: relative; }
 
 /* ---------------------------- Chips ---------------------------- */
 .chip {
@@ -137,7 +179,9 @@
 .card-img img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
+  background: var(--color-surface-alt);
+  padding: 4px;
   transition: transform var(--transition-slow);
 }
 .card:hover .card-img img { transform: scale(1.04); }
@@ -448,7 +492,7 @@
 
 .subscribe-form { text-align: center; }
 .subscribe-table { width: 100%; border-collapse: collapse; margin-bottom: var(--space-lg); margin: 0 auto var(--space-lg); }
-.subscribe-table td { padding: var(--space-sm) 0; vertical-align: middle; }
+.subscribe-table td { padding: var(--space-sm) 0; vertical-align: middle; text-align: left; }
 .subscribe-table td:first-child { width: 120px; font-weight: 600; color: var(--color-text-muted); white-space: nowrap; }
 .subscribe-table input,
 .subscribe-table textarea {
