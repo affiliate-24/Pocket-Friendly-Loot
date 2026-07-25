@@ -313,12 +313,11 @@
   background: var(--color-gold);
   border-radius: var(--radius-full);
 }
-.nav-actions { display: flex; align-items: center; gap: var(--space-md); margin-right: -4px; }
+.nav-actions { display: flex; align-items: center; gap: var(--space-lg); margin-right: -4px; }
 .nav-search {
   display: flex;
   align-items: center;
   gap: 0;
-  margin: 0 0 0 var(--space-xl);
 }
 .nav-search-input {
   background: var(--color-surface);
@@ -337,12 +336,18 @@
   background: none;
   border: none;
   cursor: pointer;
-  padding: 6px;
+  width: 40px;
+  height: 40px;
+  padding: 0;
   color: var(--color-text-muted);
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: var(--radius-full);
+}
+.nav-search-icon svg {
+  width: 20px;
+  height: 20px;
 }
 .nav-search-icon:hover { color: var(--color-text); background: var(--color-surface); }
 

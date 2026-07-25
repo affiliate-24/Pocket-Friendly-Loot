@@ -207,7 +207,8 @@ function showExternalToast(url) {
     _toastEl.querySelector(".toast-open").addEventListener("click", function () {
       if (_pendingUrl) {
         clearTimeout(_toastTimer);
-        window.open(_pendingUrl, "_blank", "noopener");
+        var win = window.open(_pendingUrl, "_blank", "noopener");
+        if (!win) window.location.href = _pendingUrl;
         dismissExternalToast();
       }
     });
@@ -228,7 +229,8 @@ function showExternalToast(url) {
 
   _toastTimer = setTimeout(function () {
     if (_pendingUrl) {
-      window.open(_pendingUrl, "_blank", "noopener");
+      var win = window.open(_pendingUrl, "_blank", "noopener");
+      if (!win) window.location.href = _pendingUrl;
       dismissExternalToast();
     }
   }, 5000);

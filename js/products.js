@@ -38,7 +38,7 @@ export function resolveCuratedList(curatedRows, allDeals) {
     .sort((a, b) => (parseFloat(a.Sort_Order) || 0) - (parseFloat(b.Sort_Order) || 0))
     .map((row) => {
       const deal = findById(allDeals, "S_No", row.S_No);
-      return deal ? { ...deal, _badgeOverride: row.Badge_Text || row.Trend_Note || "" } : null;
+      return deal && isValidDeal(deal) ? { ...deal, _badgeOverride: row.Badge_Text || row.Trend_Note || "" } : null;
     })
     .filter(Boolean);
 }
@@ -89,6 +89,7 @@ function buildStarsHTML(rating, reviewCount) {
 /** Builds one product card. `deal` is a row from the Deals tab (optionally merged with a curated-tab badge override).
  *  Optional `rank` adds a rank badge (e.g. #1, #2) inside .card-img. */
 export function buildCardHTML(deal, rank) {
+  if (!isValidDeal(deal)) return "";
   const pct = discountPct(deal.Original_Price, deal.Sale_Price);
   const wishlisted = isWishlisted(deal.S_No);
   // Escape every sheet-derived string before it is inserted into innerHTML.
@@ -142,6 +143,10 @@ export function buildSkeletonCardHTML() {
 }
 
 /* ---------------------------- Rendering ---------------------------- */
+function isValidDeal(deal) {
+  return deal && deal.Product_Name && deal.Product_Name.trim() !== "";
+}
+
 export function renderSkeletonGrid(container, count = 8) {
   container.innerHTML = Array.from({ length: count }, buildSkeletonCardHTML).join("");
 }
@@ -155,11 +160,12 @@ export function renderErrorState(container, message = "Couldn't load deals — c
 }
 
 export function renderGrid(container, deals) {
-  if (!deals.length) {
+  var valid = deals.filter(isValidDeal);
+  if (!valid.length) {
     renderEmptyState(container);
     return;
   }
-  container.innerHTML = deals.map(buildCardHTML).join("");
+  container.innerHTML = valid.map(buildCardHTML).join("");
   container.classList.add("fade-in");
   setupCardInteractions(container);
 }
@@ -210,12 +216,17 @@ export function sortDeals(deals, sortKey) {
    Generic: renders `batchSize` items at a time into `container`, loading
    more whenever the sentinel element scrolls into view. */
 export function initInfiniteScroll(container, items, batchSize = 12) {
+  var valid = items.filter(isValidDeal);
+  if (!valid.length) {
+    renderEmptyState(container);
+    return;
+  }
   let rendered = 0;
   const sentinel = document.createElement("div");
   sentinel.className = "load-more-sentinel";
 
   function renderNextBatch() {
-    const batch = items.slice(rendered, rendered + batchSize);
+    const batch = valid.slice(rendered, rendered + batchSize);
     if (!batch.length) {
       sentinel.remove();
       observer.disconnect();
@@ -224,7 +235,7 @@ export function initInfiniteScroll(container, items, batchSize = 12) {
     const html = batch.map(buildCardHTML).join("");
     sentinel.insertAdjacentHTML("beforebegin", html);
     rendered += batch.length;
-    if (rendered >= items.length) {
+    if (rendered >= valid.length) {
       sentinel.remove();
       observer.disconnect();
     }
@@ -234,10 +245,6 @@ export function initInfiniteScroll(container, items, batchSize = 12) {
     if (entries[0].isIntersecting) renderNextBatch();
   });
 
-  if (!items.length) {
-    renderEmptyState(container);
-    return;
-  }
   container.innerHTML = "";
   container.appendChild(sentinel);
   renderNextBatch();
