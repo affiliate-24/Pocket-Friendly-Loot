@@ -47,6 +47,9 @@
     display: none;
   }
   .nav-search {
+    display: flex;
+  }
+  .nav-search-input {
     display: none;
   }
   .nav-toggle {
