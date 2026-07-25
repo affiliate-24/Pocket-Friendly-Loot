@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /assets/papaparse.min.js
+
+Sitemap: https://pf-loots.netlify.app/sitemap.xml
