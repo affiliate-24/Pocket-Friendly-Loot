@@ -46,11 +46,11 @@
   .nav-links {
     display: none;
   }
-  .nav-search {
-    display: flex;
-  }
-  .nav-search-input {
+  .search-bar {
     display: none;
+  }
+  .nav-top {
+    padding: var(--space-xs) var(--gutter);
   }
   .nav-toggle {
     display: flex;
@@ -58,9 +58,6 @@
   .nav-tg-link .tg-icon {
     width: 24px;
     height: 24px;
-  }
-  .nav-tg-label {
-    display: none;
   }
   .nav-tg-link:hover::after,
   .hero-ctas .btn-ghost[data-telegram-cta]:hover::after {

@@ -15,7 +15,6 @@
 <meta name="twitter:title" content="Affiliate Disclosure — Pocket Friendly Loot">
 <meta name="twitter:description" content="Affiliate Disclosure for Pocket Friendly Loot. Learn how we earn commissions through affiliate links.">
 <meta name="twitter:image" content="https://pf-loots.netlify.app/assets/og-image.png">
-
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/variables.css">
@@ -37,7 +36,6 @@
     }
   });
 </script>
-
 <!-- Branding icons: favicon + apple-touch-icon for iOS home screen bookmarks -->
 <link rel="icon" type="image/x-icon" href="/assets/favicon.ico">
 <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
@@ -45,26 +43,25 @@
 </head>
 <body>
 <script>document.documentElement.classList.add('js');</script>
-
 <header class="navbar">
+  <div class="nav-top">
     <a class="brand" href="index.html"><span class="brand-dot"></span> Pocket Friendly Loot</a>
-  <nav class="nav-links" aria-label="Primary">
-    <a class="nav-link" href="index.html">Home</a>
-    <a class="nav-link" href="todays-deals.html">Today's Deals</a>
-    <a class="nav-link" href="trending-deals.html">Trending</a>
-    <a class="nav-link" href="categories.html">Categories</a>
-    <a class="nav-link" href="best-products.html">Best Products</a>
-    <a class="nav-link" href="blogs.html">Blogs</a>
-    <a class="nav-link" href="gift-ideas.html">Gift Ideas</a>
-  </nav>
-  <div class="nav-actions">
-    <form class="nav-search" action="search.html" method="GET">
-      <button class="nav-search-icon" type="submit" aria-label="Submit search">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-      </button>
-      <input class="nav-search-input" name="q" type="text" placeholder="Search…" aria-label="Search products">
-    </form>
-    <span class="nav-tg">
+    <form class="search-bar" action="search.html" method="GET">
+                      <div class="search-cat-wrap">
+                        <select class="search-cat" name="cat" aria-label="Category">
+                          <option value="">All</option>
+                        </select>
+                      </div>
+                      <div class="search-input-wrap">
+                        <input class="search-input-field" name="q" type="text" placeholder="Search products…" aria-label="Search products" autocomplete="off">
+                        <div id="search-suggestions" class="search-suggestions" hidden></div>
+                      </div>
+                      <button class="search-submit" type="submit" aria-label="Submit search">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                      </button>
+                    </form>
+    <div class="nav-actions">
+<span class="nav-tg">
       <a class="nav-tg-link" data-telegram-cta href="#" target="_blank" rel="noopener" data-tooltip="Get alerts on Telegram">
         <svg class="tg-icon" width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
       </a>
@@ -74,7 +71,20 @@
     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7.5-4.6-10-9.3C.5 8 2 4.5 5.5 4 8 3.6 10 5 12 7.5 14 5 16 3.6 18.5 4 22 4.5 23.5 8 22 11.7 19.5 16.4 12 21 12 21z"/></svg>
     <span class="nav-saved-badge" id="saved-badge">0</span>
   </a><button class="nav-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-menu"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" stroke="none" aria-hidden="true"><circle cx="12" cy="5" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="12" cy="19" r="2"/></svg></button>
-  </div><nav id="mobile-menu" class="mobile-menu" aria-label="Mobile">
+    </div>
+  </div>
+  <div class="nav-bottom">
+    <nav class="nav-links" aria-label="Primary">
+        <a class="nav-link" href="index.html">Home</a>
+        <a class="nav-link" href="todays-deals.html">Today's Deals</a>
+        <a class="nav-link" href="trending-deals.html">Trending</a>
+        <a class="nav-link" href="categories.html">Categories</a>
+        <a class="nav-link" href="best-products.html">Best Products</a>
+        <a class="nav-link" href="blogs.html">Blogs</a>
+        <a class="nav-link" href="gift-ideas.html">Gift Ideas</a>
+      </nav>
+  </div>
+  <nav id="mobile-menu" class="mobile-menu" aria-label="Mobile">
     <a class="nav-link" href="index.html">Home</a>
     <a class="nav-link" href="todays-deals.html">Today's Deals</a>
     <a class="nav-link" href="trending-deals.html">Trending</a>
@@ -85,32 +95,25 @@
     <a class="nav-link" href="search.html">Search</a>
   </nav>
 </header>
-
 <main id="main">
   <div class="page-header">
     <span class="eyebrow">Disclosure</span>
     <h1>Affiliate Disclosure</h1>
     <p>Transparency about how we earn commissions</p>
   </div>
-
   <div class="article-layout">
     <div class="article-content">
       <h2>Amazon Associates Program</h2>
       <p>Pocket Friendly Loot is a participant in the <strong>Amazon Services LLC Associates Program</strong>, an affiliate advertising program designed to provide a means for sites to earn advertising fees by advertising and linking to <strong>Amazon.in</strong>.</p>
-
       <h2>How It Works</h2>
       <p>When you click on an affiliate link on our site and make a purchase on Amazon, we may earn a small commission — <strong>at no extra cost to you</strong>. The price you pay is exactly the same as if you had visited Amazon directly.</p>
-
       <h2>Our Commitment</h2>
       <p>We only recommend products we genuinely believe offer value. Affiliate partnerships do not influence our reviews, rankings, or editorial content. Our primary goal is to help you find the best deals and make informed purchasing decisions.</p>
-
       <h2>Other Affiliate Programs</h2>
       <p>In addition to Amazon, we may occasionally participate in other affiliate programs. The same principles apply — we earn a commission on qualifying purchases at no extra cost to you.</p>
-
       <h2>Questions?</h2>
       <p>If you have any questions about our affiliate relationships, please <a href="contact.html"><span style="color:var(--color-gold);font-weight:600;">Contact Us</span></a>.</p>
     </div>
-
     <aside class="article-sidebar">
       <div class="sidebar-nav">
         <h4>Legal</h4>
@@ -123,7 +126,6 @@
     </aside>
   </div>
 </main>
-
 <footer class="site-footer">
   <div class="footer-grid">
     <div class="footer-col">
@@ -159,15 +161,12 @@
     © <span data-current-year></span> Pocket Friendly Loot | <a data-telegram-cta href="#" target="_blank" rel="noopener">Join us on Telegram</a> for instant deals.
   </div>
 </footer>
-
 <script type="module">
   import { initShared } from "./js/app.js";
   import { initNavbar } from "./js/navbar.js";
-
   initShared();
   initNavbar();
 </script>
-
 <button id="btn-top" class="nav-btn btn-top" aria-label="Go to top">↑</button>
 <button id="btn-back" class="nav-btn btn-back" aria-label="Go back">←</button>
 </body>
