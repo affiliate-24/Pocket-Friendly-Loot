@@ -7,33 +7,31 @@
 
 :root {
 
-  /* ---------- Color: surfaces ----------
-     60-30-10 rule: 60% background (white), 30% primary (navy, used on nav/footer),
-     10% action (gold, used on CTAs/badges/links only). */
-  --color-bg: #FFFFFF;
-  --color-surface: #FFFFFF;
-  --color-surface-alt: #FFFFFF;
+  /* ---------- Color: surfaces ---------- */
+  --color-bg: #12122B;
+  --color-surface: #1B1B3F;
+  --color-surface-alt: #232352;
 
   /* ---------- Color: brand / accent ---------- */
-  --color-primary: #232F3E;
-  --color-secondary-accent: #007185;
-  --color-gold: #FFD814;
-  --color-gold-soft: #F7CA00;
-  --color-red: #B12704;
+  --color-primary: #12122B;
+  --color-secondary-accent: #FFB627;
+  --color-gold: #FFB627;
+  --color-gold-soft: #FFD789;
+  --color-red: #FF5C5C;
 
   /* ---------- Color: text ---------- */
-  --color-text: #0F1111;
-  --color-text-muted: #565959;
+  --color-text: #F5F3EC;
+  --color-text-muted: #9B98B8;
 
   /* ---------- Color: structure ---------- */
-  --color-border: #D5D9D9;
-  --color-border-hover: rgba(247, 202, 0, 0.4);
+  --color-border: rgba(245, 243, 236, 0.08);
+  --color-border-hover: rgba(255, 182, 39, 0.4);
 
   /* ---------- Color: semantic aliases ---------- */
   --color-cta-bg: var(--color-gold);
-  --color-cta-text: #0F1111;
-  --color-star-filled: #FFA41C;
-  --color-star-empty: #DEE2E6;
+  --color-cta-text: #1A1A1A;
+  --color-star-filled: var(--color-gold);
+  --color-star-empty: var(--color-border-hover);
   --color-badge-bg: var(--color-red);
   --color-badge-text: #FFFFFF;
 
