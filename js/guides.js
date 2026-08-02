@@ -8,6 +8,7 @@
 import { CONFIG } from "./app.js";
 import { fetchCSV, qs, getQueryParam, findById, formatMoney, escapeHtml } from "./utils.js";
 import { loadDeals, buildCardHTML, setupCardInteractions } from "./products.js";
+import { buildGuideCardHTML } from "./templates.js";
 
 export function groupBySlug(rows) {
   const groups = new Map();
@@ -50,22 +51,7 @@ function renderListing(guides, deals) {
   var guideMap = {};
   guides.forEach(function (g) { guideMap[g.slug] = g; });
 
-  container.innerHTML = guides
-    .map(function (guide) {
-      var safeTitle = escapeHtml(guide.title || "");
-      var safeSlug = encodeURIComponent(guide.slug || "");
-      return `
-        <div class="guide-card" data-slug="${safeSlug}" data-animate>
-          <div class="guide-card-header" role="button" tabindex="0" aria-expanded="false">
-            <h3><a href="best-products.html?slug=${safeSlug}">${safeTitle}</a></h3>
-            <svg class="guide-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
-          </div>
-          <div class="guide-card-body">
-            <div class="guide-card-body-inner"></div>
-          </div>
-        </div>`;
-    })
-    .join("");
+  container.innerHTML = guides.map(buildGuideCardHTML).join("");
 
   container.addEventListener("click", function (e) {
     var header = e.target.closest(".guide-card-header");

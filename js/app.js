@@ -7,7 +7,7 @@
    CONFIG from here — never duplicates it.
    ========================================================================== */
 
-import { qs, qsa } from "./utils.js";
+import { qs, qsa, escapeHtml, formatMoney } from "./utils.js";
 
 /* ====================== EDIT THESE ====================== */
 export const CONFIG = {
@@ -123,6 +123,7 @@ export function initShared() {
   setFooterYear();
   initNetworkDetection();
   initNavButtons();
+  initSearchAutocomplete();
   initExternalLinkHandler();
 }
 
@@ -155,6 +156,91 @@ export function initNavButtons() {
     }
     backBtn.addEventListener("click", () => window.history.back());
   }
+}
+
+/** Amazon-style search bar: category dropdown, debounced autocomplete, suggestions. */
+function initSearchAutocomplete() {
+  var input = document.querySelector(".search-input-field");
+  var suggestions = document.getElementById("search-suggestions");
+  var select = document.querySelector(".search-cat");
+  if (!input || !suggestions || !select) return;
+
+  // Off-screen span to measure selected-option text width
+  var measurer = document.createElement("span");
+  measurer.style.cssText = "position:fixed;top:-999px;left:-999px;visibility:hidden;white-space:nowrap;";
+  // Copy the select's font and padding so measurements are accurate
+  var cs = getComputedStyle(select);
+  measurer.style.font = cs.font;
+  measurer.style.fontSize = cs.fontSize;
+  measurer.style.fontFamily = cs.fontFamily;
+  measurer.style.fontWeight = cs.fontWeight;
+  measurer.style.padding = cs.padding;
+  measurer.style.border = cs.border; // border affects offsetWidth
+  document.body.appendChild(measurer);
+
+  function fitSelectWidth() {
+    var opt = select.options[select.selectedIndex];
+    measurer.textContent = opt ? opt.text : "";
+    // offsetWidth includes padding + border.  Set select to match.
+    var w = measurer.offsetWidth;
+    select.style.width = w + "px";
+  }
+
+  select.addEventListener("change", fitSelectWidth);
+
+  // Populate category dropdown from Categories sheet
+  import("./categories.js").then(function (mod) {
+    mod.loadCategories().then(function (cats) {
+      cats.forEach(function (c) {
+        var name = c.Category_Name || c.Name || "";
+        if (!name) return;
+        var opt = document.createElement("option");
+        opt.value = name;
+        opt.textContent = name;
+        select.appendChild(opt);
+      });
+      fitSelectWidth(); // size to "All" after options exist
+    });
+  });
+
+  // Cache deals data for autocomplete
+  var dealsCache = null;
+  import("./products.js").then(function (mod) {
+    mod.loadDeals().then(function (deals) { dealsCache = deals; });
+  });
+
+  // Debounced autocomplete
+  var debounceTimer;
+  input.addEventListener("input", function () {
+    clearTimeout(debounceTimer);
+    var query = input.value.trim();
+    if (query.length < 2) { suggestions.hidden = true; return; }
+    debounceTimer = setTimeout(function () {
+      if (!dealsCache) return;
+      var q = query.toLowerCase();
+      var matches = dealsCache
+        .filter(function (d) { return (d.Product_Name || "").toLowerCase().includes(q); })
+        .slice(0, 8);
+      if (!matches.length) { suggestions.hidden = true; return; }
+      suggestions.innerHTML = matches.map(function (d) {
+        var name = escapeHtml(d.Product_Name || "");
+        var img = d.Image_URL ? escapeHtml(d.Image_URL) : "";
+        var price = formatMoney(d.Sale_Price);
+        var cat = escapeHtml(d.Category || "");
+        var link = d.Affiliate_Link ? escapeHtml(d.Affiliate_Link) : "#";
+        return '<a class="search-suggestion" href="' + link + '" target="_blank" rel="noopener sponsored nofollow">' +
+          (img ? '<img src="' + img + '" alt="" loading="lazy">' : '<span style="width:32px;height:32px;background:#f5f5f5;border-radius:2px;flex-shrink:0"></span>') +
+          '<span class="sug-name">' + name + '<br><span class="sug-cat">' + cat + '</span></span>' +
+          '<span class="sug-price">' + price + '</span></a>';
+      }).join("");
+      suggestions.hidden = false;
+    }, 300);
+  });
+
+  // Close suggestions when clicking outside
+  document.addEventListener("click", function (e) {
+    if (!e.target.closest(".search-input-wrap")) suggestions.hidden = true;
+  });
 }
 
 /** Show a centered notification when users click links that leave the site. */

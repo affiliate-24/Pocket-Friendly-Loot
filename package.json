@@ -1,0 +1,15 @@
+{
+  "name": "pocket-friendly-loot",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Static affiliate deals site, pre-rendered from Google Sheets at build time",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "serve": "node scripts/serve.mjs"
+  },
+  "devDependencies": {
+    "papaparse": "^5.4.1",
+    "playwright": "^1.62.1"
+  }
+}

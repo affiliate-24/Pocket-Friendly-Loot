@@ -56,13 +56,44 @@ export function slugify(text) {
  * Fetch a published Google Sheet CSV and resolve with an array of row
  * objects (PapaParse's `header:true` mode). Loaded as a global <script>
  * (not an ES module), so `Papa` is available on `window` here.
+ *
+ * Reliability: Google's CSV endpoints are slow/flaky, so this call
+ *  - caches each successful response in localStorage (30 min TTL),
+ *  - retries failed downloads with backoff, and
+ *  - falls back to the cached copy when a refresh fails but old data exists.
+ * Content renders instantly from cache on repeat visits even if the
+ * network hiccups.
  */
-export function fetchCSV(url) {
-  return new Promise((resolve, reject) => {
-    if (!url || url.includes("PASTE_YOUR")) {
-      reject(new Error("Sheet URL not configured yet — check app.js"));
-      return;
+
+var SHEET_CACHE_KEY = "mela_sheet_cache_v1";
+var SHEET_CACHE_TTL = 30 * 60 * 1000; // 30 minutes
+var SHEET_MAX_RETRIES = 3;
+var SHEET_TIMEOUT = 15000; // 15 seconds
+
+function readSheetCache() {
+  try {
+    return JSON.parse(localStorage.getItem(SHEET_CACHE_KEY) || "{}");
+  } catch {
+    return {};
+  }
+}
+
+function writeSheetCache(cache) {
+  try {
+    // Trim to the most recent 30 entries to avoid blowing the quota
+    var keys = Object.keys(cache);
+    if (keys.length > 30) {
+      keys.sort((a, b) => (cache[a].t || 0) - (cache[b].t || 0));
+      keys.slice(0, keys.length - 30).forEach((k) => delete cache[k]);
     }
+    localStorage.setItem(SHEET_CACHE_KEY, JSON.stringify(cache));
+  } catch {
+    /* storage full / unavailable — cache is best-effort only */
+  }
+}
+
+function parseSheetOnce(url) {
+  return new Promise((resolve, reject) => {
     Papa.parse(url, {
       download: true,
       header: true,
@@ -71,6 +102,84 @@ export function fetchCSV(url) {
       error: (err) => reject(err),
     });
   });
+}
+
+export function fetchCSV(url) {
+  return new Promise((resolve, reject) => {
+    if (!url || url.includes("PASTE_YOUR")) {
+      reject(new Error("Sheet URL not configured yet — check app.js"));
+      return;
+    }
+
+    // Build-time pre-render fast path: every page is generated with its
+    // dataset embedded as window.PAGE_DATA (keyed by the exact sheet URL),
+    // so there is nothing to fetch, cache, or retry — resolve instantly.
+    if (typeof window !== "undefined" && window.PAGE_DATA && Array.isArray(window.PAGE_DATA[url])) {
+      resolve(window.PAGE_DATA[url]);
+      return;
+    }
+
+    var cache = readSheetCache();
+    var cached = cache[url];
+
+    // Return fresh-enough cache immediately, then refresh in background.
+    if (cached && cached.rows && Date.now() - cached.t < SHEET_CACHE_TTL) {
+      refreshSheet(url, cache);
+      resolve(cached.rows);
+      return;
+    }
+
+    var attempts = 0;
+    var timer;
+
+    function attempt() {
+      attempts++;
+      if (timer) clearTimeout(timer);
+      timer = setTimeout(() => {
+        fail(new Error("Sheet fetch timed out"));
+      }, SHEET_TIMEOUT);
+
+      parseSheetOnce(url).then(
+        (rows) => {
+          clearTimeout(timer);
+          cache[url] = { rows: rows, t: Date.now() };
+          writeSheetCache(cache);
+          resolve(rows);
+        },
+        () => {
+          clearTimeout(timer);
+          if (attempts < SHEET_MAX_RETRIES) {
+            setTimeout(attempt, 800 * attempts); // 800ms, 1.6s backoff
+          } else {
+            fail();
+          }
+        }
+      );
+    }
+
+    function fail(_err) {
+      clearTimeout(timer);
+      // Stale-while-error: serve the last known copy if a refresh fails.
+      if (cached && cached.rows) {
+        resolve(cached.rows);
+        return;
+      }
+      reject(new Error("Sheet fetch failed"));
+    }
+
+    attempt();
+  });
+}
+
+/** Background refresh: re-fetch a URL and update the cache without blocking the caller. */
+function refreshSheet(url, cache) {
+  parseSheetOnce(url).then(
+    (rows) => {
+      cache[url] = { rows: rows, t: Date.now() };
+      writeSheetCache(cache);
+    },
+    () => { /* keep the stale copy until the next successful refresh */ }
+  );
 }
 
 /** Find one row in `rows` whose `idField` matches `id` (string-safe compare). */

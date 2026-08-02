@@ -10,9 +10,11 @@
   /* ---------- Color: surfaces ---------- */
   --color-bg: #12122B;
   --color-surface: #1B1B3F;
-  --color-surface-alt: #ffffff;
+  --color-surface-alt: #232352;
 
   /* ---------- Color: brand / accent ---------- */
+  --color-primary: #12122B;
+  --color-secondary-accent: #FFB627;
   --color-gold: #FFB627;
   --color-gold-soft: #FFD789;
   --color-red: #FF5C5C;
@@ -25,9 +27,7 @@
   --color-border: rgba(245, 243, 236, 0.08);
   --color-border-hover: rgba(255, 182, 39, 0.4);
 
-  /* ---------- Color: semantic aliases ----------
-     Components reference these instead of raw colors above, so a future
-     re-theme only ever touches this file. */
+  /* ---------- Color: semantic aliases ---------- */
   --color-cta-bg: var(--color-gold);
   --color-cta-text: #1A1A1A;
   --color-star-filled: var(--color-gold);
@@ -98,4 +98,4 @@
      --bp-sm: 480px   (small phones)
      --bp-md: 768px   (tablets)
      --bp-lg: 1024px  (small laptops)
-*/
+ */

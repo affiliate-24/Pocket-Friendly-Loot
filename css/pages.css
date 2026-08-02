@@ -335,7 +335,7 @@
 .sidebar-nav a.active { color: var(--color-gold); background: var(--color-surface); }
 
 /* ---------------------------- Search page ---------------------------- */
-.search-results { max-width: var(--content-max-width); margin: 0 auto var(--space-5xl); }
+.search-results { max-width: var(--content-max-width); margin: var(--space-3xl) auto var(--space-5xl); }
 .search-result-group { margin-bottom: var(--space-3xl); }
 .search-result-group h2 { font-size: var(--text-lg); margin-bottom: var(--space-lg); color: var(--color-gold); }
 .search-result-list { display: flex; flex-direction: column; gap: var(--space-sm); }

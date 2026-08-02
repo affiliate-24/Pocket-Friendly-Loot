@@ -7,6 +7,7 @@
 import { CONFIG } from "./app.js";
 import { fetchCSV, qs, getQueryParam, findByIds, escapeHtml } from "./utils.js"; // escapeHtml added for XSS protection on sheet content
 import { loadDeals, buildCardHTML, setupCardInteractions } from "./products.js"; // setupCardInteractions added to wire wishlist on gift detail cards
+import { buildTeaserCardHTML } from "./templates.js";
 
 export async function initGiftIdeasPage() {
   const slug = getQueryParam("slug");
@@ -34,24 +35,14 @@ function renderListing(guides) {
   }
 
   container.innerHTML = guides
-    .map(
-      (guide) => {
-        // Escape every sheet-derived string before insertion into innerHTML to prevent stored XSS.
-        const safeSlug = encodeURIComponent(guide.Slug || "");
-        const safeImg = guide.Hero_Image_URL ? encodeURI(guide.Hero_Image_URL) : "";
-        const safeTitle = escapeHtml(guide.Guide_Title || "");
-        const safeTag = guide.Occasion_Tag ? escapeHtml(guide.Occasion_Tag) : "";
-        const safeDesc = guide.Description ? escapeHtml(guide.Description) : "";
-        return `
-        <a class="teaser-card" href="gift-ideas.html?slug=${safeSlug}" data-animate>
-          <img src="${safeImg}" alt="${safeTitle}" loading="lazy">
-          <div class="teaser-body">
-            ${safeTag ? `<div class="teaser-tag">${safeTag}</div>` : ""}
-            <h3>${safeTitle}</h3>
-            <p>${safeDesc}</p>
-          </div>
-        </a>`;
-      }
+    .map((guide) =>
+      buildTeaserCardHTML({
+        img: guide.Hero_Image_URL ? encodeURI(guide.Hero_Image_URL) : "",
+        title: escapeHtml(guide.Guide_Title || ""),
+        desc: guide.Description ? escapeHtml(guide.Description) : "",
+        tag: guide.Occasion_Tag ? escapeHtml(guide.Occasion_Tag) : "",
+        href: `gift-ideas.html?slug=${encodeURIComponent(guide.Slug || "")}`,
+      })
     )
     .join("");
 }
