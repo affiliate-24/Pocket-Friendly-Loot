@@ -11,6 +11,7 @@ a--Next works
 /requirements.txt
 /install_bookmarklet.html
 /grab_product_info.source.js
+netlify-build-hook.gs
 
 
   
