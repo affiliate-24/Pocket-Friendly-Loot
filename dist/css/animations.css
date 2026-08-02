@@ -1,0 +1,52 @@
+/* ==========================================================================
+   animations.css
+   All @keyframes plus the utility classes that trigger them. The global
+   prefers-reduced-motion override already lives in style.css, so nothing
+   in here needs its own reduced-motion rule.
+   ========================================================================== */
+
+@keyframes ticker-scroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+@keyframes skeleton-shimmer {
+  0% { background-position: 100% 0; }
+  100% { background-position: 0 0; }
+}
+
+/* Scroll-reveal fade-in — animations.js adds .is-visible via
+   IntersectionObserver when an element with [data-animate] enters the
+   viewport. Starts invisible/offset so there's no flash-of-content
+   before JS runs. */
+.js [data-animate] {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+.js [data-animate].is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Mobile menu open/close — height-based slide handled by .is-open in
+   components.css (display:flex); this adds the entrance motion. */
+.mobile-menu {
+  transform: translateY(-8px);
+  opacity: 0;
+  transition: transform var(--transition-medium), opacity var(--transition-medium);
+}
+.mobile-menu.is-open {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+/* Generic fade-in, used for swapping loading -> loaded content without a
+   hard cut. */
+.fade-in {
+  animation: fade-in 0.4s ease;
+}
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
