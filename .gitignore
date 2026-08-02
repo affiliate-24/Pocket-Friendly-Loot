@@ -13,3 +13,7 @@ a--Next works
 /grab_product_info.source.js
 
 
+  
+# Build output and dependencies  
+/dist  
+/node_modules  

@@ -7,6 +7,7 @@
 
 import { CONFIG } from "./app.js";
 import { fetchCSV, qsa, escapeHtml } from "./utils.js"; // escapeHtml added for XSS protection on sheet content
+import { buildCategoryCardHTML } from "./templates.js";
 
 export function loadCategories() {
   return fetchCSV(CONFIG.SHEETS.categories);
@@ -57,24 +58,7 @@ export function renderCategoryCards(container, categories) {
     return;
   }
   const sorted = categories.slice().sort((a, b) => (parseFloat(a.Sort_Order) || 0) - (parseFloat(b.Sort_Order) || 0));
-  container.innerHTML = sorted
-    .map(
-      (cat) => {
-        // Escape all sheet-derived content to prevent stored XSS / CSS injection.
-        const safeName = escapeHtml(cat.Category_Name || "");
-        const safeDesc = cat.Description ? escapeHtml(cat.Description) : "";
-        const safeIcon = cat.Icon_Emoji ? escapeHtml(cat.Icon_Emoji) : "";
-        const safeImg = cat.Image_URL ? encodeURI(cat.Image_URL) : "";
-        const safeHref = `category.html?cat=${encodeURIComponent(cat.Category_Name)}`;
-        return `
-        <a class="category-card${cat.Image_URL ? " category-card--img" : ""}" href="${safeHref}" data-animate${cat.Image_URL ? ` style="background-image:url('${escapeHtml(safeImg)}')"` : ""}>
-          ${!cat.Image_URL && cat.Icon_Emoji ? `<div class="icon" aria-hidden="true">${safeIcon}</div>` : ""}
-          <h3>${safeName}</h3>
-          ${safeDesc ? `<p>${safeDesc}</p>` : ""}
-        </a>`;
-      }
-    )
-    .join("") + `
+  container.innerHTML = sorted.map(buildCategoryCardHTML).join("") + `
     <a class="category-card" href="category.html" data-animate>
       <div class="icon" aria-hidden="true">📦</div>
       <h3>All Products</h3>

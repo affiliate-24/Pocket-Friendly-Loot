@@ -17,6 +17,7 @@ import {
   escapeHtml, // imported for XSS protection on sheet-derived strings (Title, Excerpt, etc.)
 } from "./utils.js";
 import { loadDeals, buildCardHTML, setupCardInteractions } from "./products.js"; // setupCardInteractions added to wire wishlist on recommended products
+import { buildTeaserCardHTML } from "./templates.js";
 
 export async function initBlogsPage() {
   const slug = getQueryParam("slug");
@@ -48,23 +49,14 @@ function renderListing(blogs) {
   const sorted = blogs.slice().sort((a, b) => new Date(b.Published_Date) - new Date(a.Published_Date));
   // Escape every sheet-derived string to prevent stored XSS via a malicious Blogs row.
   container.innerHTML = sorted
-    .map(
-      (post) => {
-        const safeTitle = escapeHtml(post.Title || "");
-        const safeImg = post.Hero_Image_URL ? encodeURI(post.Hero_Image_URL) : "";
-        const safeCategory = post.Category ? escapeHtml(post.Category) : "";
-        const safeExcerpt = post.Excerpt ? escapeHtml(post.Excerpt) : "";
-        const safeSlug = encodeURIComponent(post.Slug || "");
-        return `
-        <a class="teaser-card" href="blogs.html?slug=${safeSlug}" data-animate>
-          <img src="${safeImg}" alt="${safeTitle}" loading="lazy">
-          <div class="teaser-body">
-            ${safeCategory ? `<div class="teaser-tag">${safeCategory}</div>` : ""}
-            <h3>${safeTitle}</h3>
-            <p>${safeExcerpt}</p>
-          </div>
-        </a>`;
-      }
+    .map((post) =>
+      buildTeaserCardHTML({
+        img: post.Hero_Image_URL ? encodeURI(post.Hero_Image_URL) : "",
+        title: escapeHtml(post.Title || ""),
+        desc: post.Excerpt ? escapeHtml(post.Excerpt) : "",
+        tag: post.Category ? escapeHtml(post.Category) : "",
+        href: `blogs.html?slug=${encodeURIComponent(post.Slug || "")}`,
+      })
     )
     .join("");
 }

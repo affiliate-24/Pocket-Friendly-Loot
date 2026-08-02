@@ -260,6 +260,7 @@
   } from "./js/products.js";
   import { loadCategories, renderCategoryCards } from "./js/categories.js";
   import { groupBySlug } from "./js/guides.js";
+  import { buildTeaserCardHTML, buildGuidePreviewHTML } from "./js/templates.js";
   import { fetchCSV, qs, escapeHtml } from "./js/utils.js";
 
   initShared();
@@ -284,8 +285,7 @@
       const rows = await fetchCSV(CONFIG.SHEETS.bestProducts);
       const guides = groupBySlug(rows);
       const el = qs("#home-guides-headings");
-      el.innerHTML = `<div class="guide-preview">${guides.slice(0, 3).map((g) => `
-        <a class="guide-preview-card" href="best-products.html?slug=${encodeURIComponent(g.slug)}">${g.title}</a>`).join("")}</div>`;
+      el.innerHTML = `<div class="guide-preview">${guides.slice(0, 3).map(buildGuidePreviewHTML).join("")}</div>`;
     } catch { /* best products sheet not configured yet */ }
   }
 
@@ -299,18 +299,14 @@
   async function initGiftsPreview() {
     try {
       const guides = await fetchCSV(CONFIG.SHEETS.giftIdeas);
-      qs("#home-gifts-preview").innerHTML = guides.slice(0, 3).map((g) => {
-        // escapeHtml prevents stored XSS from sheet content; encodeURI neutralizes attribute-injection in src/href.
-        const safeImg = g.Hero_Image_URL ? encodeURI(g.Hero_Image_URL) : "";
-        const safeTitle = escapeHtml(g.Guide_Title || "");
-        const safeDesc = g.Description ? escapeHtml(g.Description) : "";
-        const safeSlug = encodeURIComponent(g.Slug || "");
-        return `
-          <a class="teaser-card" href="gift-ideas.html?slug=${safeSlug}" data-animate>
-            <img src="${safeImg}" alt="${safeTitle}" loading="lazy">
-            <div class="teaser-body"><h3>${safeTitle}</h3><p>${safeDesc}</p></div>
-          </a>`;
-      }).join("");
+      qs("#home-gifts-preview").innerHTML = guides.slice(0, 3).map((g) =>
+        buildTeaserCardHTML({
+          img: g.Hero_Image_URL ? encodeURI(g.Hero_Image_URL) : "",
+          title: escapeHtml(g.Guide_Title || ""),
+          desc: g.Description ? escapeHtml(g.Description) : "",
+          href: `gift-ideas.html?slug=${encodeURIComponent(g.Slug || "")}`,
+        })
+      ).join("");
     } catch { /* gift ideas sheet not configured yet */ }
   }
 
@@ -318,17 +314,14 @@
     try {
       const posts = await fetchCSV(CONFIG.SHEETS.blogs);
       const sorted = posts.slice().sort((a, b) => new Date(b.Published_Date) - new Date(a.Published_Date));
-      qs("#home-blogs-preview").innerHTML = sorted.slice(0, 3).map((p) => {
-        const safeImg = p.Hero_Image_URL ? encodeURI(p.Hero_Image_URL) : "";
-        const safeTitle = escapeHtml(p.Title || "");
-        const safeExcerpt = p.Excerpt ? escapeHtml(p.Excerpt) : "";
-        const safeSlug = encodeURIComponent(p.Slug || "");
-        return `
-          <a class="teaser-card" href="blogs.html?slug=${safeSlug}" data-animate>
-            <img src="${safeImg}" alt="${safeTitle}" loading="lazy">
-            <div class="teaser-body"><h3>${safeTitle}</h3><p>${safeExcerpt}</p></div>
-          </a>`;
-      }).join("");
+      qs("#home-blogs-preview").innerHTML = sorted.slice(0, 3).map((p) =>
+        buildTeaserCardHTML({
+          img: p.Hero_Image_URL ? encodeURI(p.Hero_Image_URL) : "",
+          title: escapeHtml(p.Title || ""),
+          desc: p.Excerpt ? escapeHtml(p.Excerpt) : "",
+          href: `blogs.html?slug=${encodeURIComponent(p.Slug || "")}`,
+        })
+      ).join("");
     } catch { /* blogs sheet not configured yet */ }
   }
 

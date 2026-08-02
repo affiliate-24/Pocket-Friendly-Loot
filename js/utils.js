@@ -111,6 +111,14 @@ export function fetchCSV(url) {
       return;
     }
 
+    // Build-time pre-render fast path: every page is generated with its
+    // dataset embedded as window.PAGE_DATA (keyed by the exact sheet URL),
+    // so there is nothing to fetch, cache, or retry — resolve instantly.
+    if (typeof window !== "undefined" && window.PAGE_DATA && Array.isArray(window.PAGE_DATA[url])) {
+      resolve(window.PAGE_DATA[url]);
+      return;
+    }
+
     var cache = readSheetCache();
     var cached = cache[url];
 
