@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Trending Deals — Pocket Friendly Loot</title>
+<meta name="description" content="Products that are selling fast right now — trending picks sorted by popularity. Filter by category, sort by price or discount.">
+<link rel="canonical" href="https://pf-loots.netlify.app/trending-deals.html">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Trending Deals — Pocket Friendly Loot">
+<meta property="og:description" content="Products that are selling fast right now.">
+<meta property="og:image" content="https://pf-loots.netlify.app/assets/og-image.png">
+<meta property="og:url" content="https://pf-loots.netlify.app/trending-deals.html">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Trending Deals — Pocket Friendly Loot">
+<meta name="twitter:description" content="Products that are selling fast right now.">
+<meta name="twitter:image" content="https://pf-loots.netlify.app/assets/og-image.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/variables.css">
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/components.css">
+<link rel="stylesheet" href="css/pages.css">
+<link rel="stylesheet" href="css/responsive.css">
+<link rel="stylesheet" href="css/animations.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js" defer></script>
+<script src="js/papafallback.js" defer></script>
+<!-- Fallback: if Papa failed to load from the CDN (outage / offline), load a local copy so the site keeps working -->
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    if (!window.Papa) {
+      var s = document.createElement('script');
+      s.src = 'assets/papaparse.min.js';
+      s.defer = true;
+      document.head.appendChild(s);
+    }
+  });
+</script>
+<!-- Branding icons: favicon + apple-touch-icon for iOS home screen bookmarks -->
+<link rel="icon" type="image/x-icon" href="/assets/favicon.ico">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">
+</head>
+<body>
+<script>document.documentElement.classList.add('js');</script>
+<header class="navbar">
+  <div class="nav-top">
+    <a class="brand" href="index.html"><span class="brand-dot"></span> Pocket Friendly Loot</a>
+    <form class="search-bar" action="search.html" method="GET">
+                      <div class="search-cat-wrap">
+                        <select class="search-cat" name="cat" aria-label="Category">
+                          <option value="">All</option>
+                        </select>
+                      </div>
+                      <div class="search-input-wrap">
+                        <input class="search-input-field" name="q" type="text" placeholder="Search products…" aria-label="Search products" autocomplete="off">
+                        <div id="search-suggestions" class="search-suggestions" hidden></div>
+                      </div>
+                      <button class="search-submit" type="submit" aria-label="Submit search">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                      </button>
+                    </form>
+    <div class="nav-actions">
+<span class="nav-tg">
+      <a class="nav-tg-link" data-telegram-cta href="#" target="_blank" rel="noopener" data-tooltip="Get alerts on Telegram">
+        <svg class="tg-icon" width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+      </a>
+      <span class="nav-tg-label">Join Telegram</span>
+    </span>
+    <a class="nav-saved-link" href="saved.html" aria-label="Favorites" title="Favorites">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7.5-4.6-10-9.3C.5 8 2 4.5 5.5 4 8 3.6 10 5 12 7.5 14 5 16 3.6 18.5 4 22 4.5 23.5 8 22 11.7 19.5 16.4 12 21 12 21z"/></svg>
+    <span class="nav-saved-badge" id="saved-badge">0</span>
+  </a><button class="nav-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-menu"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" stroke="none" aria-hidden="true"><circle cx="12" cy="5" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="12" cy="19" r="2"/></svg></button>
+    </div>
+  </div>
+  <div class="nav-bottom">
+    <nav class="nav-links" aria-label="Primary">
+        <a class="nav-link" href="index.html">Home</a>
+        <a class="nav-link" href="todays-deals.html">Today's Deals</a>
+        <a class="nav-link" href="trending-deals.html">Trending</a>
+        <a class="nav-link" href="categories.html">Categories</a>
+        <a class="nav-link" href="best-products.html">Best Products</a>
+        <a class="nav-link" href="blogs.html">Blogs</a>
+        <a class="nav-link" href="gift-ideas.html">Gift Ideas</a>
+      </nav>
+  </div>
+  <nav id="mobile-menu" class="mobile-menu" aria-label="Mobile">
+    <a class="nav-link" href="index.html">Home</a>
+    <a class="nav-link" href="todays-deals.html">Today's Deals</a>
+    <a class="nav-link" href="trending-deals.html">Trending</a>
+    <a class="nav-link" href="categories.html">Categories</a>
+    <a class="nav-link" href="best-products.html">Best Products</a>
+    <a class="nav-link" href="blogs.html">Blogs</a>
+    <a class="nav-link" href="gift-ideas.html">Gift Ideas</a>
+    <a class="nav-link" href="search.html">Search</a>
+  </nav>
+</header>
+<main id="main">
+  <div class="page-header">
+    <span class="eyebrow">🔥 Trending now</span>
+    <h1>Trending Deals</h1>
+    <p>Products that are selling fast right now. Filter, sort, and keep scrolling — more loads automatically.</p>
+  </div>
+  <div class="controls">
+    <select id="category-select" class="sort-select" aria-label="Filter by category">
+      <option value="">All Categories</option>
+    </select>
+    <select class="sort-select" id="sort-select" aria-label="Sort deals">
+      <option value="default">Sort: Featured</option>
+      <option value="price-asc">Price: Low to High</option>
+      <option value="price-desc">Price: High to Low</option>
+      <option value="discount-desc">Biggest Discount</option>
+      <option value="rating-desc">Highest Rated</option>
+    </select>
+  </div>
+  <div class="grid" id="deals-grid">
+    <article class="card" data-sno="13" data-link="https://www.amazon.in/dp/B0GYY8ZNP3?tag=dcube01-21" tabindex="-1">
+      <div class="card-img">
+        
+        <span class="badge badge-discount">29% OFF</span>
+        <button
+          type="button"
+          class="wishlist-btn "
+          data-wishlist-btn
+          data-sno="13"
+          aria-pressed="false"
+          aria-label="Add to wishlist: XIAOMI 17T (Violet,12GB+256GB)|Flagship Leica Cameras|Leica UltraPure Optics|Segment Best Leica 5X Optical Zoom|120X AI Zoom|16.74cm(6.59") 120Hz AMOLED Display|3500 nits|6500mAh Battery|HyperOS 3.0"
+        ><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 21s-7.5-4.6-10-9.3C.5 8 2 4.5 5.5 4 8 3.6 10 5 12 7.5 14 5 16 3.6 18.5 4 22 4.5 23.5 8 22 11.7 19.5 16.4 12 21 12 21z"/></svg></button>
+        <img src="https://m.media-amazon.com/images/I/61AX0q6UfJL._SL1500_.jpg" alt="XIAOMI 17T (Violet,12GB+256GB)|Flagship Leica Cameras|Leica UltraPure Optics|Segment Best Leica 5X Optical Zoom|120X AI Zoom|16.74cm(6.59") 120Hz AMOLED Display|3500 nits|6500mAh Battery|HyperOS 3.0" loading="lazy" onerror="this.style.display='none'">
+      </div>
+      <div class="card-body">
+        <!-- this is commented because every product box containaing it -->
+        <!-- <span class="badge badge-affiliate">Affiliate</span> -->
+        <div class="card-cat">Electronics</div>
+        <div class="card-name"><a href="https://www.amazon.in/dp/B0GYY8ZNP3?tag=dcube01-21" target="_blank" rel="noopener sponsored nofollow">XIAOMI 17T (Violet,12GB+256GB)|Flagship Leica Cameras|Leica UltraPure Optics|Segment Best Leica 5X Optical Zoom|120X AI Zoom|16.74cm(6.59") 120Hz AMOLED Display|3500 nits|6500mAh Battery|HyperOS 3.0</a></div>
+        <div class="stars" role="img" aria-label="4.5 out of 5 stars, 11 reviews"><span class="star-filled" aria-hidden="true">★</span><span class="star-filled" aria-hidden="true">★</span><span class="star-filled" aria-hidden="true">★</span><span class="star-filled" aria-hidden="true">★</span><span class="star-filled" aria-hidden="true">★</span><span class="review-count">(11)</span></div>
+        <div class="card-price">
+          <span class="orig">₹84,990</span>
+          <span class="sale">₹59,999</span>
+        </div>
+        <a class="card-cta" href="https://www.amazon.in/dp/B0GYY8ZNP3?tag=dcube01-21" target="_blank" rel="noopener sponsored nofollow">Grab Deal</a>
+      </div>
+    </article>
+    <article class="card" data-sno="17" data-link="https://www.amazon.in/dp/B0DRYMKCW4?tag=dcube01-21" tabindex="-1">
+      <div class="card-img">
+        
+        <span class="badge badge-discount">20% OFF</span>
+        <button
+          type="button"
+          class="wishlist-btn "
+          data-wishlist-btn
+          data-sno="17"
+          aria-pressed="false"
+          aria-label="Add to wishlist: Samsung 9 kg, 5 star, AI EcoBubble, Super Speed, Wi-Fi, Hygiene Steam with Inbuilt Heater, Digital Inverter, Fully-Automatic Front Load Washing Machine (WW90DG5U24AXTL, Inox)"
+        ><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 21s-7.5-4.6-10-9.3C.5 8 2 4.5 5.5 4 8 3.6 10 5 12 7.5 14 5 16 3.6 18.5 4 22 4.5 23.5 8 22 11.7 19.5 16.4 12 21 12 21z"/></svg></button>
+        <img src="https://m.media-amazon.com/images/I/71pUPI7ylNL._SL1500_.jpg" alt="Samsung 9 kg, 5 star, AI EcoBubble, Super Speed, Wi-Fi, Hygiene Steam with Inbuilt Heater, Digital Inverter, Fully-Automatic Front Load Washing Machine (WW90DG5U24AXTL, Inox)" loading="lazy" onerror="this.style.display='none'">
+      </div>
+      <div class="card-body">
+        <!-- this is commented because every product box containaing it -->
+        <!-- <span class="badge badge-affiliate">Affiliate</span> -->
+        <div class="card-cat">Home &amp; Kitchen</div>
+        <div class="card-name"><a href="https://www.amazon.in/dp/B0DRYMKCW4?tag=dcube01-21" target="_blank" rel="noopener sponsored nofollow">Samsung 9 kg, 5 star, AI EcoBubble, Super Speed, Wi-Fi, Hygiene Steam with Inbuilt Heater, Digital Inverter, Fully-Automatic Front Load Washing Machine (WW90DG5U24AXTL, Inox)</a></div>
+        <div class="stars" role="img" aria-label="4.2 out of 5 stars, 715 reviews"><span class="star-filled" aria-hidden="true">★</span><span class="star-filled" aria-hidden="true">★</span><span class="star-filled" aria-hidden="true">★</span><span class="star-filled" aria-hidden="true">★</span><span class="star-empty" aria-hidden="true">★</span><span class="review-count">(715)</span></div>
+        <div class="card-price">
+          <span class="orig">₹50,990</span>
+          <span class="sale">₹40,691</span>
+        </div>
+        <a class="card-cta" href="https://www.amazon.in/dp/B0DRYMKCW4?tag=dcube01-21" target="_blank" rel="noopener sponsored nofollow">Grab Deal</a>
+      </div>
+    </article>
+    <article class="card" data-sno="1" data-link="https://www.amazon.in/dp/B0GX52LD7V?tag=dcube01-21" tabindex="-1">
+      <div class="card-img">
+        
+        <span class="badge badge-discount">Selling fast this week</span>
+        <button
+          type="button"
+          class="wishlist-btn "
+          data-wishlist-btn
+          data-sno="1"
+          aria-pressed="false"
+          aria-label="Add to wishlist: VW 109 cm (43 inches) Spectra Series Full HD Smart QLED Android TV VW43AQ3"
+        ><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 21s-7.5-4.6-10-9.3C.5 8 2 4.5 5.5 4 8 3.6 10 5 12 7.5 14 5 16 3.6 18.5 4 22 4.5 23.5 8 22 11.7 19.5 16.4 12 21 12 21z"/></svg></button>
+        <img src="https://m.media-amazon.com/images/I/817R+GUhSXL._SL1500_.jpg" alt="VW 109 cm (43 inches) Spectra Series Full HD Smart QLED Android TV VW43AQ3" loading="lazy" onerror="this.style.display='none'">
+      </div>
+      <div class="card-body">
+        <!-- this is commented because every product box containaing it -->
+        <!-- <span class="badge badge-affiliate">Affiliate</span> -->
+        <div class="card-cat">Electronics</div>
+        <div class="card-name"><a href="https://www.amazon.in/dp/B0GX52LD7V?tag=dcube01-21" target="_blank" rel="noopener sponsored nofollow">VW 109 cm (43 inches) Spectra Series Full HD Smart QLED Android TV VW43AQ3</a></div>
+        <div class="stars" role="img" aria-label="4.1 out of 5 stars, 15964 reviews"><span class="star-filled" aria-hidden="true">★</span><span class="star-filled" aria-hidden="true">★</span><span class="star-filled" aria-hidden="true">★</span><span class="star-filled" aria-hidden="true">★</span><span class="star-empty" aria-hidden="true">★</span><span class="review-count">(15,964)</span></div>
+        <div class="card-price">
+          <span class="orig">₹29,999</span>
+          <span class="sale">₹15,499</span>
+        </div>
+        <a class="card-cta" href="https://www.amazon.in/dp/B0GX52LD7V?tag=dcube01-21" target="_blank" rel="noopener sponsored nofollow">Grab Deal</a>
+      </div>
+    </article>
+    <article class="card" data-sno="2" data-link="https://www.amazon.in/dp/B0F84FBWQM?tag=dcube01-21" tabindex="-1">
+      <div class="card-img">
+        
+        <span class="badge badge-discount">8% OFF</span>
+        <button
+          type="button"
+          class="wishlist-btn "
+          data-wishlist-btn
+          data-sno="2"
+          aria-pressed="false"
+          aria-label="Add to wishlist: Samsung 80 cm (32 inches) HD Smart LED TV UA32H4550FUXXL"
+        ><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 21s-7.5-4.6-10-9.3C.5 8 2 4.5 5.5 4 8 3.6 10 5 12 7.5 14 5 16 3.6 18.5 4 22 4.5 23.5 8 22 11.7 19.5 16.4 12 21 12 21z"/></svg></button>
+        <img src="https://m.media-amazon.com/images/I/71XA+N8Xj1L._SL1500_.jpg" alt="Samsung 80 cm (32 inches) HD Smart LED TV UA32H4550FUXXL" loading="lazy" onerror="this.style.display='none'">
+      </div>
+      <div class="card-body">
+        <!-- this is commented because every product box containaing it -->
+        <!-- <span class="badge badge-affiliate">Affiliate</span> -->
+        <div class="card-cat">Electronics</div>
+        <div class="card-name"><a href="https://www.amazon.in/dp/B0F84FBWQM?tag=dcube01-21" target="_blank" rel="noopener sponsored nofollow">Samsung 80 cm (32 inches) HD Smart LED TV UA32H4550FUXXL</a></div>
+        <div class="stars" role="img" aria-label="4.1 out of 5 stars, 6319 reviews"><span class="star-filled" aria-hidden="true">★</span><span class="star-filled" aria-hidden="true">★</span><span class="star-filled" aria-hidden="true">★</span><span class="star-filled" aria-hidden="true">★</span><span class="star-empty" aria-hidden="true">★</span><span class="review-count">(6,319)</span></div>
+        <div class="card-price">
+          <span class="orig">₹17,900</span>
+          <span class="sale">₹16,490</span>
+        </div>
+        <a class="card-cta" href="https://www.amazon.in/dp/B0F84FBWQM?tag=dcube01-21" target="_blank" rel="noopener sponsored nofollow">Grab Deal</a>
+      </div>
+    </article>
+    <article class="card" data-sno="3" data-link="https://www.amazon.in/dp/B0F3JM1YP5?tag=dcube01-21" tabindex="-1">
+      <div class="card-img">
+        
+        <span class="badge badge-discount">46% OFF</span>
+        <button
+          type="button"
+          class="wishlist-btn "
+          data-wishlist-btn
+          data-sno="3"
+          aria-pressed="false"
+          aria-label="Add to wishlist: Xiaomi 80 cm (32 inch) F Series HD Ready Smart LED Fire TV L32MB-FIN"
+        ><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 21s-7.5-4.6-10-9.3C.5 8 2 4.5 5.5 4 8 3.6 10 5 12 7.5 14 5 16 3.6 18.5 4 22 4.5 23.5 8 22 11.7 19.5 16.4 12 21 12 21z"/></svg></button>
+        <img src="https://m.media-amazon.com/images/I/71kjAokz-yL._SL1500_.jpg" alt="Xiaomi 80 cm (32 inch) F Series HD Ready Smart LED Fire TV L32MB-FIN" loading="lazy" onerror="this.style.display='none'">
+      </div>
+      <div class="card-body">
+        <!-- this is commented because every product box containaing it -->
+        <!-- <span class="badge badge-affiliate">Affiliate</span> -->
+        <div class="card-cat">Electronics</div>
+        <div class="card-name"><a href="https://www.amazon.in/dp/B0F3JM1YP5?tag=dcube01-21" target="_blank" rel="noopener sponsored nofollow">Xiaomi 80 cm (32 inch) F Series HD Ready Smart LED Fire TV L32MB-FIN</a></div>
+        <div class="stars" role="img" aria-label="4.1 out of 5 stars, 1038 reviews"><span class="star-filled" aria-hidden="true">★</span><span class="star-filled" aria-hidden="true">★</span><span class="star-filled" aria-hidden="true">★</span><span class="star-filled" aria-hidden="true">★</span><span class="star-empty" aria-hidden="true">★</span><span class="review-count">(1,038)</span></div>
+        <div class="card-price">
+          <span class="orig">₹24,999</span>
+          <span class="sale">₹13,499</span>
+        </div>
+        <a class="card-cta" href="https://www.amazon.in/dp/B0F3JM1YP5?tag=dcube01-21" target="_blank" rel="noopener sponsored nofollow">Grab Deal</a>
+      </div>
+    </article>
+    <article class="card" data-sno="4" data-link="https://www.amazon.in/dp/B0FBWG1Z6Q?tag=dcube01-21" tabindex="-1">
+      <div class="card-img">
+        
+        <span class="badge badge-discount">39% OFF</span>
+        <button
+          type="button"
+          class="wishlist-btn "
+          data-wishlist-btn
+          data-sno="4"
+          aria-pressed="false"
+          aria-label="Add to wishlist: PHILIPS 80 cm (32 inches) 6100 Series Frameless HD Smart LED Google TV 32PFT6130/94"
+        ><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 21s-7.5-4.6-10-9.3C.5 8 2 4.5 5.5 4 8 3.6 10 5 12 7.5 14 5 16 3.6 18.5 4 22 4.5 23.5 8 22 11.7 19.5 16.4 12 21 12 21z"/></svg></button>
+        <img src="https://m.media-amazon.com/images/I/71YBXXC6T6L._SL1500_.jpg" alt="PHILIPS 80 cm (32 inches) 6100 Series Frameless HD Smart LED Google TV 32PFT6130/94" loading="lazy" onerror="this.style.display='none'">
+      </div>
+      <div class="card-body">
+        <!-- this is commented because every product box containaing it -->
+        <!-- <span class="badge badge-affiliate">Affiliate</span> -->
+        <div class="card-cat">Electronics</div>
+        <div class="card-name"><a href="https://www.amazon.in/dp/B0FBWG1Z6Q?tag=dcube01-21" target="_blank" rel="noopener sponsored nofollow">PHILIPS 80 cm (32 inches) 6100 Series Frameless HD Smart LED Google TV 32PFT6130/94</a></div>
+        <div class="stars" role="img" aria-label="4.1 out of 5 stars, 839 reviews"><span class="star-filled" aria-hidden="true">★</span><span class="star-filled" aria-hidden="true">★</span><span class="star-filled" aria-hidden="true">★</span><span class="star-filled" aria-hidden="true">★</span><span class="star-empty" aria-hidden="true">★</span><span class="review-count">(839)</span></div>
+        <div class="card-price">
+          <span class="orig">₹22,999</span>
+          <span class="sale">₹13,999</span>
+        </div>
+        <a class="card-cta" href="https://www.amazon.in/dp/B0FBWG1Z6Q?tag=dcube01-21" target="_blank" rel="noopener sponsored nofollow">Grab Deal</a>
+      </div>
+    </article>
+    <article class="card" data-sno="5" data-link="https://www.amazon.in/dp/B0GY486J25?tag=dcube01-21" tabindex="-1">
+      <div class="card-img">
+        
+        <span class="badge badge-discount">38% OFF</span>
+        <button
+          type="button"
+          class="wishlist-btn "
+          data-wishlist-btn
+          data-sno="5"
+          aria-pressed="false"
+          aria-label="Add to wishlist: Sony 164 cm (65 inches) BRAVIA 3II Ultra HD Smart LED Google TV K-65XR30M2"
+        ><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 21s-7.5-4.6-10-9.3C.5 8 2 4.5 5.5 4 8 3.6 10 5 12 7.5 14 5 16 3.6 18.5 4 22 4.5 23.5 8 22 11.7 19.5 16.4 12 21 12 21z"/></svg></button>
+        <img src="https://m.media-amazon.com/images/I/81nJ+qPGu8L._SL1500_.jpg" alt="Sony 164 cm (65 inches) BRAVIA 3II Ultra HD Smart LED Google TV K-65XR30M2" loading="lazy" onerror="this.style.display='none'">
+      </div>
+      <div class="card-body">
+        <!-- this is commented because every product box containaing it -->
+        <!-- <span class="badge badge-affiliate">Affiliate</span> -->
+        <div class="card-cat">Electronics</div>
+        <div class="card-name"><a href="https://www.amazon.in/dp/B0GY486J25?tag=dcube01-21" target="_blank" rel="noopener sponsored nofollow">Sony 164 cm (65 inches) BRAVIA 3II Ultra HD Smart LED Google TV K-65XR30M2</a></div>
+        <div class="stars" role="img" aria-label="5 out of 5 stars, 2 reviews"><span class="star-filled" aria-hidden="true">★</span><span class="star-filled" aria-hidden="true">★</span><span class="star-filled" aria-hidden="true">★</span><span class="star-filled" aria-hidden="true">★</span><span class="star-filled" aria-hidden="true">★</span><span class="review-count">(2)</span></div>
+        <div class="card-price">
+          <span class="orig">₹1,89,900</span>
+          <span class="sale">₹1,17,990</span>
+        </div>
+        <a class="card-cta" href="https://www.amazon.in/dp/B0GY486J25?tag=dcube01-21" target="_blank" rel="noopener sponsored nofollow">Grab Deal</a>
+      </div>
+    </article>
+    <article class="card" data-sno="6" data-link="https://www.amazon.in/dp/B09BB766ZL?tag=dcube01-21" tabindex="-1">
+      <div class="card-img">
+        
+        <span class="badge badge-discount">11% OFF</span>
+        <button
+          type="button"
+          class="wishlist-btn "
+          data-wishlist-btn
+          data-sno="6"
+          aria-pressed="false"
+          aria-label="Add to wishlist: ASUS Zenbook 14 (2026),Smartchoice,Intel Core Ultra 9 285H,32GB RAM,1TB SSD,OLED,Touchscreen,14"(35.5 cm),Win 11,M365 Basic(1Y)* Office 24,Foggy Silver,1.28 Kg,UX3405CA-QL1113WS,Thin &amp; Light Laptop"
+        ><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 21s-7.5-4.6-10-9.3C.5 8 2 4.5 5.5 4 8 3.6 10 5 12 7.5 14 5 16 3.6 18.5 4 22 4.5 23.5 8 22 11.7 19.5 16.4 12 21 12 21z"/></svg></button>
+        <img src="https://m.media-amazon.com/images/I/61tjQ9CkAhL._SL1500_.jpg" alt="ASUS Zenbook 14 (2026),Smartchoice,Intel Core Ultra 9 285H,32GB RAM,1TB SSD,OLED,Touchscreen,14"(35.5 cm),Win 11,M365 Basic(1Y)* Office 24,Foggy Silver,1.28 Kg,UX3405CA-QL1113WS,Thin &amp; Light Laptop" loading="lazy" onerror="this.style.display='none'">
+      </div>
+      <div class="card-body">
+        <!-- this is commented because every product box containaing it -->
+        <!-- <span class="badge badge-affiliate">Affiliate</span> -->
+        <div class="card-cat">Computers &amp; Accessories</div>
+        <div class="card-name"><a href="https://www.amazon.in/dp/B09BB766ZL?tag=dcube01-21" target="_blank" rel="noopener sponsored nofollow">ASUS Zenbook 14 (2026),Smartchoice,Intel Core Ultra 9 285H,32GB RAM,1TB SSD,OLED,Touchscreen,14"(35.5 cm),Win 11,M365 Basic(1Y)* Office 24,Foggy Silver,1.28 Kg,UX3405CA-QL1113WS,Thin &amp; Light Laptop</a></div>
+        <div class="stars" role="img" aria-label="4.8 out of 5 stars, 8 reviews"><span class="star-filled" aria-hidden="true">★</span><span class="star-filled" aria-hidden="true">★</span><span class="star-filled" aria-hidden="true">★</span><span class="star-filled" aria-hidden="true">★</span><span class="star-filled" aria-hidden="true">★</span><span class="review-count">(8)</span></div>
+        <div class="card-price">
+          <span class="orig">₹1,53,990</span>
+          <span class="sale">₹1,36,990</span>
+        </div>
+        <a class="card-cta" href="https://www.amazon.in/dp/B09BB766ZL?tag=dcube01-21" target="_blank" rel="noopener sponsored nofollow">Grab Deal</a>
+      </div>
+    </article>
+    <article class="card" data-sno="7" data-link="https://www.amazon.in/dp/B0G2BHDDB8?tag=dcube01-21" tabindex="-1">
+      <div class="card-img">
+        
+        <span class="badge badge-discount">4% OFF</span>
+        <button
+          type="button"
+          class="wishlist-btn "
+          data-wishlist-btn
+          data-sno="7"
+          aria-pressed="false"
+          aria-label="Add to wishlist: HP 14 Smartchoice, Intel Core Ultra 5 125H 12 TOPS, 24GB DDR5 (Upgradeable) 1TB SSD, Anti-Glare, FHD, 14''/35.6cm,Win11, M365*Office24, Silver, 1.4kg, ep1180tu, FHD Camera w/Shutter, Backlit AI Laptop"
+        ><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 21s-7.5-4.6-10-9.3C.5 8 2 4.5 5.5 4 8 3.6 10 5 12 7.5 14 5 16 3.6 18.5 4 22 4.5 23.5 8 22 11.7 19.5 16.4 12 21 12 21z"/></svg></button>
+        <img src="https://m.media-amazon.com/images/I/71vhdLDaDQL._SL1500_.jpg" alt="HP 14 Smartchoice, Intel Core Ultra 5 125H 12 TOPS, 24GB DDR5 (Upgradeable) 1TB SSD, Anti-Glare, FHD, 14''/35.6cm,Win11, M365*Office24, Silver, 1.4kg, ep1180tu, FHD Camera w/Shutter, Backlit AI Laptop" loading="lazy" onerror="this.style.display='none'">
+      </div>
+      <div class="card-body">
+        <!-- this is commented because every product box containaing it -->
+        <!-- <span class="badge badge-affiliate">Affiliate</span> -->
+        <div class="card-cat">Computers &amp; Accessories</div>
+        <div class="card-name"><a href="https://www.amazon.in/dp/B0G2BHDDB8?tag=dcube01-21" target="_blank" rel="noopener sponsored nofollow">HP 14 Smartchoice, Intel Core Ultra 5 125H 12 TOPS, 24GB DDR5 (Upgradeable) 1TB SSD, Anti-Glare, FHD, 14''/35.6cm,Win11, M365*Office24, Silver, 1.4kg, ep1180tu, FHD Camera w/Shutter, Backlit AI Laptop</a></div>
+        <div class="stars" role="img" aria-label="3.6 out of 5 stars, 61 reviews"><span class="star-filled" aria-hidden="true">★</span><span class="star-filled" aria-hidden="true">★</span><span class="star-filled" aria-hidden="true">★</span><span class="star-filled" aria-hidden="true">★</span><span class="star-empty" aria-hidden="true">★</span><span class="review-count">(61)</span></div>
+        <div class="card-price">
+          <span class="orig">₹81,143</span>
+          <span class="sale">₹77,990</span>
+        </div>
+        <a class="card-cta" href="https://www.amazon.in/dp/B0G2BHDDB8?tag=dcube01-21" target="_blank" rel="noopener sponsored nofollow">Grab Deal</a>
+      </div>
+    </article>
+    <article class="card" data-sno="8" data-link="https://www.amazon.in/dp/B0H3PV7418?tag=dcube01-21" tabindex="-1">
+      <div class="card-img">
+        
+        <span class="badge badge-discount">44% OFF</span>
+        <button
+          type="button"
+          class="wishlist-btn "
+          data-wishlist-btn
+          data-sno="8"
+          aria-pressed="false"
+          aria-label="Add to wishlist: Lenovo IdeaPad Slim 3 Intel Core Ultra 5 322 Next-Gen AI PC (16GB RAM/512GB SSD/15.3" (38.8cm)/WUXGA IPS/Copilot+ PC/Windows 11/MSO 365 Basic+Office 2024/Backlit Keyboard/Grey/1.6Kg), 83UR009QIN"
+        ><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 21s-7.5-4.6-10-9.3C.5 8 2 4.5 5.5 4 8 3.6 10 5 12 7.5 14 5 16 3.6 18.5 4 22 4.5 23.5 8 22 11.7 19.5 16.4 12 21 12 21z"/></svg></button>
+        <img src="https://m.media-amazon.com/images/I/81lOD07E0YL._SL1500_.jpg" alt="Lenovo IdeaPad Slim 3 Intel Core Ultra 5 322 Next-Gen AI PC (16GB RAM/512GB SSD/15.3" (38.8cm)/WUXGA IPS/Copilot+ PC/Windows 11/MSO 365 Basic+Office 2024/Backlit Keyboard/Grey/1.6Kg), 83UR009QIN" loading="lazy" onerror="this.style.display='none'">
+      </div>
+      <div class="card-body">
+        <!-- this is commented because every product box containaing it -->
+        <!-- <span class="badge badge-affiliate">Affiliate</span> -->
+        <div class="card-cat">Computers &amp; Accessories</div>
+        <div class="card-name"><a href="https://www.amazon.in/dp/B0H3PV7418?tag=dcube01-21" target="_blank" rel="noopener sponsored nofollow">Lenovo IdeaPad Slim 3 Intel Core Ultra 5 322 Next-Gen AI PC (16GB RAM/512GB SSD/15.3" (38.8cm)/WUXGA IPS/Copilot+ PC/Windows 11/MSO 365 Basic+Office 2024/Backlit Keyboard/Grey/1.6Kg), 83UR009QIN</a></div>
+        <div class="stars" role="img" aria-label="4.8 out of 5 stars, 8 reviews"><span class="star-filled" aria-hidden="true">★</span><span class="star-filled" aria-hidden="true">★</span><span class="star-filled" aria-hidden="true">★</span><span class="star-filled" aria-hidden="true">★</span><span class="star-filled" aria-hidden="true">★</span><span class="review-count">(8)</span></div>
+        <div class="card-price">
+          <span class="orig">₹1,80,690</span>
+          <span class="sale">₹1,01,007</span>
+        </div>
+        <a class="card-cta" href="https://www.amazon.in/dp/B0H3PV7418?tag=dcube01-21" target="_blank" rel="noopener sponsored nofollow">Grab Deal</a>
+      </div>
+    </article>
+    <article class="card" data-sno="9" data-link="https://www.amazon.in/dp/B0FMRWYCRT?tag=dcube01-21" tabindex="-1">
+      <div class="card-img">
+        
+        <span class="badge badge-discount">8% OFF</span>
+        <button
+          type="button"
+          class="wishlist-btn "
+          data-wishlist-btn
+          data-sno="9"
+          aria-pressed="false"
+          aria-label="Add to wishlist: HP OmniBook X Flip OLED Intel Core Ultra 5 226V, 40 Tops (16GB LPDDR5x,1TB SSD) 3K, Touch, 120hz, 14''/35.6cm, Intel ARC Graphic,Win11, Office24, Meteor Silver, 1.38kg, fm0099TU,Pen, 2 in 1 AI Laptop"
+        ><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 21s-7.5-4.6-10-9.3C.5 8 2 4.5 5.5 4 8 3.6 10 5 12 7.5 14 5 16 3.6 18.5 4 22 4.5 23.5 8 22 11.7 19.5 16.4 12 21 12 21z"/></svg></button>
+        <img src="https://m.media-amazon.com/images/I/71jypuf+GVL._SL1500_.jpg" alt="HP OmniBook X Flip OLED Intel Core Ultra 5 226V, 40 Tops (16GB LPDDR5x,1TB SSD) 3K, Touch, 120hz, 14''/35.6cm, Intel ARC Graphic,Win11, Office24, Meteor Silver, 1.38kg, fm0099TU,Pen, 2 in 1 AI Laptop" loading="lazy" onerror="this.style.display='none'">
+      </div>
+      <div class="card-body">
+        <!-- this is commented because every product box containaing it -->
+        <!-- <span class="badge badge-affiliate">Affiliate</span> -->
+        <div class="card-cat">Computers &amp; Accessories</div>
+        <div class="card-name"><a href="https://www.amazon.in/dp/B0FMRWYCRT?tag=dcube01-21" target="_blank" rel="noopener sponsored nofollow">HP OmniBook X Flip OLED Intel Core Ultra 5 226V, 40 Tops (16GB LPDDR5x,1TB SSD) 3K, Touch, 120hz, 14''/35.6cm, Intel ARC Graphic,Win11, Office24, Meteor Silver, 1.38kg, fm0099TU,Pen, 2 in 1 AI Laptop</a></div>
+        <div class="stars" role="img" aria-label="3.4 out of 5 stars, 32 reviews"><span class="star-filled" aria-hidden="true">★</span><span class="star-filled" aria-hidden="true">★</span><span class="star-filled" aria-hidden="true">★</span><span class="star-empty" aria-hidden="true">★</span><span class="star-empty" aria-hidden="true">★</span><span class="review-count">(32)</span></div>
+        <div class="card-price">
+          <span class="orig">₹1,25,841.3</span>
+          <span class="sale">₹1,15,990</span>
+        </div>
+        <a class="card-cta" href="https://www.amazon.in/dp/B0FMRWYCRT?tag=dcube01-21" target="_blank" rel="noopener sponsored nofollow">Grab Deal</a>
+      </div>
+    </article>
+    <article class="card" data-sno="10" data-link="https://www.amazon.in/dp/B0GR1NYGC9?tag=dcube01-21" tabindex="-1">
+      <div class="card-img">
+        
+        <span class="badge badge-discount">-243% OFF</span>
+        <button
+          type="button"
+          class="wishlist-btn "
+          data-wishlist-btn
+          data-sno="10"
+          aria-pressed="false"
+          aria-label="Add to wishlist: Apple 2026 MacBook Pro Laptop with M5 Pro chip with 18‑core CPU and 20‑core GPU: Built for AI, 41.05 cm (16.2″) Liquid Retina XDR Display, 48GB Unified Memory, 1TB SSD Storage; Space Black"
+        ><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 21s-7.5-4.6-10-9.3C.5 8 2 4.5 5.5 4 8 3.6 10 5 12 7.5 14 5 16 3.6 18.5 4 22 4.5 23.5 8 22 11.7 19.5 16.4 12 21 12 21z"/></svg></button>
+        <img src="https://m.media-amazon.com/images/I/61h78UMEXjL._SL1500_.jpg" alt="Apple 2026 MacBook Pro Laptop with M5 Pro chip with 18‑core CPU and 20‑core GPU: Built for AI, 41.05 cm (16.2″) Liquid Retina XDR Display, 48GB Unified Memory, 1TB SSD Storage; Space Black" loading="lazy" onerror="this.style.display='none'">
+      </div>
+      <div class="card-body">
+        <!-- this is commented because every product box containaing it -->
+        <!-- <span class="badge badge-affiliate">Affiliate</span> -->
+        <div class="card-cat">Computers &amp; Accessories</div>
+        <div class="card-name"><a href="https://www.amazon.in/dp/B0GR1NYGC9?tag=dcube01-21" target="_blank" rel="noopener sponsored nofollow">Apple 2026 MacBook Pro Laptop with M5 Pro chip with 18‑core CPU and 20‑core GPU: Built for AI, 41.05 cm (16.2″) Liquid Retina XDR Display, 48GB Unified Memory, 1TB SSD Storage; Space Black</a></div>
+        
+        <div class="card-price">
+          <span class="orig">₹1,25,841.3</span>
+          <span class="sale">₹4,31,900</span>
+        </div>
+        <a class="card-cta" href="https://www.amazon.in/dp/B0GR1NYGC9?tag=dcube01-21" target="_blank" rel="noopener sponsored nofollow">Grab Deal</a>
+      </div>
+    </article></div>
+</main>
+<footer class="site-footer">
+  <div class="footer-grid">
+    <div class="footer-col"><h4>Pocket Friendly Loot</h4><a href="index.html">Home</a><a href="todays-deals.html">Today's Deals</a><a href="trending-deals.html">Trending Deals</a><a href="categories.html">Categories</a></div>
+    <div class="footer-col"><h4>Discover</h4><a href="best-products.html">Best Products</a><a href="blogs.html">Blogs</a><a href="gift-ideas.html">Gift Ideas</a><a href="about.html">About</a></div>
+    <div class="footer-col"><h4>More</h4><a href="search.html">Search</a><a href="contact.html">Contact</a><a href="saved.html">Favorites</a><a data-telegram-cta href="#" target="_blank" rel="noopener">Telegram Channel</a></div>
+    <div class="footer-col"><h4>Legal</h4><a href="privacy-policy.html">Privacy Policy</a><a href="affiliate-disclosure.html">Affiliate Disclosure</a><a href="terms.html">Terms of Use</a></div>
+  </div>
+  <div class="footer-bottom disclosure">
+    As an Amazon Associate, I earn from qualifying purchases.<br>
+    © <span data-current-year></span> Pocket Friendly Loot | <a data-telegram-cta href="#" target="_blank" rel="noopener">Join us on Telegram</a> for instant deals.
+  </div>
+</footer>
+<script type="module">
+  import { initShared } from "./js/app.js";
+  import { initNavbar } from "./js/navbar.js";
+  import { initScrollReveal } from "./js/animations.js";
+  import {
+    loadDeals, loadTrendingDeals, resolveCuratedList,
+    renderSkeletonGrid, sortDeals, initInfiniteScroll,
+  } from "./js/products.js";
+  import { loadCategories } from "./js/categories.js";
+  import { qs } from "./js/utils.js";
+  initShared();
+  initNavbar();
+  let allDeals = [];
+  var activeCategory = "";
+  function isInCategory(deal, category) {
+    if (!category) return true;
+    return (deal.Category || "").split(",").map(function (c) { return c.trim(); }).includes(category);
+  }
+  function applyAndRender() {
+    const sortKey = qs("#sort-select").value;
+    var filtered = allDeals.filter(function (d) { return isInCategory(d, activeCategory); });
+    filtered = sortDeals(filtered, sortKey);
+    initInfiniteScroll(qs("#deals-grid"), filtered, 12);
+    initScrollReveal();
+  }
+  function populateCategoryDropdown(categories) {
+    var select = qs("#category-select");
+    var seen = {};
+    categories.forEach(function (cat) {
+      var name = cat.Category_Name;
+      if (!name || seen[name]) return;
+      seen[name] = true;
+      var opt = document.createElement("option");
+      opt.value = name;
+      opt.textContent = name;
+      select.appendChild(opt);
+    });
+    select.addEventListener("change", function () {
+      activeCategory = this.value;
+      applyAndRender();
+    });
+  }
+  async function init() {
+    renderSkeletonGrid(qs("#deals-grid"), 12);
+    try {
+      var [deals, curated, categories] = await Promise.all([loadDeals(), loadTrendingDeals(), loadCategories()]);
+      allDeals = resolveCuratedList(curated, deals);
+      populateCategoryDropdown(categories);
+      applyAndRender();
+    } catch {
+      qs("#deals-grid").innerHTML = '<div class="state-error"><div class="display">Couldn\'t load deals</div><div>Check the SHEETS URLs in app.js.</div></div>';
+    }
+  }
+  qs("#sort-select").addEventListener("change", applyAndRender);
+  init();
+</script>
+<button id="btn-top" class="nav-btn btn-top" aria-label="Go to top">↑</button>
+<button id="btn-back" class="nav-btn btn-back" aria-label="Go back">←</button>
+
+<script>window.PAGE_DATA={"https://docs.google.com/spreadsheets/d/e/2PACX-1vQlfHk-JQa7q8lIyBxXQtdI3et92suMRw2t2C5A1OfvR41mMZ-wy_hUWuMOizPmFzTbRq0u0WS0OJ-Z/pub?gid=0&single=true&output=csv":[{"S_No":"1","Product_Name":"VW 109 cm (43 inches) Spectra Series Full HD Smart QLED Android TV VW43AQ3","Category":"Electronics","Original_Price":"29999","Sale_Price":"15499","Image_URL":"https://m.media-amazon.com/images/I/817R+GUhSXL._SL1500_.jpg","Affiliate_Link":"https://www.amazon.in/dp/B0GX52LD7V?tag=dcube01-21","Rating":"4.1","Review_Count":"15964","Spec1_Label":"","Spec1_Value":"","Spec2_Label":"","Spec2_Value":"","Spec3_Label":"","Spec3_Value":"","Notes":"","Target Tab 1":"Best_Products, Todays_Deals"},{"S_No":"2","Product_Name":"Samsung 80 cm (32 inches) HD Smart LED TV UA32H4550FUXXL","Category":"Electronics","Original_Price":"17900","Sale_Price":"16490","Image_URL":"https://m.media-amazon.com/images/I/71XA+N8Xj1L._SL1500_.jpg","Affiliate_Link":"https://www.amazon.in/dp/B0F84FBWQM?tag=dcube01-21","Rating":"4.1","Review_Count":"6319","Spec1_Label":"","Spec1_Value":"","Spec2_Label":"","Spec2_Value":"","Spec3_Label":"","Spec3_Value":"","Notes":"","Target Tab 1":"Todays_Deals"},{"S_No":"3","Product_Name":"Xiaomi 80 cm (32 inch) F Series HD Ready Smart LED Fire TV L32MB-FIN","Category":"Electronics","Original_Price":"24999","Sale_Price":"13499","Image_URL":"https://m.media-amazon.com/images/I/71kjAokz-yL._SL1500_.jpg","Affiliate_Link":"https://www.amazon.in/dp/B0F3JM1YP5?tag=dcube01-21","Rating":"4.1","Review_Count":"1038","Spec1_Label":"","Spec1_Value":"","Spec2_Label":"","Spec2_Value":"","Spec3_Label":"","Spec3_Value":"","Notes":"","Target Tab 1":"Todays_Deals"},{"S_No":"4","Product_Name":"PHILIPS 80 cm (32 inches) 6100 Series Frameless HD Smart LED Google TV 32PFT6130/94","Category":"Electronics","Original_Price":"22999","Sale_Price":"13999","Image_URL":"https://m.media-amazon.com/images/I/71YBXXC6T6L._SL1500_.jpg","Affiliate_Link":"https://www.amazon.in/dp/B0FBWG1Z6Q?tag=dcube01-21","Rating":"4.1","Review_Count":"839","Spec1_Label":"","Spec1_Value":"","Spec2_Label":"","Spec2_Value":"","Spec3_Label":"","Spec3_Value":"","Notes":"","Target Tab 1":"Todays_Deals"},{"S_No":"5","Product_Name":"Sony 164 cm (65 inches) BRAVIA 3II Ultra HD Smart LED Google TV K-65XR30M2","Category":"Electronics","Original_Price":"189900","Sale_Price":"117990","Image_URL":"https://m.media-amazon.com/images/I/81nJ+qPGu8L._SL1500_.jpg","Affiliate_Link":"https://www.amazon.in/dp/B0GY486J25?tag=dcube01-21","Rating":"5","Review_Count":"2","Spec1_Label":"","Spec1_Value":"","Spec2_Label":"","Spec2_Value":"","Spec3_Label":"","Spec3_Value":"","Notes":"","Target Tab 1":"Todays_Deals"},{"S_No":"6","Product_Name":"ASUS Zenbook 14 (2026),Smartchoice,Intel Core Ultra 9 285H,32GB RAM,1TB SSD,OLED,Touchscreen,14\"(35.5 cm),Win 11,M365 Basic(1Y)* Office 24,Foggy Silver,1.28 Kg,UX3405CA-QL1113WS,Thin & Light Laptop","Category":"Computers & Accessories","Original_Price":"153990","Sale_Price":"136990","Image_URL":"https://m.media-amazon.com/images/I/61tjQ9CkAhL._SL1500_.jpg","Affiliate_Link":"https://www.amazon.in/dp/B09BB766ZL?tag=dcube01-21","Rating":"4.8","Review_Count":"8","Spec1_Label":"","Spec1_Value":"","Spec2_Label":"","Spec2_Value":"","Spec3_Label":"","Spec3_Value":"","Notes":"","Target Tab 1":"Todays_Deals"},{"S_No":"7","Product_Name":"HP 14 Smartchoice, Intel Core Ultra 5 125H 12 TOPS, 24GB DDR5 (Upgradeable) 1TB SSD, Anti-Glare, FHD, 14''/35.6cm,Win11, M365*Office24, Silver, 1.4kg, ep1180tu, FHD Camera w/Shutter, Backlit AI Laptop","Category":"Computers & Accessories","Original_Price":"81143","Sale_Price":"77990","Image_URL":"https://m.media-amazon.com/images/I/71vhdLDaDQL._SL1500_.jpg","Affiliate_Link":"https://www.amazon.in/dp/B0G2BHDDB8?tag=dcube01-21","Rating":"3.6","Review_Count":"61","Spec1_Label":"","Spec1_Value":"","Spec2_Label":"","Spec2_Value":"","Spec3_Label":"","Spec3_Value":"","Notes":"","Target Tab 1":"Todays_Deals"},{"S_No":"8","Product_Name":"Lenovo IdeaPad Slim 3 Intel Core Ultra 5 322 Next-Gen AI PC (16GB RAM/512GB SSD/15.3\" (38.8cm)/WUXGA IPS/Copilot+ PC/Windows 11/MSO 365 Basic+Office 2024/Backlit Keyboard/Grey/1.6Kg), 83UR009QIN","Category":"Computers & Accessories","Original_Price":"180690","Sale_Price":"101007","Image_URL":"https://m.media-amazon.com/images/I/81lOD07E0YL._SL1500_.jpg","Affiliate_Link":"https://www.amazon.in/dp/B0H3PV7418?tag=dcube01-21","Rating":"4.8","Review_Count":"8","Spec1_Label":"","Spec1_Value":"","Spec2_Label":"","Spec2_Value":"","Spec3_Label":"","Spec3_Value":"","Notes":"","Target Tab 1":"Todays_Deals"},{"S_No":"9","Product_Name":"HP OmniBook X Flip OLED Intel Core Ultra 5 226V, 40 Tops (16GB LPDDR5x,1TB SSD) 3K, Touch, 120hz, 14''/35.6cm, Intel ARC Graphic,Win11, Office24, Meteor Silver, 1.38kg, fm0099TU,Pen, 2 in 1 AI Laptop","Category":"Computers & Accessories","Original_Price":"125841.3","Sale_Price":"115990","Image_URL":"https://m.media-amazon.com/images/I/71jypuf+GVL._SL1500_.jpg","Affiliate_Link":"https://www.amazon.in/dp/B0FMRWYCRT?tag=dcube01-21","Rating":"3.4","Review_Count":"32","Spec1_Label":"","Spec1_Value":"","Spec2_Label":"","Spec2_Value":"","Spec3_Label":"","Spec3_Value":"","Notes":"","Target Tab 1":"Todays_Deals"},{"S_No":"10","Product_Name":"Apple 2026 MacBook Pro Laptop with M5 Pro chip with 18‑core CPU and 20‑core GPU: Built for AI, 41.05 cm (16.2″) Liquid Retina XDR Display, 48GB Unified Memory, 1TB SSD Storage; Space Black","Category":"Computers & Accessories","Original_Price":"125841.3","Sale_Price":"431900","Image_URL":"https://m.media-amazon.com/images/I/61h78UMEXjL._SL1500_.jpg","Affiliate_Link":"https://www.amazon.in/dp/B0GR1NYGC9?tag=dcube01-21","Rating":"","Review_Count":"","Spec1_Label":"","Spec1_Value":"","Spec2_Label":"","Spec2_Value":"","Spec3_Label":"","Spec3_Value":"","Notes":"","Target Tab 1":"Todays_Deals"},{"S_No":"11","Product_Name":"Samsung Galaxy M47 5G (Blaze Blue, 6GB RAM, 128GB Storage)| Powerful Snapdragon Processor| Fast LPDDR5x RAM,UFS 3.1 Storage| Gorilla Glass Victus+| IP64| Super AMOLED Display| 50MP OIS|AI| Gemini Live","Category":"Electronics","Original_Price":"46999","Sale_Price":"25999","Image_URL":"https://m.media-amazon.com/images/I/71hoMhV+VeL._SL1500_.jpg","Affiliate_Link":"https://www.amazon.in/dp/B0H4LBXQDC?tag=dcube01-21","Rating":"","Review_Count":"","Spec1_Label":"","Spec1_Value":"","Spec2_Label":"","Spec2_Value":"","Spec3_Label":"","Spec3_Value":"","Notes":"","Target Tab 1":"Todays_Deals"},{"S_No":"12","Product_Name":"REDMI Turbo 5 (8GB + 256GB) Turbo White | MediaTek Dimensity 8500 Ultra | Mega 7540mAh Battery | 100W HyperCharge | Compact 16.75cm(6.9) 120Hz Display | 50MP Sony OIS Camera","Category":"Electronics","Original_Price":"54999","Sale_Price":"37999","Image_URL":"https://m.media-amazon.com/images/I/71-soe9ImCL._SL1500_.jpg","Affiliate_Link":"https://www.amazon.in/dp/B0H293SFTR?tag=dcube01-21","Rating":"4.1","Review_Count":"146","Spec1_Label":"","Spec1_Value":"","Spec2_Label":"","Spec2_Value":"","Spec3_Label":"","Spec3_Value":"","Notes":"","Target Tab 1":"Todays_Deals"},{"S_No":"13","Product_Name":"XIAOMI 17T (Violet,12GB+256GB)|Flagship Leica Cameras|Leica UltraPure Optics|Segment Best Leica 5X Optical Zoom|120X AI Zoom|16.74cm(6.59\") 120Hz AMOLED Display|3500 nits|6500mAh Battery|HyperOS 3.0","Category":"Electronics","Original_Price":"84990","Sale_Price":"59999","Image_URL":"https://m.media-amazon.com/images/I/61AX0q6UfJL._SL1500_.jpg","Affiliate_Link":"https://www.amazon.in/dp/B0GYY8ZNP3?tag=dcube01-21","Rating":"4.5","Review_Count":"11","Spec1_Label":"","Spec1_Value":"","Spec2_Label":"","Spec2_Value":"","Spec3_Label":"","Spec3_Value":"","Notes":"","Target Tab 1":"Todays_Deals"},{"S_No":"14","Product_Name":"realme narzo 100 Lite 5G (Frost Silver,4GB+64GB) | 7000mAh Titan Battery | 4 Years, Zero Lag | 144 Hz Ultra Smooth Display | 6 nm Octa-core 5G Chipset | Color Pop Design | VC Cooling","Category":"Electronics","Original_Price":"24999","Sale_Price":"14999","Image_URL":"https://m.media-amazon.com/images/I/81vHnwGKVSL._SL1500_.jpg","Affiliate_Link":"https://www.amazon.in/dp/B0GTRXVQ8N?tag=dcube01-21","Rating":"4","Review_Count":"146","Spec1_Label":"","Spec1_Value":"","Spec2_Label":"","Spec2_Value":"","Spec3_Label":"","Spec3_Value":"","Notes":"","Target Tab 1":"Todays_Deals"},{"S_No":"15","Product_Name":"Nothing Phone (3), Black (12GB, 256GB) | Snapdragon 8s Gen 4 | 50MP + 50MP + 50MP Rear Camera | 1.5K+ 120Hz AMOLED Flexible LTPS Display","Category":"Electronics","Original_Price":"84999","Sale_Price":"45999","Image_URL":"https://m.media-amazon.com/images/I/717z2bNF6DL._SL1500_.jpg","Affiliate_Link":"https://www.amazon.in/dp/B0F7R6V1LM?tag=dcube01-21","Rating":"","Review_Count":"","Spec1_Label":"","Spec1_Value":"","Spec2_Label":"","Spec2_Value":"","Spec3_Label":"","Spec3_Value":"","Notes":"","Target Tab 1":"Todays_Deals"},{"S_No":"16","Product_Name":"Voltas 1.5 ton 3 star,New star rated, Rating Inverter Split AC (Copper, Convertible 5-in-1 Cooling Mode, 2-Way Air Swing, Anti-dust Filter with Anti Microbial Coating, Auto Clean (183INV CAV, White)","Category":"Home & Kitchen","Original_Price":"60990","Sale_Price":"33990","Image_URL":"https://m.media-amazon.com/images/I/51TjEqdi+uL._SL1200_.jpg","Affiliate_Link":"https://www.amazon.in/dp/B0GSZRBDND?tag=dcube01-21","Rating":"3.5","Review_Count":"2689","Spec1_Label":"","Spec1_Value":"","Spec2_Label":"","Spec2_Value":"","Spec3_Label":"","Spec3_Value":"","Notes":"","Target Tab 1":"Todays_Deals"},{"S_No":"17","Product_Name":"Samsung 9 kg, 5 star, AI EcoBubble, Super Speed, Wi-Fi, Hygiene Steam with Inbuilt Heater, Digital Inverter, Fully-Automatic Front Load Washing Machine (WW90DG5U24AXTL, Inox)","Category":"Home & Kitchen","Original_Price":"50990","Sale_Price":"40691","Image_URL":"https://m.media-amazon.com/images/I/71pUPI7ylNL._SL1500_.jpg","Affiliate_Link":"https://www.amazon.in/dp/B0DRYMKCW4?tag=dcube01-21","Rating":"4.2","Review_Count":"715","Spec1_Label":"","Spec1_Value":"","Spec2_Label":"","Spec2_Value":"","Spec3_Label":"","Spec3_Value":"","Notes":"","Target Tab 1":"Todays_Deals"},{"S_No":"18","Product_Name":"Daikin 1.5 Ton 3 Star, New Star rated, Inverter Split AC (Copper, PM2.5 Filter, MTKL50XV16, White)","Category":"Home & Kitchen","Original_Price":"4849","Sale_Price":"449","Image_URL":"https://m.media-amazon.com/images/I/61aNUgUz6EL._SL1500_.jpg","Affiliate_Link":"https://www.amazon.in/dp/B0GRV2DWP3?tag=dcube01-21","Rating":"3.8","Review_Count":"747","Spec1_Label":"","Spec1_Value":"","Spec2_Label":"","Spec2_Value":"","Spec3_Label":"","Spec3_Value":"","Notes":"","Target Tab 1":"Todays_Deals"},{"S_No":"19","Product_Name":"LG 8 Kg, 5 Star, Wi-Fi, Direct Drive Technology, Steam Wash, 6 Motion DD, Fully-Automatic Front Load Washing Machine (FHB1208Z4M, Allergy Care, In-Built Heater, Touch Panel, Middle Black)","Category":"Home & Kitchen","Original_Price":"50490","Sale_Price":"37990","Image_URL":"https://m.media-amazon.com/images/I/71qrhZshZgL._SL1500_.jpg","Affiliate_Link":"https://www.amazon.in/dp/B0DD45WVCM?tag=dcube01-21","Rating":"4.2","Review_Count":"844","Spec1_Label":"","Spec1_Value":"","Spec2_Label":"","Spec2_Value":"","Spec3_Label":"","Spec3_Value":"","Notes":"","Target Tab 1":"Todays_Deals"},{"S_No":"20","Product_Name":"IFB 24L Solo Microwave Oven with 69 Auto Cook Menus (24PM2S, Silver, Mug Recipes, Steam Clean, Auto Reheat, Preset Timer, Power Save, Child Safety Lock, 10 Power Levels)","Category":"Home & Kitchen","Original_Price":"10290","Sale_Price":"8690","Image_URL":"https://m.media-amazon.com/images/I/61vQxewGCiL._SL1500_.jpg","Affiliate_Link":"https://www.amazon.in/dp/B0CGN8FMJ8?tag=dcube01-21","Rating":"4.4","Review_Count":"4676","Spec1_Label":"","Spec1_Value":"","Spec2_Label":"","Spec2_Value":"","Spec3_Label":"","Spec3_Value":"","Notes":"","Target Tab 1":"Todays_Deals"},{"S_No":"21","Product_Name":"LG 9 Kg, 5 Star, AI Direct Drive Technology, Wi-Fi, Steam+ with Wrinkle Care, Fully Automatic Front-Loading Washing Machine (FHP1209Z7P, Intelligent & Convenient Fabric Care, Allergy Care, Platinum)","Category":"Home & Kitchen","Original_Price":"55990","Sale_Price":"41990","Image_URL":"https://m.media-amazon.com/images/I/81WpWonSZNL._SL1500_.jpg","Affiliate_Link":"https://www.amazon.in/dp/B0DVRF9TJT?tag=dcube01-21","Rating":"4","Review_Count":"55","Spec1_Label":"","Spec1_Value":"","Spec2_Label":"","Spec2_Value":"","Spec3_Label":"","Spec3_Value":"","Notes":"","Target Tab 1":"Todays_Deals"},{"S_No":"22","Product_Name":"NESTER Home Barista Coffee Machine – 20 Bar Italian Ulka Pressure Pump, Built-in Grinder, BrewCore™ Technology, PID Temperature Control, Espresso, Americano, Steam & Pod Compatible - Dalgona Brown","Category":"Home & Kitchen","Original_Price":"29999","Sale_Price":"24998","Image_URL":"https://m.media-amazon.com/images/I/61mQyZJVz0L._SL1500_.jpg","Affiliate_Link":"https://www.amazon.in/dp/B0GYZVX9XT?tag=dcube01-21","Rating":"3","Review_Count":"2","Spec1_Label":"","Spec1_Value":"","Spec2_Label":"","Spec2_Value":"","Spec3_Label":"","Spec3_Value":"","Notes":"","Target Tab 1":"Todays_Deals"},{"S_No":"23","Product_Name":"Ninja Air Fryer MAX PRO 6.2L (AF180IN) 2000W Max Crisp Technology Variable Air Flow PFOA-Free Non-Stick 6-in-1 Air Fry, Roast, Bake & More Cook from Frozen to Crispy, black","Category":"Home & Kitchen","Original_Price":"14990","Sale_Price":"9999","Image_URL":"https://m.media-amazon.com/images/I/61NEz27pw3L._SL1086_.jpg","Affiliate_Link":"https://www.amazon.in/dp/B0FWY8R9W8?tag=dcube01-21","Rating":"4.6","Review_Count":"2027","Spec1_Label":"","Spec1_Value":"","Spec2_Label":"","Spec2_Value":"","Spec3_Label":"","Spec3_Value":"","Notes":"","Target Tab 1":"Todays_Deals"},{"S_No":"24","Product_Name":"Havells 1200mm Ambrose BLDC Motor Ceiling Fan | Remote Controlled, High Air Delivery Fan | 5 Star Rated, Upto 60% Energy Saving, 2 Year Warranty | (Pack of 1, Pearl White Wood)","Category":"Home & Kitchen","Original_Price":"5880","Sale_Price":"3350","Image_URL":"https://m.media-amazon.com/images/I/51ByNekZkOL._SL1500_.jpg","Affiliate_Link":"https://www.amazon.in/dp/B0BHJF11TV?tag=dcube01-21","Rating":"3.6","Review_Count":"755","Spec1_Label":"","Spec1_Value":"","Spec2_Label":"","Spec2_Value":"","Spec3_Label":"","Spec3_Value":"","Notes":"","Target Tab 1":"Todays_Deals"},{"S_No":"25","Product_Name":"Havells Gatik Pro 400mm Wall Mount Fan|RPM: 1350|Double string for Speed & Oscillation control | Thermal Overloaded Protected Motor | 100% Copper Wire Winding Motor | 2 Year Warranty,230 Volts(Black)","Category":"Home & Kitchen","Original_Price":"4090","Sale_Price":"2190","Image_URL":"https://m.media-amazon.com/images/I/71Z2zCJH5iL._SL1500_.jpg","Affiliate_Link":"https://www.amazon.in/dp/B0FMRH6X8Y?tag=dcube01-21","Rating":"4","Review_Count":"12246","Spec1_Label":"","Spec1_Value":"","Spec2_Label":"","Spec2_Value":"","Spec3_Label":"","Spec3_Value":"","Notes":"","Target Tab 1":"Todays_Deals"},{"S_No":"26","Product_Name":"Havells 20W 3 in 1 LED Batten Tubelight|Energy Efficient|Three Color Temperatures(Warm White,Neutral White,Cool White)|Upto 4KV Surge Protection|Made in India | (Triyca)|Pack of 10","Category":"Home & Kitchen","Original_Price":"6250","Sale_Price":"1819","Image_URL":"https://m.media-amazon.com/images/I/71ZORJaJSlL._SL1500_.jpg","Affiliate_Link":"https://www.amazon.in/dp/B0CY26L18L?tag=dcube01-21","Rating":"3.8","Review_Count":"1086","Spec1_Label":"","Spec1_Value":"","Spec2_Label":"","Spec2_Value":"","Spec3_Label":"","Spec3_Value":"","Notes":"","Target Tab 1":"Todays_Deals"},{"S_No":"27","Product_Name":"atomberg Renesa Enzel 1400mm BLDC Ceiling Fan with Remote | BEE 5 star | High Air Delivery | LED Speed Indicator | Low Noise | Sleek Design | Power Saving | 3 Year Warranty (Gloss white)","Category":"Home & Kitchen","Original_Price":"6000","Sale_Price":"3949","Image_URL":"https://m.media-amazon.com/images/I/51PiSvJqZYL._SL1500_.jpg","Affiliate_Link":"https://www.amazon.in/dp/B0FNFBKVXM?tag=dcube01-21","Rating":"4.1","Review_Count":"28606","Spec1_Label":"","Spec1_Value":"","Spec2_Label":"","Spec2_Value":"","Spec3_Label":"","Spec3_Value":"","Notes":"","Target Tab 1":"Todays_Deals"},{"S_No":"28","Product_Name":"1500ml Capacity Mixer Grinder Jar with ABS Plastic Handle and Stainless Steel Blade","Category":"Home & Kitchen","Original_Price":"1299","Sale_Price":"449","Image_URL":"https://m.media-amazon.com/images/I/61+b67B9FGL._SL1082_.jpg","Affiliate_Link":"https://www.amazon.in/dp/B0H5WRJRVZ?tag=dcube01-21","Rating":"","Review_Count":"","Spec1_Label":"","Spec1_Value":"","Spec2_Label":"","Spec2_Value":"","Spec3_Label":"","Spec3_Value":"","Notes":"","Target Tab 1":"Todays_Deals"},{"S_No":"29","Product_Name":"LG 210 L, 5 Star, Smart Inverter, Direct Cool Single Door Refrigerator (GLD2256ZABW, Blue Waterlily, Base stand with Drawer)","Category":"Home & Kitchen","Original_Price":"30090","Sale_Price":"22959","Image_URL":"https://m.media-amazon.com/images/I/61XHvT72SVL._SL1500_.jpg","Affiliate_Link":"https://www.amazon.in/dp/B0GMVLB272?tag=dcube01-21","Rating":"4.3","Review_Count":"65","Spec1_Label":"","Spec1_Value":"","Spec2_Label":"","Spec2_Value":"","Spec3_Label":"","Spec3_Value":"","Notes":"","Target Tab 1":"Todays_Deals"},{"S_No":"30","Product_Name":"LG 185 L, 5 Star, Smart Inverter, Direct Cool Single Door Refrigerator (GLD1956ZAPI, Purple Ilan, Fit Max Chiller Tray, Base stand with Drawer & Runs on Home Inverter)","Category":"Home & Kitchen","Original_Price":"26290","Sale_Price":"18490","Image_URL":"https://m.media-amazon.com/images/I/61BVIOqyLFL._SL1500_.jpg","Affiliate_Link":"https://www.amazon.in/dp/B0GRW157R2?tag=dcube01-21","Rating":"3.8","Review_Count":"67","Spec1_Label":"","Spec1_Value":"","Spec2_Label":"","Spec2_Value":"","Spec3_Label":"","Spec3_Value":"","Notes":"","Target Tab 1":"Todays_Deals"},{"S_No":"31","Product_Name":"Amazon Echo Show 8 (newest model), vibrant 8.7\" HD display with spatial audio & Alexa, new sleek design, smart home controls, 2x bass speaker, 13 MP camera, bluetooth, Graphite","Category":"Echo & Alexa Devices","Original_Price":"24999","Sale_Price":"23999","Image_URL":"https://m.media-amazon.com/images/I/71S5-aLNRFL._SL1500_.jpg","Affiliate_Link":"https://www.amazon.in/dp/B0DYBZF1LL?tag=dcube01-21","Rating":"4","Review_Count":"65","Spec1_Label":"","Spec1_Value":"","Spec2_Label":"","Spec2_Value":"","Spec3_Label":"","Spec3_Value":"","Notes":"","Target Tab 1":"Todays_Deals"},{"S_No":"32","Product_Name":"Amazon Echo Dot (5th Gen) | Smart speaker with vibrant sound, Motion Detection, Temperature Sensor, Alexa and Bluetooth| Black","Category":"Echo & Alexa Devices","Original_Price":"5499","Sale_Price":"5499","Image_URL":"https://m.media-amazon.com/images/I/71YyamED8CL._SL1500_.jpg","Affiliate_Link":"https://www.amazon.in/dp/B09B917Z8D?tag=dcube01-21","Rating":"4.1","Review_Count":"13077","Spec1_Label":"","Spec1_Value":"","Spec2_Label":"","Spec2_Value":"","Spec3_Label":"","Spec3_Value":"","Notes":"","Target Tab 1":"Todays_Deals"},{"S_No":"33","Product_Name":"Amazon Echo Spot (latest model), Smart alarm clock with vibrant sound, Alexa and Bluetooth | Black","Category":"Echo & Alexa Devices","Original_Price":"8999","Sale_Price":"8499","Image_URL":"https://m.media-amazon.com/images/I/61AYmtvX5ML._SL1500_.jpg","Affiliate_Link":"https://www.amazon.in/dp/B0C2S39V9Y?tag=dcube01-21","Rating":"4","Review_Count":"522","Spec1_Label":"","Spec1_Value":"","Spec2_Label":"","Spec2_Value":"","Spec3_Label":"","Spec3_Value":"","Notes":"","Target Tab 1":"Todays_Deals"},{"S_No":"34","Product_Name":"Amazon Echo Dot (5th Gen, Blue) Smart Home Speaker Combo with Wipro 9W LED Smart Color Bulb | with Bluetooth and Alexa","Category":"Echo & Alexa Devices","Original_Price":"7598","Sale_Price":"6088","Image_URL":"https://m.media-amazon.com/images/I/71ErAODCIhL._SL1500_.jpg","Affiliate_Link":"https://www.amazon.in/dp/B0BVMDSPQT?tag=dcube01-21","Rating":"4.3","Review_Count":"320","Spec1_Label":"","Spec1_Value":"","Spec2_Label":"","Spec2_Value":"","Spec3_Label":"","Spec3_Value":"","Notes":"","Target Tab 1":"Todays_Deals"},{"S_No":"35","Product_Name":"Amazon Echo Studio (newest model), Alexa speaker with immersive spatial audio and Dolby Atmos, hands-free smart home management, Bluetooth, Graphite","Category":"Echo & Alexa Devices","Original_Price":"23999","Sale_Price":"23999","Image_URL":"https://m.media-amazon.com/images/I/71I65AMWs7L._SL1500_.jpg","Affiliate_Link":"https://www.amazon.in/dp/B0DXN3BQSH?tag=dcube01-21","Rating":"3.5","Review_Count":"14","Spec1_Label":"","Spec1_Value":"","Spec2_Label":"","Spec2_Value":"","Spec3_Label":"","Spec3_Value":"","Notes":"","Target Tab 1":"Todays_Deals"},{"S_No":"36","Product_Name":"Hero RIOT 26T Single Speed Mountain Bicycle for Adults | Grey | Front Suspension | Disc Brake | Steel Frame : 16.5Inches | Rider Height : 5ft 0\" - 5ft 8\" | 95% Pre-Assembled(Ready to Ride in 5 Mins)","Category":"Sports, Fitness & Outdoors","Original_Price":"14062","Sale_Price":"7379","Image_URL":"https://m.media-amazon.com/images/I/81j+rHMcF8L._SL1500_.jpg","Affiliate_Link":"https://www.amazon.in/dp/B0BRPW5HDF?tag=dcube01-21","Rating":"3.4","Review_Count":"239","Spec1_Label":"","Spec1_Value":"","Spec2_Label":"","Spec2_Value":"","Spec3_Label":"","Spec3_Value":"","Notes":"","Target Tab 1":"Todays_Deals"},{"S_No":"37","Product_Name":"","Category":"","Original_Price":"","Sale_Price":"","Image_URL":"","Affiliate_Link":"","Rating":"","Review_Count":"","Spec1_Label":"","Spec1_Value":"","Spec2_Label":"","Spec2_Value":"","Spec3_Label":"","Spec3_Value":"","Notes":"","Target Tab 1":"Todays_Deals"},{"S_No":"38","Product_Name":"","Category":"","Original_Price":"","Sale_Price":"","Image_URL":"","Affiliate_Link":"","Rating":"","Review_Count":"","Spec1_Label":"","Spec1_Value":"","Spec2_Label":"","Spec2_Value":"","Spec3_Label":"","Spec3_Value":"","Notes":"","Target Tab 1":"Todays_Deals"},{"S_No":"39","Product_Name":"","Category":"","Original_Price":"","Sale_Price":"","Image_URL":"","Affiliate_Link":"","Rating":"","Review_Count":"","Spec1_Label":"","Spec1_Value":"","Spec2_Label":"","Spec2_Value":"","Spec3_Label":"","Spec3_Value":"","Notes":"","Target Tab 1":"Todays_Deals"},{"S_No":"40","Product_Name":"","Category":"","Original_Price":"","Sale_Price":"","Image_URL":"","Affiliate_Link":"","Rating":"","Review_Count":"","Spec1_Label":"","Spec1_Value":"","Spec2_Label":"","Spec2_Value":"","Spec3_Label":"","Spec3_Value":"","Notes":"","Target Tab 1":"Todays_Deals"},{"S_No":"41","Product_Name":"","Category":"","Original_Price":"","Sale_Price":"","Image_URL":"","Affiliate_Link":"","Rating":"","Review_Count":"","Spec1_Label":"","Spec1_Value":"","Spec2_Label":"","Spec2_Value":"","Spec3_Label":"","Spec3_Value":"","Notes":"","Target Tab 1":"Todays_Deals"},{"S_No":"42","Product_Name":"","Category":"","Original_Price":"","Sale_Price":"","Image_URL":"","Affiliate_Link":"","Rating":"","Review_Count":"","Spec1_Label":"","Spec1_Value":"","Spec2_Label":"","Spec2_Value":"","Spec3_Label":"","Spec3_Value":"","Notes":"","Target Tab 1":"Todays_Deals"},{"S_No":"43","Product_Name":"","Category":"","Original_Price":"","Sale_Price":"","Image_URL":"","Affiliate_Link":"","Rating":"","Review_Count":"","Spec1_Label":"","Spec1_Value":"","Spec2_Label":"","Spec2_Value":"","Spec3_Label":"","Spec3_Value":"","Notes":"","Target Tab 1":"Todays_Deals"},{"S_No":"44","Product_Name":"","Category":"","Original_Price":"","Sale_Price":"","Image_URL":"","Affiliate_Link":"","Rating":"","Review_Count":"","Spec1_Label":"","Spec1_Value":"","Spec2_Label":"","Spec2_Value":"","Spec3_Label":"","Spec3_Value":"","Notes":"","Target Tab 1":"Todays_Deals"},{"S_No":"45","Product_Name":"","Category":"","Original_Price":"","Sale_Price":"","Image_URL":"","Affiliate_Link":"","Rating":"","Review_Count":"","Spec1_Label":"","Spec1_Value":"","Spec2_Label":"","Spec2_Value":"","Spec3_Label":"","Spec3_Value":"","Notes":"","Target Tab 1":"Todays_Deals"},{"S_No":"46","Product_Name":"","Category":"","Original_Price":"","Sale_Price":"","Image_URL":"","Affiliate_Link":"","Rating":"","Review_Count":"","Spec1_Label":"","Spec1_Value":"","Spec2_Label":"","Spec2_Value":"","Spec3_Label":"","Spec3_Value":"","Notes":"","Target Tab 1":"Todays_Deals"},{"S_No":"47","Product_Name":"","Category":"","Original_Price":"","Sale_Price":"","Image_URL":"","Affiliate_Link":"","Rating":"","Review_Count":"","Spec1_Label":"","Spec1_Value":"","Spec2_Label":"","Spec2_Value":"","Spec3_Label":"","Spec3_Value":"","Notes":"","Target Tab 1":"Todays_Deals"},{"S_No":"48","Product_Name":"","Category":"","Original_Price":"","Sale_Price":"","Image_URL":"","Affiliate_Link":"","Rating":"","Review_Count":"","Spec1_Label":"","Spec1_Value":"","Spec2_Label":"","Spec2_Value":"","Spec3_Label":"","Spec3_Value":"","Notes":"","Target Tab 1":"Todays_Deals"},{"S_No":"49","Product_Name":"","Category":"","Original_Price":"","Sale_Price":"","Image_URL":"","Affiliate_Link":"","Rating":"","Review_Count":"","Spec1_Label":"","Spec1_Value":"","Spec2_Label":"","Spec2_Value":"","Spec3_Label":"","Spec3_Value":"","Notes":"","Target Tab 1":"Todays_Deals"},{"S_No":"50","Product_Name":"","Category":"","Original_Price":"","Sale_Price":"","Image_URL":"","Affiliate_Link":"","Rating":"","Review_Count":"","Spec1_Label":"","Spec1_Value":"","Spec2_Label":"","Spec2_Value":"","Spec3_Label":"","Spec3_Value":"","Notes":"","Target Tab 1":"Todays_Deals"},{"S_No":"51","Product_Name":"","Category":"","Original_Price":"","Sale_Price":"","Image_URL":"","Affiliate_Link":"","Rating":"","Review_Count":"","Spec1_Label":"","Spec1_Value":"","Spec2_Label":"","Spec2_Value":"","Spec3_Label":"","Spec3_Value":"","Notes":"","Target Tab 1":"Todays_Deals"},{"S_No":"52","Product_Name":"","Category":"","Original_Price":"","Sale_Price":"","Image_URL":"","Affiliate_Link":"","Rating":"","Review_Count":"","Spec1_Label":"","Spec1_Value":"","Spec2_Label":"","Spec2_Value":"","Spec3_Label":"","Spec3_Value":"","Notes":"","Target Tab 1":""},{"S_No":"53","Product_Name":"","Category":"","Original_Price":"","Sale_Price":"","Image_URL":"","Affiliate_Link":"","Rating":"","Review_Count":"","Spec1_Label":"","Spec1_Value":"","Spec2_Label":"","Spec2_Value":"","Spec3_Label":"","Spec3_Value":"","Notes":"","Target Tab 1":""},{"S_No":"54","Product_Name":"","Category":"","Original_Price":"","Sale_Price":"","Image_URL":"","Affiliate_Link":"","Rating":"","Review_Count":"","Spec1_Label":"","Spec1_Value":"","Spec2_Label":"","Spec2_Value":"","Spec3_Label":"","Spec3_Value":"","Notes":"","Target Tab 1":""},{"S_No":"55","Product_Name":"","Category":"","Original_Price":"","Sale_Price":"","Image_URL":"","Affiliate_Link":"","Rating":"","Review_Count":"","Spec1_Label":"","Spec1_Value":"","Spec2_Label":"","Spec2_Value":"","Spec3_Label":"","Spec3_Value":"","Notes":"","Target Tab 1":""},{"S_No":"56","Product_Name":"","Category":"","Original_Price":"","Sale_Price":"","Image_URL":"","Affiliate_Link":"","Rating":"","Review_Count":"","Spec1_Label":"","Spec1_Value":"","Spec2_Label":"","Spec2_Value":"","Spec3_Label":"","Spec3_Value":"","Notes":"","Target Tab 1":""}],"https://docs.google.com/spreadsheets/d/e/2PACX-1vQlfHk-JQa7q8lIyBxXQtdI3et92suMRw2t2C5A1OfvR41mMZ-wy_hUWuMOizPmFzTbRq0u0WS0OJ-Z/pub?gid=2035525778&single=true&output=csv":[{"S_No":"1","Sort_Order":"1","Badge_Text":"Deal of the Day","Min Discount %":"0","S_No_1":"1","Product_Name":"VW 109 cm (43 inches) Spectra Series Full HD Smart QLED Android TV VW43AQ3","Original_Price":"29999","Sale_Price":"15499","Rating":"4.1","Review_Count":"15964"},{"S_No":"2","Sort_Order":"2","Badge_Text":"Dealll","Min Discount %":"","S_No_1":"2","Product_Name":"Samsung 80 cm (32 inches) HD Smart LED TV UA32H4550FUXXL","Original_Price":"17900","Sale_Price":"16490","Rating":"4.1","Review_Count":"6319"},{"S_No":"3","Sort_Order":"3","Badge_Text":"","Min Discount %":"","S_No_1":"3","Product_Name":"Xiaomi 80 cm (32 inch) F Series HD Ready Smart LED Fire TV L32MB-FIN","Original_Price":"24999","Sale_Price":"13499","Rating":"4.1","Review_Count":"1038"},{"S_No":"4","Sort_Order":"4","Badge_Text":"","Min Discount %":"","S_No_1":"4","Product_Name":"PHILIPS 80 cm (32 inches) 6100 Series Frameless HD Smart LED Google TV 32PFT6130/94","Original_Price":"22999","Sale_Price":"13999","Rating":"4.1","Review_Count":"839"},{"S_No":"5","Sort_Order":"5","Badge_Text":"","Min Discount %":"","S_No_1":"5","Product_Name":"Sony 164 cm (65 inches) BRAVIA 3II Ultra HD Smart LED Google TV K-65XR30M2","Original_Price":"189900","Sale_Price":"117990","Rating":"5","Review_Count":"2"},{"S_No":"6","Sort_Order":"6","Badge_Text":"","Min Discount %":"","S_No_1":"6","Product_Name":"ASUS Zenbook 14 (2026),Smartchoice,Intel Core Ultra 9 285H,32GB RAM,1TB SSD,OLED,Touchscreen,14\"(35.5 cm),Win 11,M365 Basic(1Y)* Office 24,Foggy Silver,1.28 Kg,UX3405CA-QL1113WS,Thin & Light Laptop","Original_Price":"153990","Sale_Price":"136990","Rating":"4.8","Review_Count":"8"},{"S_No":"7","Sort_Order":"7","Badge_Text":"","Min Discount %":"","S_No_1":"7","Product_Name":"HP 14 Smartchoice, Intel Core Ultra 5 125H 12 TOPS, 24GB DDR5 (Upgradeable) 1TB SSD, Anti-Glare, FHD, 14''/35.6cm,Win11, M365*Office24, Silver, 1.4kg, ep1180tu, FHD Camera w/Shutter, Backlit AI Laptop","Original_Price":"81143","Sale_Price":"77990","Rating":"3.6","Review_Count":"61"},{"S_No":"8","Sort_Order":"8","Badge_Text":"","Min Discount %":"","S_No_1":"8","Product_Name":"Lenovo IdeaPad Slim 3 Intel Core Ultra 5 322 Next-Gen AI PC (16GB RAM/512GB SSD/15.3\" (38.8cm)/WUXGA IPS/Copilot+ PC/Windows 11/MSO 365 Basic+Office 2024/Backlit Keyboard/Grey/1.6Kg), 83UR009QIN","Original_Price":"180690","Sale_Price":"101007","Rating":"4.8","Review_Count":"8"},{"S_No":"9","Sort_Order":"9","Badge_Text":"","Min Discount %":"","S_No_1":"9","Product_Name":"HP OmniBook X Flip OLED Intel Core Ultra 5 226V, 40 Tops (16GB LPDDR5x,1TB SSD) 3K, Touch, 120hz, 14''/35.6cm, Intel ARC Graphic,Win11, Office24, Meteor Silver, 1.38kg, fm0099TU,Pen, 2 in 1 AI Laptop","Original_Price":"125841.3","Sale_Price":"115990","Rating":"3.4","Review_Count":"32"},{"S_No":"11","Sort_Order":"10","Badge_Text":"","Min Discount %":"","S_No_1":"10","Product_Name":"Apple 2026 MacBook Pro Laptop with M5 Pro chip with 18‑core CPU and 20‑core GPU: Built for AI, 41.05 cm (16.2″) Liquid Retina XDR Display, 48GB Unified Memory, 1TB SSD Storage; Space Black","Original_Price":"125841.3","Sale_Price":"431900","Rating":"","Review_Count":""},{"S_No":"12","Sort_Order":"11","Badge_Text":"","Min Discount %":"","S_No_1":"11","Product_Name":"Samsung Galaxy M47 5G (Blaze Blue, 6GB RAM, 128GB Storage)| Powerful Snapdragon Processor| Fast LPDDR5x RAM,UFS 3.1 Storage| Gorilla Glass Victus+| IP64| Super AMOLED Display| 50MP OIS|AI| Gemini Live","Original_Price":"46999","Sale_Price":"25999","Rating":"","Review_Count":""},{"S_No":"13","Sort_Order":"12","Badge_Text":"","Min Discount %":"","S_No_1":"12","Product_Name":"REDMI Turbo 5 (8GB + 256GB) Turbo White | MediaTek Dimensity 8500 Ultra | Mega 7540mAh Battery | 100W HyperCharge | Compact 16.75cm(6.9) 120Hz Display | 50MP Sony OIS Camera","Original_Price":"54999","Sale_Price":"37999","Rating":"4.1","Review_Count":"146"},{"S_No":"14","Sort_Order":"13","Badge_Text":"","Min Discount %":"","S_No_1":"13","Product_Name":"XIAOMI 17T (Violet,12GB+256GB)|Flagship Leica Cameras|Leica UltraPure Optics|Segment Best Leica 5X Optical Zoom|120X AI Zoom|16.74cm(6.59\") 120Hz AMOLED Display|3500 nits|6500mAh Battery|HyperOS 3.0","Original_Price":"84990","Sale_Price":"59999","Rating":"4.5","Review_Count":"11"},{"S_No":"15","Sort_Order":"14","Badge_Text":"","Min Discount %":"","S_No_1":"14","Product_Name":"realme narzo 100 Lite 5G (Frost Silver,4GB+64GB) | 7000mAh Titan Battery | 4 Years, Zero Lag | 144 Hz Ultra Smooth Display | 6 nm Octa-core 5G Chipset | Color Pop Design | VC Cooling","Original_Price":"24999","Sale_Price":"14999","Rating":"4","Review_Count":"146"},{"S_No":"16","Sort_Order":"15","Badge_Text":"","Min Discount %":"","S_No_1":"15","Product_Name":"Nothing Phone (3), Black (12GB, 256GB) | Snapdragon 8s Gen 4 | 50MP + 50MP + 50MP Rear Camera | 1.5K+ 120Hz AMOLED Flexible LTPS Display","Original_Price":"84999","Sale_Price":"45999","Rating":"","Review_Count":""},{"S_No":"17","Sort_Order":"16","Badge_Text":"","Min Discount %":"","S_No_1":"16","Product_Name":"Voltas 1.5 ton 3 star,New star rated, Rating Inverter Split AC (Copper, Convertible 5-in-1 Cooling Mode, 2-Way Air Swing, Anti-dust Filter with Anti Microbial Coating, Auto Clean (183INV CAV, White)","Original_Price":"60990","Sale_Price":"33990","Rating":"3.5","Review_Count":"2689"},{"S_No":"18","Sort_Order":"17","Badge_Text":"","Min Discount %":"","S_No_1":"17","Product_Name":"Samsung 9 kg, 5 star, AI EcoBubble, Super Speed, Wi-Fi, Hygiene Steam with Inbuilt Heater, Digital Inverter, Fully-Automatic Front Load Washing Machine (WW90DG5U24AXTL, Inox)","Original_Price":"50990","Sale_Price":"40691","Rating":"4.2","Review_Count":"715"},{"S_No":"19","Sort_Order":"18","Badge_Text":"","Min Discount %":"","S_No_1":"18","Product_Name":"Daikin 1.5 Ton 3 Star, New Star rated, Inverter Split AC (Copper, PM2.5 Filter, MTKL50XV16, White)","Original_Price":"4849","Sale_Price":"449","Rating":"3.8","Review_Count":"747"},{"S_No":"20","Sort_Order":"19","Badge_Text":"","Min Discount %":"","S_No_1":"19","Product_Name":"LG 8 Kg, 5 Star, Wi-Fi, Direct Drive Technology, Steam Wash, 6 Motion DD, Fully-Automatic Front Load Washing Machine (FHB1208Z4M, Allergy Care, In-Built Heater, Touch Panel, Middle Black)","Original_Price":"50490","Sale_Price":"37990","Rating":"4.2","Review_Count":"844"},{"S_No":"21","Sort_Order":"20","Badge_Text":"","Min Discount %":"","S_No_1":"20","Product_Name":"IFB 24L Solo Microwave Oven with 69 Auto Cook Menus (24PM2S, Silver, Mug Recipes, Steam Clean, Auto Reheat, Preset Timer, Power Save, Child Safety Lock, 10 Power Levels)","Original_Price":"10290","Sale_Price":"8690","Rating":"4.4","Review_Count":"4676"},{"S_No":"22","Sort_Order":"21","Badge_Text":"","Min Discount %":"","S_No_1":"21","Product_Name":"LG 9 Kg, 5 Star, AI Direct Drive Technology, Wi-Fi, Steam+ with Wrinkle Care, Fully Automatic Front-Loading Washing Machine (FHP1209Z7P, Intelligent & Convenient Fabric Care, Allergy Care, Platinum)","Original_Price":"55990","Sale_Price":"41990","Rating":"4","Review_Count":"55"},{"S_No":"23","Sort_Order":"22","Badge_Text":"","Min Discount %":"","S_No_1":"22","Product_Name":"NESTER Home Barista Coffee Machine – 20 Bar Italian Ulka Pressure Pump, Built-in Grinder, BrewCore™ Technology, PID Temperature Control, Espresso, Americano, Steam & Pod Compatible - Dalgona Brown","Original_Price":"29999","Sale_Price":"24998","Rating":"3","Review_Count":"2"},{"S_No":"24","Sort_Order":"23","Badge_Text":"","Min Discount %":"","S_No_1":"23","Product_Name":"Ninja Air Fryer MAX PRO 6.2L (AF180IN) 2000W Max Crisp Technology Variable Air Flow PFOA-Free Non-Stick 6-in-1 Air Fry, Roast, Bake & More Cook from Frozen to Crispy, black","Original_Price":"14990","Sale_Price":"9999","Rating":"4.6","Review_Count":"2027"},{"S_No":"25","Sort_Order":"24","Badge_Text":"","Min Discount %":"","S_No_1":"24","Product_Name":"Havells 1200mm Ambrose BLDC Motor Ceiling Fan | Remote Controlled, High Air Delivery Fan | 5 Star Rated, Upto 60% Energy Saving, 2 Year Warranty | (Pack of 1, Pearl White Wood)","Original_Price":"5880","Sale_Price":"3350","Rating":"3.6","Review_Count":"755"},{"S_No":"26","Sort_Order":"25","Badge_Text":"","Min Discount %":"","S_No_1":"25","Product_Name":"Havells Gatik Pro 400mm Wall Mount Fan|RPM: 1350|Double string for Speed & Oscillation control | Thermal Overloaded Protected Motor | 100% Copper Wire Winding Motor | 2 Year Warranty,230 Volts(Black)","Original_Price":"4090","Sale_Price":"2190","Rating":"4","Review_Count":"12246"},{"S_No":"27","Sort_Order":"26","Badge_Text":"","Min Discount %":"","S_No_1":"26","Product_Name":"Havells 20W 3 in 1 LED Batten Tubelight|Energy Efficient|Three Color Temperatures(Warm White,Neutral White,Cool White)|Upto 4KV Surge Protection|Made in India | (Triyca)|Pack of 10","Original_Price":"6250","Sale_Price":"1819","Rating":"3.8","Review_Count":"1086"},{"S_No":"28","Sort_Order":"27","Badge_Text":"","Min Discount %":"","S_No_1":"27","Product_Name":"atomberg Renesa Enzel 1400mm BLDC Ceiling Fan with Remote | BEE 5 star | High Air Delivery | LED Speed Indicator | Low Noise | Sleek Design | Power Saving | 3 Year Warranty (Gloss white)","Original_Price":"6000","Sale_Price":"3949","Rating":"4.1","Review_Count":"28606"},{"S_No":"29","Sort_Order":"28","Badge_Text":"","Min Discount %":"","S_No_1":"28","Product_Name":"1500ml Capacity Mixer Grinder Jar with ABS Plastic Handle and Stainless Steel Blade","Original_Price":"1299","Sale_Price":"449","Rating":"","Review_Count":""},{"S_No":"30","Sort_Order":"29","Badge_Text":"","Min Discount %":"","S_No_1":"29","Product_Name":"LG 210 L, 5 Star, Smart Inverter, Direct Cool Single Door Refrigerator (GLD2256ZABW, Blue Waterlily, Base stand with Drawer)","Original_Price":"30090","Sale_Price":"22959","Rating":"4.3","Review_Count":"65"},{"S_No":"31","Sort_Order":"30","Badge_Text":"","Min Discount %":"","S_No_1":"30","Product_Name":"LG 185 L, 5 Star, Smart Inverter, Direct Cool Single Door Refrigerator (GLD1956ZAPI, Purple Ilan, Fit Max Chiller Tray, Base stand with Drawer & Runs on Home Inverter)","Original_Price":"26290","Sale_Price":"18490","Rating":"3.8","Review_Count":"67"},{"S_No":"32","Sort_Order":"31","Badge_Text":"","Min Discount %":"","S_No_1":"31","Product_Name":"Amazon Echo Show 8 (newest model), vibrant 8.7\" HD display with spatial audio & Alexa, new sleek design, smart home controls, 2x bass speaker, 13 MP camera, bluetooth, Graphite","Original_Price":"24999","Sale_Price":"23999","Rating":"4","Review_Count":"65"},{"S_No":"33","Sort_Order":"32","Badge_Text":"","Min Discount %":"","S_No_1":"32","Product_Name":"Amazon Echo Dot (5th Gen) | Smart speaker with vibrant sound, Motion Detection, Temperature Sensor, Alexa and Bluetooth| Black","Original_Price":"5499","Sale_Price":"5499","Rating":"4.1","Review_Count":"13077"},{"S_No":"34","Sort_Order":"33","Badge_Text":"","Min Discount %":"","S_No_1":"33","Product_Name":"Amazon Echo Spot (latest model), Smart alarm clock with vibrant sound, Alexa and Bluetooth | Black","Original_Price":"8999","Sale_Price":"8499","Rating":"4","Review_Count":"522"},{"S_No":"35","Sort_Order":"34","Badge_Text":"","Min Discount %":"","S_No_1":"34","Product_Name":"Amazon Echo Dot (5th Gen, Blue) Smart Home Speaker Combo with Wipro 9W LED Smart Color Bulb | with Bluetooth and Alexa","Original_Price":"7598","Sale_Price":"6088","Rating":"4.3","Review_Count":"320"},{"S_No":"36","Sort_Order":"35","Badge_Text":"","Min Discount %":"","S_No_1":"35","Product_Name":"Amazon Echo Studio (newest model), Alexa speaker with immersive spatial audio and Dolby Atmos, hands-free smart home management, Bluetooth, Graphite","Original_Price":"23999","Sale_Price":"23999","Rating":"3.5","Review_Count":"14"},{"S_No":"","Sort_Order":"36","Badge_Text":"","Min Discount %":"","S_No_1":"36","Product_Name":"Hero RIOT 26T Single Speed Mountain Bicycle for Adults | Grey | Front Suspension | Disc Brake | Steel Frame : 16.5Inches | Rider Height : 5ft 0\" - 5ft 8\" | 95% Pre-Assembled(Ready to Ride in 5 Mins)","Original_Price":"14062","Sale_Price":"7379","Rating":"3.4","Review_Count":"239"},{"S_No":"","Sort_Order":"37","Badge_Text":"","Min Discount %":"","S_No_1":"37","Product_Name":"","Original_Price":"","Sale_Price":"","Rating":"","Review_Count":""},{"S_No":"","Sort_Order":"38","Badge_Text":"","Min Discount %":"","S_No_1":"38","Product_Name":"","Original_Price":"","Sale_Price":"","Rating":"","Review_Count":""},{"S_No":"","Sort_Order":"39","Badge_Text":"","Min Discount %":"","S_No_1":"39","Product_Name":"","Original_Price":"","Sale_Price":"","Rating":"","Review_Count":""},{"S_No":"","Sort_Order":"40","Badge_Text":"","Min Discount %":"","S_No_1":"40","Product_Name":"","Original_Price":"","Sale_Price":"","Rating":"","Review_Count":""},{"S_No":"","Sort_Order":"41","Badge_Text":"","Min Discount %":"","S_No_1":"41","Product_Name":"","Original_Price":"","Sale_Price":"","Rating":"","Review_Count":""},{"S_No":"","Sort_Order":"42","Badge_Text":"","Min Discount %":"","S_No_1":"42","Product_Name":"","Original_Price":"","Sale_Price":"","Rating":"","Review_Count":""},{"S_No":"","Sort_Order":"43","Badge_Text":"","Min Discount %":"","S_No_1":"43","Product_Name":"","Original_Price":"","Sale_Price":"","Rating":"","Review_Count":""},{"S_No":"","Sort_Order":"44","Badge_Text":"","Min Discount %":"","S_No_1":"44","Product_Name":"","Original_Price":"","Sale_Price":"","Rating":"","Review_Count":""},{"S_No":"","Sort_Order":"45","Badge_Text":"","Min Discount %":"","S_No_1":"45","Product_Name":"","Original_Price":"","Sale_Price":"","Rating":"","Review_Count":""},{"S_No":"","Sort_Order":"46","Badge_Text":"","Min Discount %":"","S_No_1":"46","Product_Name":"","Original_Price":"","Sale_Price":"","Rating":"","Review_Count":""},{"S_No":"","Sort_Order":"","Badge_Text":"","Min Discount %":"","S_No_1":"47","Product_Name":"","Original_Price":"","Sale_Price":"","Rating":"","Review_Count":""},{"S_No":"","Sort_Order":"","Badge_Text":"","Min Discount %":"","S_No_1":"48","Product_Name":"","Original_Price":"","Sale_Price":"","Rating":"","Review_Count":""},{"S_No":"","Sort_Order":"","Badge_Text":"","Min Discount %":"","S_No_1":"49","Product_Name":"","Original_Price":"","Sale_Price":"","Rating":"","Review_Count":""},{"S_No":"","Sort_Order":"","Badge_Text":"","Min Discount %":"","S_No_1":"50","Product_Name":"","Original_Price":"","Sale_Price":"","Rating":"","Review_Count":""},{"S_No":"","Sort_Order":"","Badge_Text":"","Min Discount %":"","S_No_1":"51","Product_Name":"","Original_Price":"","Sale_Price":"","Rating":"","Review_Count":""}],"https://docs.google.com/spreadsheets/d/e/2PACX-1vQlfHk-JQa7q8lIyBxXQtdI3et92suMRw2t2C5A1OfvR41mMZ-wy_hUWuMOizPmFzTbRq0u0WS0OJ-Z/pub?gid=1671278602&single=true&output=csv":[{"S_No":"1","Sort_Order":"1","Trend_Note":"Selling fast this week","":"","S_No_1":"","Product_Name":"","Original_Price":"","Sale_Price":"","Rating":"","Review_Count":""},{"S_No":"2","Sort_Order":"2","Trend_Note":"","":"","S_No_1":"","Product_Name":"","Original_Price":"","Sale_Price":"","Rating":"","Review_Count":""},{"S_No":"3","Sort_Order":"3","Trend_Note":"","":"","S_No_1":"","Product_Name":"","Original_Price":"","Sale_Price":"","Rating":"","Review_Count":""},{"S_No":"4","Sort_Order":"4","Trend_Note":"","":"","S_No_1":"","Product_Name":"","Original_Price":"","Sale_Price":"","Rating":"","Review_Count":""},{"S_No":"5","Sort_Order":"5","Trend_Note":"","":"","S_No_1":"","Product_Name":"","Original_Price":"","Sale_Price":"","Rating":"","Review_Count":""},{"S_No":"6","Sort_Order":"6","Trend_Note":"","":"","S_No_1":"","Product_Name":"","Original_Price":"","Sale_Price":"","Rating":"","Review_Count":""},{"S_No":"7","Sort_Order":"7","Trend_Note":"","":"","S_No_1":"","Product_Name":"","Original_Price":"","Sale_Price":"","Rating":"","Review_Count":""},{"S_No":"8","Sort_Order":"8","Trend_Note":"","":"","S_No_1":"","Product_Name":"","Original_Price":"","Sale_Price":"","Rating":"","Review_Count":""},{"S_No":"9","Sort_Order":"9","Trend_Note":"","":"","S_No_1":"","Product_Name":"","Original_Price":"","Sale_Price":"","Rating":"","Review_Count":""},{"S_No":"10","Sort_Order":"10","Trend_Note":"","":"","S_No_1":"","Product_Name":"","Original_Price":"","Sale_Price":"","Rating":"","Review_Count":""},{"S_No":"11","Sort_Order":"11","Trend_Note":"","":"","S_No_1":"","Product_Name":"","Original_Price":"","Sale_Price":"","Rating":"","Review_Count":""},{"S_No":"12","Sort_Order":"12","Trend_Note":"","":"","S_No_1":"","Product_Name":"","Original_Price":"","Sale_Price":"","Rating":"","Review_Count":""},{"S_No":"13","Sort_Order":"","Trend_Note":"","":"","S_No_1":"","Product_Name":"","Original_Price":"","Sale_Price":"","Rating":"","Review_Count":""},{"S_No":"17","Sort_Order":"","Trend_Note":"","":"","S_No_1":"","Product_Name":"","Original_Price":"","Sale_Price":"","Rating":"","Review_Count":""}],"https://docs.google.com/spreadsheets/d/e/2PACX-1vQlfHk-JQa7q8lIyBxXQtdI3et92suMRw2t2C5A1OfvR41mMZ-wy_hUWuMOizPmFzTbRq0u0WS0OJ-Z/pub?gid=1900968817&single=true&output=csv":[{"Category_Name":"Electronics","Slug":"electronics","Icon_Emoji":"📱","Image_URL":"https://images.unsplash.com/photo-1533450718592-29d45635f0a9?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8anBnfGVufDB8fDB8fHww","Description":"Phones, earbuds, and gadgets","Sort_Order":"1"},{"Category_Name":"Computers & Accessories","Slug":"","Icon_Emoji":"","Image_URL":"https://pf-loots.netlify.app/images/pricing_audit.png","Description":"","Sort_Order":"2"},{"Category_Name":"Home & Kitchen","Slug":"","Icon_Emoji":"","Image_URL":"","Description":"","Sort_Order":"3"},{"Category_Name":"Echo & Alexa Devices","Slug":"","Icon_Emoji":"","Image_URL":"","Description":"","Sort_Order":"4"},{"Category_Name":"Sports","Slug":"","Icon_Emoji":"","Image_URL":"","Description":"","Sort_Order":""},{"Category_Name":"Fitness & Outdoors","Slug":"","Icon_Emoji":"","Image_URL":"","Description":"","Sort_Order":""}],"https://docs.google.com/spreadsheets/d/e/2PACX-1vQlfHk-JQa7q8lIyBxXQtdI3et92suMRw2t2C5A1OfvR41mMZ-wy_hUWuMOizPmFzTbRq0u0WS0OJ-Z/pub?gid=2115468565&single=true&output=csv":[{"S_No":"1","Title":"How to Find the Best Deals on Amazon Using AI Tools","Slug":"how-to-find-best-amazon-deals-using-ai","Hero_Image_URL":"https://pf-loots.netlify.app/images/ai_curated_amazon_deals.png","Excerpt":"A practical guide to using AI tools to save money and shop smarter online.","Content":"## Use AI price tracking tools \n\nAI-powered price tracking tools have become essential for smart online shopping. These tools monitor product prices over time and alert you when the price drops. Instead of buying impulsively during sales, you can rely on data to decide the best time to purchase.\n\nTools like Keepa and Honey use historical data and AI predictions to show whether a deal is genuinely worth it. If the current price is close to the lowest recorded price, it is usually a good time to buy.\n\n## Compare products instantly with AI\n\nOne of the biggest challenges in online shopping is choosing between similar products. AI tools can now compare multiple products instantly based on features, pricing, and user ratings.\n\nInstead of opening multiple tabs and manually checking specifications, AI assistants can summarize everything in seconds. This helps you quickly identify the best value product without wasting time.\n\n## Detect fake reviews and ratings\n\nFake reviews are a common problem on e-commerce platforms. AI tools can analyze review patterns and detect suspicious or biased feedback.\n\nThey highlight genuine reviews and summarize common pros and cons, giving you a clearer understanding of the product. This reduces the risk of buying low-quality items based on misleading ratings.\n\n## Get personalized recommendations\n\nAI learns from your browsing behavior and purchase history to suggest products that match your preferences. This makes product discovery faster and more relevant.\n\nInstead of scrolling through hundreds of listings, you can rely on AI to narrow down the best options tailored to your needs.\n\n## Make smarter buying decisions\n\nUsing AI tools does not just save money; it also improves your overall shopping experience. You spend less time researching and more time making confident decisions.\n\nBy combining AI insights with your own judgment, you can avoid common online shopping mistakes and consistently find better deals.","Published_Date":"2026-06-28","Author":"Pocket Friendly Team","Category":"Buying Tips","Recommended_Product_SNos":"1,2","":"","S_No_1":"","Product_Name":"","Original_Price":"","Sale_Price":"","Rating":"","Review_Count":""},{"S_No":"2","Title":"How AI Is Changing the Way We Shop on Amazon in 2026","Slug":"how-ai-is-changing-amazon-shopping-2026","Hero_Image_URL":"https://pf-loots.netlify.app/images/ai_change_shopping.png","Excerpt":"Discover how AI tools are transforming online shopping, from smarter recommendations to better deal tracking.","Content":"## Check the price history\n\nRetailers often use a deceptive tactic called \"\"price anchoring,\"\" where they artificially inflate the MSRP of an item just weeks before a major sale event. This makes the new \"\"discounted\"\" price look like a steal, when in reality, it might just be the standard everyday price.\n\nTo protect yourself, always use a price-tracking tool before you buy. Extensions and websites like CamelCamelCamel, Keepa, or Honey will show you a detailed graph of the product's price history.\n\nIf the current \"\"deal\"\" price is the same as the average historical price, it is not a real discount.\n\nCompare the real specs\nIt is incredibly easy to get blinded by a massive \"\"50% OFF\"\" badge, but a huge discount percentage does not automatically mean you are getting the best value.\n\nBrands frequently offer deep discounts on older models, discontinued stock, or stripped-down versions of a product just to clear out their warehouses.\n\nDo not just compare the percentage off; compare the actual specifications. A 50% discount on a slow, three-year-old laptop is not a better deal than a 20% discount on a current-generation model.\n\nAlways verify exact model numbers and check the core features before making a purchase.","Published_Date":"2026-07-05","Author":"Pocket Friendly Team","Category":"Online Shopping Trends","Recommended_Product_SNos":"","":"","S_No_1":"","Product_Name":"","Original_Price":"","Sale_Price":"","Rating":"","Review_Count":""},{"S_No":"3","Title":"The 3-Step \"Pricing Audit\" You Should Do Before Clicking 'Buy' on Any Major Sale","Slug":"3-step-pricing-audit-before-buying-online","Hero_Image_URL":"https://pf-loots.netlify.app/images/pricing_audit.png","Excerpt":"Ever felt that immediate rush of excitement when you see a \"60% OFF\" tag, only to feel a sinking suspicion later that you didn't actually save money? Here is how to audit online prices like an expert and protect your wallet.","Content":"## Content \n\nWe have all been there. You are scrolling through your favorite shopping app, and a sleek gadget or a clean pair of sneakers pops up. Right next to the price tag is a bright, bold badge shouting 55% OFF! Only 3 left in stock! Your heart rate ticks up a little bit. That psychological urgency kicks in. You start thinking, “If I don’t buy this right now, I’m losing money.”\n\nBut here is the honest, unfiltered truth about modern online shopping: retail brands spend millions of dollars studying human psychology to make you feel panicked into buying. Half the time, those massive discounts are completely manufactured.\n\nIf you want to stop falling for retail traps and start finding genuine steals, you need to run this quick, 3-step \"Pricing Audit\" before you ever type in your card details.\n\n## Step 1: The \"MSRP\" Reality Check\n\nThe biggest trick in the e-commerce playbook is the inflated MSRP (Manufacturer's Suggested Retail Price), also known as the anchor price.\n\nImagine a pair of headphones that naturally sells for $50 all year round. A retailer might list the product with a \"struck-through\" original price of $120, claiming it’s marked down to $48. On paper, it looks like a staggering $72 savings. In reality, you saved exactly two bucks.\n\nBefore you celebrate a discount, copy the exact model number or product title and paste it directly into a standard search engine. Look at what other stores (or the manufacturer’s official site) are listing as the standard price. If every site has it for roughly the same price, that massive discount badge is completely artificial.\n\n## Step 2: Look at the 90-Day Price Wave\n\nPrices online are not static; they breathe. They fluctuate up and down constantly based on algorithms, stock levels, and time of day.\nAn item might be artificially marked up by 20% for two weeks just so the platform can drop it back to its original price during a holiday weekend and call it a \"Flash Sale.\"\nTo beat the algorithm, you have to look backward. Always use historical price-tracking tools or community-vetted deal platforms to see what the item cost 30, 60, and 90 days ago. If the item consistently drops to that \"sale\" price every single month, there is no need to panic buy today. You can wait until you actually need it.\n\n## Step 3: Run the \"Value Per Use\" Formula\n\nTrue money-saving isn't just about spending less; it's about buying things that last. A $20 winter jacket with a 70% discount sticker looks like an incredible deal. But if the zipper breaks after three wears, your cost-per-use is massive.\nOn the flip side, a premium, high-quality $100 jacket that lasts you five years is an infinitely better financial investment, even if it only has a tiny 10% discount today.\n\nBefore checking out, ask yourself: “Am I buying this because I genuinely need this specific item, or am I buying it simply because the discount percentage makes me feel smart?” If the discount badge disappeared tomorrow and the item was full price, would you still want it? If the answer is no, close the tab and walk away.\n\n## Why We Do Things Differently Here\n\nThe reason we started this platform is simple: we were incredibly tired of the corporate smoke and mirrors. The internet is flooded with junk products masked by fake five-star reviews and manipulated discount tickers.\n\nOur promise to you is straightforward: we don't just hunt for the biggest percentages. We manually filter through the noise to find high-quality products that hit genuine, historical low prices. If a deal isn't actually a deal, it doesn't make it onto our list. Period.\n\nBookmark this page, stick around, and let’s start shopping smarter together.\n\nFollow for more [Content!](/contact)","Published_Date":"2026-07-07","Author":"Pocket Friendly Team","Category":"Buying Tips","Recommended_Product_SNos":"29,30","":"","S_No_1":"","Product_Name":"","Original_Price":"","Sale_Price":"","Rating":"","Review_Count":""}],"https://docs.google.com/spreadsheets/d/e/2PACX-1vQlfHk-JQa7q8lIyBxXQtdI3et92suMRw2t2C5A1OfvR41mMZ-wy_hUWuMOizPmFzTbRq0u0WS0OJ-Z/pub?gid=763871860&single=true&output=csv":[{"List_Title":"Best Wireless Earbuds Under ₹2000","Slug":"best-earbuds-2000","Category":"Electronics","Rank":"1","S_No":"1","Ranking_Note":"Best battery life at this price","":"","S_No_1":"1","Product_Name":"VW 109 cm (43 inches) Spectra Series Full HD Smart QLED Android TV VW43AQ3","Original_Price":"29999","Sale_Price":"15499","Rating":"4.1","Review_Count":"15964"},{"List_Title":"Best Wireless Earbuds Under ₹2000","Slug":"best-earbuds-2000","Category":"Electronics","Rank":"2","S_No":"2","Ranking_Note":"Best battery life at this price","":"","S_No_1":"","Product_Name":"","Original_Price":"","Sale_Price":"","Rating":"","Review_Count":""},{"List_Title":"Best Watch","Slug":"Best wrist watch ","Category":"Electronics","Rank":"1","S_No":"1","Ranking_Note":"","":"","S_No_1":"","Product_Name":"","Original_Price":"","Sale_Price":"","Rating":"","Review_Count":""}],"https://docs.google.com/spreadsheets/d/e/2PACX-1vQlfHk-JQa7q8lIyBxXQtdI3et92suMRw2t2C5A1OfvR41mMZ-wy_hUWuMOizPmFzTbRq0u0WS0OJ-Z/pub?gid=2030758027&single=true&output=csv":[{"S_No":"1","Guide_Title":"Birthday Gifts for Men","Slug":"gifts-for-men","Hero_Image_URL":"https://images.unsplash.com/photo-1635166304779-8ebcfe8e57bd?q=80&w=870&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D","Description":"Thoughtful gifts that won't break the bank.","Occasion_Tag":"Birthday","Product_SNos":"52,51,22,17,4,11","":"","S_No_1":"","Product_Name":"","Original_Price":"","Sale_Price":"","Rating":"","Review_Count":""}]};</script>
+</body>
+</html>

@@ -1,0 +1,171 @@
+/* ==========================================================================
+   responsive.css
+   Most layout in this project is already fluid (CSS grid auto-fill,
+   clamp() for type) and needs no breakpoints at all. This file only
+   contains the handful of rules that genuinely need a hard cutoff —
+   mainly the nav collapsing to a hamburger, and the two-column article
+   layout dropping to one column.
+   Breakpoints used: 1024px (laptop), 768px (tablet), 480px (phone)
+   ========================================================================== */
+
+@media (max-width: 1024px) {
+  .article-layout {
+    display: flex;
+    flex-direction: column;
+  }
+  .article-sidebar {
+    display: contents;
+  }
+  .article-content { order: 2; }
+  .toc { order: 1; }
+  .recommended-products {
+    order: 3;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-md);
+    padding-top: var(--space-xl);
+    border-top: 1px solid var(--color-border);
+  }
+  .recommended-products h3 {
+    grid-column: 1 / -1;
+    margin-bottom: 0;
+  }
+}
+
+@media (max-width: 900px) {
+  .grid { grid-template-columns: repeat(2, 1fr); }
+  .guide-preview { grid-template-columns: repeat(2, 1fr); }
+  .guide-card-body-inner { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 480px) {
+  .guide-preview { grid-template-columns: repeat(2, 1fr); }
+  .guide-card-body-inner { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 768px) {
+  .nav-links {
+    display: none;
+  }
+  .nav-top {
+    grid-template-columns: 1fr auto;
+    padding: var(--space-xs) var(--gutter);
+  }
+  .brand {
+    grid-column: 1;
+  }
+  .nav-actions {
+    grid-column: 2;
+  }
+  .search-bar {
+    display: none;
+  }
+  .nav-search-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--color-text-muted);
+  }
+  .nav-search-toggle:hover { color: var(--color-text); }
+  .mobile-search-bar {
+    display: block;
+    padding: var(--space-sm) var(--gutter) var(--space-xs);
+    border-top: 1px solid var(--color-border);
+  }
+  .mobile-search-bar[hidden] { display: none; }
+  .mobile-search-form {
+    display: flex;
+    align-items: center;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    background: var(--color-surface);
+  }
+  .mobile-search-form:focus-within {
+    border-color: var(--color-gold);
+    box-shadow: 0 0 0 3px rgba(255, 182, 39, 0.4);
+  }
+  .mobile-search-input {
+    flex: 1;
+    min-width: 0;
+    border: none;
+    padding: 8px 12px;
+    font-size: var(--text-sm);
+    outline: none;
+    background: transparent;
+    color: var(--color-text);
+  }
+  .mobile-search-input::placeholder { color: var(--color-text-muted); }
+  .mobile-search-submit {
+    background: var(--color-gold);
+    border: none;
+    padding: 8px 14px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-cta-text);
+  }
+  .nav-toggle {
+    display: flex;
+  }
+  .nav-bottom {
+    grid-template-columns: 1fr;
+    padding: 0;
+    border-top: none;
+  }
+  .nav-tg-link .tg-icon {
+    width: 24px;
+    height: 24px;
+  }
+  .nav-tg-link:hover::after,
+  .hero-ctas .btn-ghost[data-telegram-cta]:hover::after {
+    display: none;
+  }
+  .nav-btn:hover {
+    background: var(--color-surface);
+    color: var(--color-text);
+    border-color: var(--color-border);
+  }
+  .controls {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .search-input,
+  .sort-select {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .subscribe-table td { display: block; width: 100% !important; padding: var(--space-xs) 0; }
+  .subscribe-table td:first-child { padding-bottom: 0; }
+  .hero {
+    padding: var(--space-3xl) var(--gutter) var(--space-2xl);
+  }
+  .countdown {
+    gap: var(--space-sm);
+  }
+  .countdown .unit {
+    min-width: 60px;
+    padding: var(--space-xs) var(--space-sm);
+  }
+  .countdown .unit .num {
+    font-size: var(--text-lg);
+  }
+  .hero-ctas {
+    flex-direction: column;
+    width: 100%;
+  }
+  .hero-ctas .btn-primary,
+  .hero-ctas .btn-ghost {
+    width: 100%;
+  }
+  .footer-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
