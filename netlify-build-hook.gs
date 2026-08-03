@@ -2,58 +2,55 @@
  * netlify-build-hook.gs
  * Google Apps Script for Pocket Friendly Loot.
  *
- * Whenever rows are added/edited in the product Google Sheet, this script
- * calls the Netlify Build Hook so Netlify rebuilds the site (~60s) and
- * publishes the fresh data.
- *
- * SETUP (5 minutes):
- *   1. In your Google Sheet: Extensions → Apps Script
- *   2. Paste this whole file into the editor (Code.gs)
- *   3. Replace NETLIFY_BUILD_HOOK_URL below with your real hook URL
- *      (Netlify → Site configuration → Build & deploy → Build hooks)
- *   4. Click "Save" then the "Run" button once and approve permissions
- *   5. In the editor sidebar: Triggers (alarm icon) → Add Trigger:
- *        - Choose which function:   onSheetEdit
- *        - Choose which deployment: Head
- *        - Event source:            From spreadsheet
- *        - Event type:              On edit
- *        - Failure notification:    daily (optional)
- *   6. Test: edit any cell in the sheet → wait ~60s → the live site updates.
+ * Adds a custom menu item in Google Sheets to manually trigger a Netlify
+ * site rebuild only when you are done making all your edits.
  */
 
-var NETLIFY_BUILD_HOOK_URL = "PASTE_YOUR_NETLIFY_BUILD_HOOK_URL_HERE";
+var NETLIFY_BUILD_HOOK_URL = "HOOK_URL";
 
-/** Debounce flag so rapid cell edits trigger one rebuild, not a flood. */
-var REBUILD_DEBOUNCE_MS = 30 * 1000;
-
-function onSheetEdit(e) {
-  if (!e || !e.range) return;
-  triggerNetlifyBuild();
+/**
+ * Automatically creates a custom top menu in Google Sheets on load.
+ */
+function onOpen() {
+  var ui = SpreadsheetApp.getUi();
+  ui.createMenu('🚀 Site Publisher')
+    .addItem('Publish Changes to Live Site', 'triggerNetlifyBuild')
+    .addToUi();
 }
 
+/**
+ * Triggers the Netlify build hook and shows a pop-up confirmation to the user.
+ */
 function triggerNetlifyBuild() {
-  var cache = CacheService.getScriptCache();
-  var last = cache.get("lastBuildHookCall");
-  var now = Date.now();
-  if (last && now - Number(last) < REBUILD_DEBOUNCE_MS) {
-    Logger.log("Build hook skipped (debounced).");
-    return;
-  }
-  cache.put("lastBuildHookCall", String(now), 600);
+  var ui = SpreadsheetApp.getUi();
 
-  if (!NETLIFY_BUILD_HOOK_URL || NETLIFY_BUILD_HOOK_URL.indexOf("PASTE_YOUR") !== -1) {
-    Logger.log("Netlify build hook URL not configured yet.");
+  // Check if hook URL is filled in
+  if (!NETLIFY_BUILD_HOOK_URL || NETLIFY_BUILD_HOOK_URL === "HOOK_URL" || NETLIFY_BUILD_HOOK_URL.indexOf("PASTE_YOUR") !== -1) {
+    ui.alert("⚠️ Configuration Error", "Please replace NETLIFY_BUILD_HOOK_URL with your actual Netlify Webhook URL.", ui.ButtonSet.OK);
     return;
   }
 
-  var response = UrlFetchApp.fetch(NETLIFY_BUILD_HOOK_URL, {
-    method: "post",
-    muteHttpExceptions: true,
-  });
-  Logger.log("Netlify rebuild triggered: " + response.getResponseCode() + " " + response.getContentText());
+  try {
+    var response = UrlFetchApp.fetch(NETLIFY_BUILD_HOOK_URL, {
+      method: "post",
+      muteHttpExceptions: true,
+    });
+
+    var statusCode = response.getResponseCode();
+
+    // 200 or 202 status codes mean Netlify successfully accepted the request
+    if (statusCode === 200 || statusCode === 202) {
+      ui.alert("✅ Success!", "Netlify build triggered! Your site will update live in ~60 seconds.", ui.ButtonSet.OK);
+    } else {
+      ui.alert("❌ Build Trigger Failed", "Netlify responded with code " + statusCode + ":\n" + response.getContentText(), ui.ButtonSet.OK);
+    }
+
+  } catch (error) {
+    ui.alert("❌ Network Error", "Failed to reach Netlify: " + error.toString(), ui.ButtonSet.OK);
+  }
 }
 
-/** Manual fallback: run this from the Apps Script editor to rebuild now. */
+/** Manual fallback: run this directly from the Apps Script editor. */
 function rebuildNow() {
   triggerNetlifyBuild();
 }
