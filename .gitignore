@@ -18,3 +18,7 @@ netlify-build-hook.gs
 # Build output and dependencies  
 /dist  
 /node_modules  
+
+/docs
+niche-data-pack-template.md
+pfl-starter-blueprint.md 
